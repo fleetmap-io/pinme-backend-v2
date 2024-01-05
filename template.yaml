@@ -1,0 +1,89 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: SAM template for Lambda with a static IP (Elastic IP) using VPC and NAT Gateway
+
+Resources:
+  VPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: '10.0.0.0/16'
+
+  Subnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: '10.0.1.0/24'
+
+  InternetGateway:
+    Type: 'AWS::EC2::InternetGateway'
+
+  AttachGateway:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  RouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref VPC
+
+  Route:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      RouteTableId: !Ref RouteTable
+      DestinationCidrBlock: '0.0.0.0/0'
+      GatewayId: !Ref InternetGateway
+
+  NATGateway:
+    Type: 'AWS::EC2::NatGateway'
+    Properties:
+      AllocationId: !GetAtt ElasticIP.AllocationId
+      SubnetId: !Ref Subnet
+
+  ElasticIP:
+    Type: 'AWS::EC2::EIP'
+
+  LambdaFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: LambdaWithStaticIP
+      Handler: app.lambdaHandler  # Assuming index.js and handler function is 'handler'
+      Runtime: nodejs16.x
+      CodeUri: ./app/
+      Policies:
+        - AWSLambdaBasicExecutionRole  # This includes the necessary permissions
+      VpcConfig:
+        SubnetIds:
+          - !Ref Subnet
+        SecurityGroupIds:
+          - !Ref SecurityGroup
+
+  SecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Security Group for Lambda function
+      VpcId: !Ref VPC
+
+  LambdaSecurityGroupIngress:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !Ref SecurityGroup
+      IpProtocol: tcp
+      FromPort: '443'  # Adjust ports as needed
+      ToPort: '443'
+      CidrIp: '0.0.0.0/0'  # Adjust CIDR as needed
+
+Outputs:
+  LambdaFunctionArn:
+    Description: ARN of the Lambda Function
+    Value: !GetAtt LambdaFunction.Arn
+  VPCId:
+    Description: VPC ID
+    Value: !Ref VPC
+  SubnetId:
+    Description: Subnet ID
+    Value: !Ref Subnet
+
+
+
