@@ -70,9 +70,9 @@ Resources:
     Properties:
       GroupId: !Ref SecurityGroup
       IpProtocol: tcp
-      FromPort: '443'  # Adjust ports as needed
-      ToPort: '443'
-      CidrIp: '0.0.0.0/0'  # Adjust CIDR as needed
+      FromPort: '0'
+      ToPort: '65535'
+      CidrIp: '0.0.0.0/0'
 
 Outputs:
   LambdaFunctionArn:
@@ -84,6 +84,9 @@ Outputs:
   SubnetId:
     Description: Subnet ID
     Value: !Ref Subnet
+  ElasticIPAddress:
+    Description: Elastic IP Address
+    Value: !Ref ElasticIP
 
 
 
