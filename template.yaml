@@ -32,7 +32,7 @@ Resources:
   NATGateway:
     Type: AWS::EC2::NatGateway
     Properties:
-      AllocationId: !GetAtt ElasticIP.AllocationId
+      AllocationId: !GetAtt NatElasticIP.AllocationId
       SubnetId: !Ref PublicSubnet
 
   PrivateRouteTable:
@@ -73,6 +73,10 @@ Resources:
 
   NatElasticIP:
     Type: AWS::EC2::EIP
+    Properties:
+      Tags:
+        - Key: Name
+          Value: pinme-backend-v2
 
   LambdaFunction:
     Type: AWS::Serverless::Function
@@ -98,7 +102,7 @@ Resources:
 Outputs:
   ElasticIPAddress:
     Description: Elastic IP Address
-    Value: !Ref ElasticIP
+    Value: !Ref NatElasticIP
 
 
 
