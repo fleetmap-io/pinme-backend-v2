@@ -93,10 +93,10 @@ Resources:
         - Key: Name
           Value: pinme-backend-v2
 
-  LambdaFunction:
+  MainFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: mainFunction
+      FunctionName: pinme-backend-main-function
       Handler: app.mainFunction
       Runtime: nodejs16.x
       CodeUri: ./app/
@@ -125,8 +125,9 @@ Outputs:
     Description: Elastic IP Address
     Value: !Ref NatElasticIP
   APIEndpoint:
-    Description: API
-    Value: !Ref ServerlessRestApi
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ServerlessRestApi.Stage}/"
+
 
 
 
