@@ -1,51 +1,70 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: 'AWS::Serverless-2016-10-31'
+Transform: AWS::Serverless-2016-10-31
 Description: SAM template for Lambda with a static IP (Elastic IP) using VPC and NAT Gateway
 
 Resources:
   VPC:
-    Type: 'AWS::EC2::VPC'
+    Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: '10.0.0.0/16'
+      CidrBlock: 10.0.0.0/16
 
-  Subnet:
-    Type: 'AWS::EC2::Subnet'
+  PrivateSubnet:
+    Type: AWS::EC2::Subnet
     Properties:
       VpcId: !Ref VPC
-      CidrBlock: '10.0.1.0/24'
+      CidrBlock: 10.0.1.0/24
+
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.2.0/24
 
   InternetGateway:
-    Type: 'AWS::EC2::InternetGateway'
+    Type: AWS::EC2::InternetGateway
 
   AttachGateway:
-    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Type: AWS::EC2::VPCGatewayAttachment
     Properties:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
 
-  RouteTable:
-    Type: 'AWS::EC2::RouteTable'
+  NATGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt ElasticIP.AllocationId
+      SubnetId: !Ref PublicSubnet
+
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref VPC
 
-  Route:
-    Type: 'AWS::EC2::Route'
+  PrivateRoute:
+    Type: AWS::EC2::Route
     Properties:
-      RouteTableId: !Ref RouteTable
+      RouteTableId: !Ref PrivateRouteTable
       DestinationCidrBlock: '0.0.0.0/0'
       NatGatewayId: !Ref NATGateway
 
-  NATGateway:
-    Type: 'AWS::EC2::NatGateway'
-    Properties:
-      AllocationId: !GetAtt ElasticIP.AllocationId
-      SubnetId: !Ref Subnet
-
-  SubnetRouteTableAssociation:
+  PrivateRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      RouteTableId: !Ref RouteTable
-      SubnetId: !Ref Subnet
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet
+
+  PublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: '0.0.0.0/0'
+      GatewayId: !Ref InternetGateway
+
+  PublicRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet
 
   ElasticIP:
     Type: 'AWS::EC2::EIP'
@@ -61,7 +80,7 @@ Resources:
         - AWSLambdaBasicExecutionRole  # This includes the necessary permissions
       VpcConfig:
         SubnetIds:
-          - !Ref Subnet
+          - !Ref PrivateSubnet
         SecurityGroupIds:
           - !Ref SecurityGroup
 
@@ -81,15 +100,6 @@ Resources:
       CidrIp: '0.0.0.0/0'
 
 Outputs:
-  LambdaFunctionArn:
-    Description: ARN of the Lambda Function
-    Value: !GetAtt LambdaFunction.Arn
-  VPCId:
-    Description: VPC ID
-    Value: !Ref VPC
-  SubnetId:
-    Description: Subnet ID
-    Value: !Ref Subnet
   ElasticIPAddress:
     Description: Elastic IP Address
     Value: !Ref ElasticIP
