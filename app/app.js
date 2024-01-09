@@ -4,7 +4,7 @@ const { getOneSignalTokens } = require('fleetmap-partners')
 const { getUserPool } = require('fleetmap-partners')
 const { logException } = require('./utils')
 
-exports.lambdaHandler = async (event) => {
+exports.mainFunction = async (event) => {
     if (event.queryStringParameters.emailAuthHash) {
         const email = event.queryStringParameters.emailAuthHash
         const crypto = require('crypto')

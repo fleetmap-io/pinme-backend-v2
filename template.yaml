@@ -96,8 +96,8 @@ Resources:
   LambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: LambdaWithStaticIP
-      Handler: app.lambdaHandler
+      FunctionName: mainFunction
+      Handler: app.mainFunction
       Runtime: nodejs16.x
       CodeUri: ./app/
       Policies:
