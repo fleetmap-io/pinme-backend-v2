@@ -41,6 +41,12 @@ Resources:
       AllocationId: !GetAtt ElasticIP.AllocationId
       SubnetId: !Ref Subnet
 
+  SubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref RouteTable
+      SubnetId: !Ref Subnet
+
   ElasticIP:
     Type: 'AWS::EC2::EIP'
 
