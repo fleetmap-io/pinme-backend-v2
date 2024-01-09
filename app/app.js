@@ -1,11 +1,10 @@
 const CognitoExpress = require('cognito-express')
-const auth = require('./auth')
 const { getOneSignalTokens } = require('fleetmap-partners')
 const { getUserPool } = require('fleetmap-partners')
-const { logException } = require('./utils')
+const { logException, logError} = require('./utils')
 
 exports.mainFunction = async (event) => {
-    if (event.queryStringParameters.emailAuthHash) {
+    if (event.queryStringParameters && event.queryStringParameters.emailAuthHash) {
         const email = event.queryStringParameters.emailAuthHash
         const crypto = require('crypto')
         const hmac = crypto.createHmac('sha256', getOneSignalTokens(event.headers.host).token)
@@ -13,7 +12,7 @@ exports.mainFunction = async (event) => {
         return okResponse(hmac.digest('hex'), event, [])
     }
     if (!event.headers.authorization) {
-        console.error('Access Token missing from header')
+        await logError(new Error('Access Token missing from header'), event)
         return { statusCode: 401, body: 'Access Token missing from header' }
     }
     const origin = event.headers.origin || 'https://' + event.headers['x-forwarded-host']
@@ -48,7 +47,7 @@ exports.mainFunction = async (event) => {
         email = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'phone_number')
     }
     try {
-        const cookies = await auth.getUserSession(email.Value)
+        const cookies = (await require('./auth')).getUserSession(email.Value)
         return okResponse('', event, cookies)
     } catch (e) {
         logException(e, 'auth.getUserSession', email)
