@@ -10,15 +10,11 @@ Globals:
   Function:
     Environment:
       Variables:
-        REPORTS_PATH: ./reports/
-        BACKEND_TABLE: !Ref BackendTable
         TRACCAR_ADMIN_USER: '{{resolve:secretsmanager:traccar:SecretString:username}}'
         TRACCAR_ADMIN_PASS: '{{resolve:secretsmanager:traccar:SecretString:password}}'
         DB_HOST: db.pinme.io
         DB_USER: '{{resolve:secretsmanager:db:SecretString:username}}'
         DB_PASSWORD: '{{resolve:secretsmanager:db:SecretString:password}}'
-        REPORTS_QUEUE1: !Ref AutomaticReportsQueue1
-        BASIC_REPORTS_QUEUE: !Ref BasicAutomaticReportsQueue
         IPINFO_TOKEN: df58ccf730ab1c
         geoapifyKey: 9a389d03f24848f2ac015e6997509dbe
 
