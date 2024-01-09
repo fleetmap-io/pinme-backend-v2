@@ -71,7 +71,7 @@ Resources:
       RouteTableId: !Ref PublicRouteTable
       SubnetId: !Ref PublicSubnet
 
-  ElasticIP:
+  NatElasticIP:
     Type: AWS::EC2::EIP
 
   LambdaFunction:
