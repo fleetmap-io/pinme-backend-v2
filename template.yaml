@@ -33,7 +33,7 @@ Resources:
     Properties:
       RouteTableId: !Ref RouteTable
       DestinationCidrBlock: '0.0.0.0/0'
-      GatewayId: !Ref NATGateway
+      NatGatewayId: !Ref NATGateway
 
   NATGateway:
     Type: 'AWS::EC2::NatGateway'
