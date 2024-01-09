@@ -107,6 +107,12 @@ Resources:
           - !Ref PrivateSubnet
         SecurityGroupIds:
           - !Ref SecurityGroup
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /backend
+            Method: get
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -118,6 +124,9 @@ Outputs:
   ElasticIPAddress:
     Description: Elastic IP Address
     Value: !Ref NatElasticIP
+  APIEndpoint:
+    Description: API
+    Value: !Ref ServerlessRestApi
 
 
 
