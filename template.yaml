@@ -16,7 +16,6 @@ Globals:
         DB_USER: '{{resolve:secretsmanager:db:SecretString:username}}'
         DB_PASSWORD: '{{resolve:secretsmanager:db:SecretString:password}}'
         IPINFO_TOKEN: df58ccf730ab1c
-        geoapifyKey: 9a389d03f24848f2ac015e6997509dbe
 
 Resources:
   VPC:
