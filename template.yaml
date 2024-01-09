@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: SAM template for Lambda with a static IP (Elastic IP) using VPC and NAT Gateway
+Description: Pinme backend v2
 
 Resources:
   VPC:
@@ -62,7 +62,7 @@ Resources:
     Type: AWS::EC2::Route
     Properties:
       RouteTableId: !Ref PublicRouteTable
-      DestinationCidrBlock: '0.0.0.0/0'
+      DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
 
   PublicRouteTableAssociation:
@@ -72,17 +72,17 @@ Resources:
       SubnetId: !Ref PublicSubnet
 
   ElasticIP:
-    Type: 'AWS::EC2::EIP'
+    Type: AWS::EC2::EIP
 
   LambdaFunction:
-    Type: 'AWS::Serverless::Function'
+    Type: AWS::Serverless::Function
     Properties:
       FunctionName: LambdaWithStaticIP
-      Handler: app.lambdaHandler  # Assuming index.js and handler function is 'handler'
+      Handler: app.lambdaHandler
       Runtime: nodejs16.x
       CodeUri: ./app/
       Policies:
-        - AWSLambdaBasicExecutionRole  # This includes the necessary permissions
+        - AWSLambdaBasicExecutionRole
       VpcConfig:
         SubnetIds:
           - !Ref PrivateSubnet
@@ -90,19 +90,10 @@ Resources:
           - !Ref SecurityGroup
 
   SecurityGroup:
-    Type: 'AWS::EC2::SecurityGroup'
+    Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Security Group for Lambda function
       VpcId: !Ref VPC
-
-  LambdaSecurityGroupIngress:
-    Type: 'AWS::EC2::SecurityGroupIngress'
-    Properties:
-      GroupId: !Ref SecurityGroup
-      IpProtocol: tcp
-      FromPort: '0'
-      ToPort: '65535'
-      CidrIp: '0.0.0.0/0'
 
 Outputs:
   ElasticIPAddress:
