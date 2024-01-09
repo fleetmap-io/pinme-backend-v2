@@ -33,7 +33,7 @@ Resources:
     Properties:
       RouteTableId: !Ref RouteTable
       DestinationCidrBlock: '0.0.0.0/0'
-      GatewayId: !Ref NATGateway
+      GatewayId: !Ref InternetGateway
 
   NATGateway:
     Type: 'AWS::EC2::NatGateway'
@@ -64,6 +64,15 @@ Resources:
     Properties:
       GroupDescription: Security Group for Lambda function
       VpcId: !Ref VPC
+
+  LambdaSecurityGroupIngress:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !Ref SecurityGroup
+      IpProtocol: tcp
+      FromPort: '0'
+      ToPort: '65535'
+      CidrIp: '0.0.0.0/0'
 
 Outputs:
   LambdaFunctionArn:
