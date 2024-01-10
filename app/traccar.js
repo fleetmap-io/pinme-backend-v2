@@ -14,7 +14,7 @@ exports.cookieJar = cookieJar
 const cache = new NodeCache({ stdTTL: 600, useClones: false, checkperiod: 120 })
 
 const config = {
-  auth: { username: process.env.TRACCAR_ADMIN_USER, password: process.env.TRACCAR_ADMIN_PASSWORD },
+  auth: { username: process.env.TRACCAR_ADMIN_USER, password: process.env.TRACCAR_ADMIN_PASS },
   headers: { 'User-Agent': 'pinme-backend' }
 }
 
@@ -184,7 +184,7 @@ exports.updateUser = (user) => {
 }
 
 exports.createSession = (user) => {
-  const body = 'email=' + encodeURIComponent(user) + '&password=' + encodeURIComponent(process.env.TRACCAR_ADMIN_PASSWORD)
+  const body = 'email=' + encodeURIComponent(user) + '&password=' + encodeURIComponent(process.env.TRACCAR_ADMIN_PASS)
   console.log(body)
   cookieJar.removeAllCookies()
   return axios.post(apiUrl + '/session', body, {

@@ -50,7 +50,7 @@ exports.insertUser = async (userName, name, email, clientId) => {
 }
 
 async function updateUser (user) {
-    user.password = process.env.TRACCAR_ADMIN_PASSWORD
+    user.password = process.env.TRACCAR_ADMIN_PASS
     return traccar.updateUser(user)
 }
 exports.updateUser = updateUser
