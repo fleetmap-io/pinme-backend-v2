@@ -15,7 +15,7 @@ exports.mainFunction = async (event) => {
         await logError(new Error('Access Token missing from header'), event)
         return { statusCode: 401, body: 'Access Token missing from header' }
     }
-    const origin = event.headers.origin || 'https://' + event.headers['x-forwarded-host']
+    const origin = event.headers.origin || 'https://' + event.headers['X-Forwarded-Host']
     let userPool, response
     try {
         userPool = getUserPool(origin)
@@ -24,7 +24,7 @@ exports.mainFunction = async (event) => {
             cognitoUserPoolId: userPool,
             tokenUse: 'access' // Possible Values: access | id
         })
-        response = await cognitoExpress.validate(event.headers.authorization)
+        response = await cognitoExpress.validate(event.headers.Authorization)
     } catch (e) {
         console.warn(e.message, 'try again')
         userPool = 'us-east-1_olpbc774t'
@@ -33,7 +33,7 @@ exports.mainFunction = async (event) => {
             cognitoUserPoolId: userPool,
             tokenUse: 'access' // Possible Values: access | id
         })
-        response = await cognitoExpress.validate(event.headers.authorization)
+        response = await cognitoExpress.validate(event.headers.Authorization)
     }
 
     console.log('token auth_time', new Date(response.auth_time * 1000))
