@@ -46,7 +46,7 @@ exports.getItem = async function (params) {
 exports.updateIgnitionOff = (deviceId, ignitionOffDate) => {
   const params = {
     TableName: process.env.DEVICE_IGNITION_OFF_TABLE,
-    Key: marshall({deviceId}),
+    Key: marshall({deviceId: deviceId + ''}),
     UpdateExpression: 'set ignitionOffDate = :ignitionOffDate',
     ExpressionAttributeValues: marshall({':ignitionOffDate': ignitionOffDate})
   }
