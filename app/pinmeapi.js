@@ -295,7 +295,7 @@ app.get('/pinmeapi/devices/ignitionOff', async (req, res) => {
     })
 
     if (keys.length > 0) {
-        res.json(await batchGet(keys))
+        res.json(await batchGet(process.env.DEVICE_IGNITION_OFF_TABLE, keys))
     } else {
         res.json([])
     }

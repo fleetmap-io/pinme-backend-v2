@@ -2,7 +2,7 @@ const { GetItemCommand, BatchGetCommand, UpdateItemCommand, PutItemCommand, Dyna
 const dynamo = new DynamoDBClient({ region: 'us-east-1' })
 const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb')
 
-exports.batchGet = async (TableName, Keys)=> {
+exports.batchGet = (TableName, Keys) => {
   const params = {RequestItems: {}}
   params.RequestItems[TableName] = {Keys: marshall(Keys.slice(0, 100))}
   return dynamo.send(new BatchGetCommand(params)).then(d => d.Responses[TableName])
