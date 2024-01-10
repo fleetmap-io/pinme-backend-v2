@@ -26,6 +26,7 @@ const upload = multer({ storage })
 
 const app = express()
 const serverlessExpress = require('@vendia/serverless-express')
+const {batchGet} = require("./dynamo");
 
 // noinspection JSCheckFunctionSignatures
 app.use(cors({ origin: true, credentials: true, methods: 'GET,PUT,POST,DELETE,OPTIONS' }))
@@ -294,19 +295,7 @@ app.get('/pinmeapi/devices/ignitionOff', async (req, res) => {
     })
 
     if (keys.length > 0) {
-        const params = {
-            RequestItems: {
-                DevicesIgnitionOff: {
-                    Keys: marshall(keys.slice(0, 100))
-                }
-            }
-        }
-
-        batchGet(params, function (err, data) {
-            if (err) { res.json(err) } else {
-                res.json(data.Responses.DevicesIgnitionOff)
-            } // successful response
-        })
+        res.json(await batchGet(keys))
     } else {
         res.json([])
     }
