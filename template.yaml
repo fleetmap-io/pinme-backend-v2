@@ -123,8 +123,8 @@ Resources:
       FunctionName: pinme-backend-process-events-queue
       MemorySize: 512
       Timeout: 900
-      CodeUri: ./app/
-      Handler: event/index.process
+      CodeUri: ./app/event/
+      Handler: index.process
       Runtime: nodejs16.x
       VpcConfig:
         SubnetIds:
@@ -142,6 +142,7 @@ Resources:
               MaximumConcurrency: 60
       Policies:
         - AmazonDynamoDBFullAccess
+
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
