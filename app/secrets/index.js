@@ -13,3 +13,10 @@ exports.getSecretValue = async secretName => {
           return JSON.parse(buff.toString('ascii'))
         }
       }
+
+
+exports.getSecretObject = async (secretName) => {
+    const command = new GetSecretValueCommand({ SecretId: secretName })
+    const { SecretString } = await client.send(command)
+    return JSON.parse(SecretString)
+}
