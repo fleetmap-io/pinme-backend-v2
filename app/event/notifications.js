@@ -18,7 +18,7 @@ const {getSecretValue} = require("../secrets");
 
 try {
   admin.initializeApp({
-    credential: admin.credential.cert(await getSecretValue('firebase-key')),
+    credential: admin.credential.cert(getSecretValue('firebase-key')),
     databaseURL: 'https://pinme-9e6a3.firebaseio.com'
   })
 } catch (e) {
