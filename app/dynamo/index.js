@@ -1,6 +1,12 @@
-const { GetItemCommand, UpdateItemCommand, PutItemCommand, DynamoDBClient } = require('@aws-sdk/client-dynamodb')
+const { GetItemCommand, BatchGetCommand, UpdateItemCommand, PutItemCommand, DynamoDBClient } = require('@aws-sdk/client-dynamodb')
 const dynamo = new DynamoDBClient({ region: 'us-east-1' })
 const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb')
+
+exports.batchGet = async (TableName, Keys)=> {
+  const params = {RequestItems: {}}
+  params.RequestItems[TableName] = {Keys: marshall(Keys.slice(0, 100))}
+  return dynamo.send(new BatchGetCommand(params)).then(d => d.Responses[TableName])
+}
 
 exports.get = async (item, TableName = 'TraccarUserLogins') => {
   const user = await dynamo.send(new GetItemCommand({
@@ -46,7 +52,7 @@ exports.getItem = async function (params) {
 exports.updateIgnitionOff = (deviceId, ignitionOffDate) => {
   const params = {
     TableName: process.env.DEVICE_IGNITION_OFF_TABLE,
-    Key: marshall({deviceId: deviceId + ''}),
+    Key: marshall({deviceId}),
     UpdateExpression: 'set ignitionOffDate = :ignitionOffDate',
     ExpressionAttributeValues: marshall({':ignitionOffDate': ignitionOffDate})
   }
@@ -58,7 +64,7 @@ exports.getDeviceIgnitionOff = (deviceId) => {
   const params = {
     TableName: deviceIgnitionOffTable,
     Key: {
-      deviceId: deviceId
+      deviceId
     }
   }
 
