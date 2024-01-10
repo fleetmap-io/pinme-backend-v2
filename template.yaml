@@ -142,7 +142,6 @@ Resources:
               MaximumConcurrency: 60
       Policies:
         - AmazonDynamoDBFullAccess
-        - SecretsManagerFullAccess
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
