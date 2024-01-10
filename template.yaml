@@ -13,7 +13,7 @@ Globals:
       Variables:
         TRACCAR_ADMIN_USER: '{{resolve:secretsmanager:traccar:SecretString:username}}'
         TRACCAR_ADMIN_PASS: '{{resolve:secretsmanager:traccar:SecretString:password}}'
-        DB_HOST: db.pinme.io
+        DB_HOST: '{{resolve:secretsmanager:db:SecretString:host}}'
         DB_USER: '{{resolve:secretsmanager:db:SecretString:username}}'
         DB_PASSWORD: '{{resolve:secretsmanager:db:SecretString:password}}'
         DB_DATABASE: '{{resolve:secretsmanager:db:SecretString:database}}'
