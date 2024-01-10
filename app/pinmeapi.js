@@ -13,7 +13,6 @@ const whatsapp = require('./whatsapp')
 const quicksight = require('./quicksight')
 const { put } = require('./s3')
 const schedulerTable = 'scheduler-1'
-const devicesIgnitionOffTable = 'DevicesIgnitionOff'
 const multer = require('multer')
 const { sendSms } = require('./sms')
 const { sendReport } = require('./scheduler')
@@ -267,7 +266,7 @@ app.get('/pinmeapi/:deviceId', async (req, res) => {
     await new DevicesApi(apiConfig).devicesGet(false, undefined, id, undefined, { headers: { cookie: req.header('cookie') } })
 
     const params = {
-        TableName: devicesIgnitionOffTable,
+        TableName: process.env.DEVICE_IGNITION_OFF_TABLE,
         FilterExpression: 'deviceId = :deviceId',
         ExpressionAttributeValues: {
             ':deviceId': id
@@ -281,8 +280,6 @@ app.get('/pinmeapi/:deviceId', async (req, res) => {
 })
 
 app.get('/pinmeapi/devices/ignitionOff', async (req, res) => {
-    const dynamodb = require('aws-sdk/clients/dynamodb')
-    const docClient = new dynamodb.DocumentClient()
     try {
         await new SessionApi(apiConfig).sessionGet(null, { headers: { cookie: req.header('cookie') } }).then(d => d.data)
     } catch (e) {
@@ -300,12 +297,12 @@ app.get('/pinmeapi/devices/ignitionOff', async (req, res) => {
         const params = {
             RequestItems: {
                 DevicesIgnitionOff: {
-                    Keys: keys.slice(0, 100)
+                    Keys: marshall(keys.slice(0, 100))
                 }
             }
         }
 
-        docClient.batchGet(params, function (err, data) {
+        batchGet(params, function (err, data) {
             if (err) { res.json(err) } else {
                 res.json(data.Responses.DevicesIgnitionOff)
             } // successful response

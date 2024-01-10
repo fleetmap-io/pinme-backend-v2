@@ -204,7 +204,7 @@ Resources:
       TableName: devicesIgnitionOff
       PrimaryKey:
         Name: deviceId
-        Type: String
+        Type: Number
 
 Outputs:
   ElasticIPAddress:
