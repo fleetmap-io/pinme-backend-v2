@@ -46,7 +46,7 @@ exports.mainFunction = async (event) => {
     let email = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'email') ||
          listUsersResponse.Users[0].Attributes.find(a => a.Name === 'phone_number')
     try {
-        const cookies = await (await require('./auth')).getUserSession(email.Value)
+        const [cookies] = await (await require('./auth')).getUserSession(email.Value)
         return okResponse('', event, cookies)
     } catch (e) {
         logException(e, 'auth.getUserSession', email)
@@ -58,7 +58,7 @@ function okResponse (result, event, cookies) {
     return {
         statusCode: 200,
         headers: {
-            'Access-Control-Allow-Origin': event.headers.origin,
+            'Access-Control-Allow-Origin': event.headers.origin || '*',
             'Access-Control-Allow-Headers': 'content-type, authorization',
             'Access-Control-Allow-Credentials': 'true',
             'Set-Cookie': cookies
