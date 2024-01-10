@@ -9,7 +9,7 @@ exports.mainFunction = async (event) => {
         const crypto = require('crypto')
         const hmac = crypto.createHmac('sha256', getOneSignalTokens(event.headers.host).token)
         hmac.update(email)
-        return okResponse(hmac.digest('hex'), event, [])
+        return okResponse(hmac.digest('hex'), event)
     }
     if (!event.headers.Authorization) {
         await logError(new Error('Access Token missing from header'), event)
@@ -54,14 +54,14 @@ exports.mainFunction = async (event) => {
     }
 }
 
-function okResponse (result, event, cookies) {
+function okResponse (result, event, cookie) {
     return {
         statusCode: 200,
         headers: {
             'Access-Control-Allow-Origin': event.headers.origin || '*',
             'Access-Control-Allow-Headers': 'content-type, authorization',
             'Access-Control-Allow-Credentials': 'true',
-            'Set-Cookie': cookies
+            ...(cookie ? {'Set-Cookie': cookie} : {})
         },
         body: JSON.stringify(result)
     }
