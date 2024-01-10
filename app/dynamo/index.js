@@ -1,11 +1,11 @@
-const { GetItemCommand, BatchGetCommand, UpdateItemCommand, PutItemCommand, DynamoDBClient } = require('@aws-sdk/client-dynamodb')
+const { GetItemCommand, BatchGetItemCommand, UpdateItemCommand, PutItemCommand, DynamoDBClient } = require('@aws-sdk/client-dynamodb')
 const dynamo = new DynamoDBClient({ region: 'us-east-1' })
 const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb')
 
 exports.batchGet = (TableName, Keys) => {
   const params = {RequestItems: {}}
   params.RequestItems[TableName] = {Keys: marshall(Keys.slice(0, 100))}
-  return dynamo.send(new BatchGetCommand(params)).then(d => d.Responses[TableName])
+  return dynamo.send(new BatchGetItemCommand(params)).then(d => d.Responses[TableName])
 }
 
 exports.get = async (item, TableName = 'TraccarUserLogins') => {
