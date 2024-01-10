@@ -14,10 +14,11 @@ const serverStarted = new Date()
 const { getImageUrl } = require('../api/google')
 const { logException } = require('../utils')
 const integration = require('../integration')
+const {getSecretValue} = require("../secrets");
 
 try {
   admin.initializeApp({
-    credential: admin.credential.cert(require('../firebase/firebase-key.json')),
+    credential: admin.credential.cert(await getSecretValue('firebase-key')),
     databaseURL: 'https://pinme-9e6a3.firebaseio.com'
   })
 } catch (e) {
@@ -412,12 +413,8 @@ function notificationIsActive (notification, event) {
     return false
   }
 
-  if (notification.attributes.checkGeofences === 'onlyOutside' &&
-      event.event.geofenceId) {
-    return false
-  }
-
-  return true
+  return !(notification.attributes.checkGeofences === 'onlyOutside' &&
+      event.event.geofenceId);
 }
 
 async function aboveSpeedLimit (position, event, device) {
