@@ -123,8 +123,8 @@ Resources:
       FunctionName: pinme-backend-process-events-queue
       MemorySize: 512
       Timeout: 900
-      CodeUri: ./app/event/
-      Handler: index.process
+      CodeUri: ./app/
+      Handler: event/index.process
       Runtime: nodejs16.x
       VpcConfig:
         SubnetIds:
