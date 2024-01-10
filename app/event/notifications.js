@@ -16,14 +16,7 @@ const { logException } = require('../utils')
 const integration = require('../integration')
 const {getSecretValue} = require("../secrets");
 
-try {
-  admin.initializeApp({
-    credential: admin.credential.cert(getSecretValue('firebase-key')),
-    databaseURL: 'https://pinme-9e6a3.firebaseio.com'
-  })
-} catch (e) {
-  console.error(e)
-}
+let firebaseInitialized
 
 async function sendEmailNotification (event, user, notification) {
   const senderEmail = 'no-reply@gpsmanager.io'
@@ -298,6 +291,17 @@ async function removeToken (token, email, user) {
 }
 
 async function sendFirebase (notification, token, email, user, retries = 3) {
+  if (!firebaseInitialized) {
+    try {
+      admin.initializeApp({
+        credential: admin.credential.cert(await getSecretValue('firebase-key')),
+        databaseURL: 'https://pinme-9e6a3.firebaseio.com'
+      })
+      firebaseInitialized = true
+    } catch (e) {
+      console.error(e)
+    }
+  }
   notification.token = token
   try {
     console.log('sent firebase', email, notification.notification && notification.notification.body, await admin.messaging().send(notification))
