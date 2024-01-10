@@ -13,6 +13,7 @@ Globals:
       Variables:
         TRACCAR_ADMIN_USER: '{{resolve:secretsmanager:traccar:SecretString:username}}'
         TRACCAR_ADMIN_PASS: '{{resolve:secretsmanager:traccar:SecretString:password}}'
+        TRACCAR_API_BASE_PATH: '{{resolve:secretsmanager:traccar:SecretString:base_path}}'
         DB_HOST: '{{resolve:secretsmanager:db:SecretString:host}}'
         DB_USER: '{{resolve:secretsmanager:db:SecretString:username}}'
         DB_PASSWORD: '{{resolve:secretsmanager:db:SecretString:password}}'
@@ -144,6 +145,40 @@ Resources:
       Policies:
         - AmazonDynamoDBFullAccess
         - SecretsManagerReadWrite
+  PinmeApi:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: pinme-backend-pinme-api
+      CodeUri: ./app/
+      Handler: pinmeapi.main
+      Runtime: nodejs16.x
+      MemorySize: 256
+      Timeout: 100
+      Policies:
+        - SecretsManagerReadWrite
+        - AmazonDynamoDBFullAccess
+        - AmazonCognitoPowerUser
+      Events:
+        ProxyApiRoot:
+          Type: Api
+          Properties:
+            Path: /pinmeapi
+            Method: ANY
+        ProxyApiGreedy:
+          Type: Api
+          Properties:
+            Path: /pinmeapi/{proxy+}
+            Method: ANY
+        ProxyScheduler:
+          Type: Api
+          Properties:
+            Path: /scheduler
+            Method: ANY
+        ProxySchedulerGreedy:
+          Type: Api
+          Properties:
+            Path: /scheduler/{proxy+}
+            Method: ANY
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup

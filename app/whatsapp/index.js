@@ -196,3 +196,142 @@ exports.send = async (user, event) => {
   }
   await sendWhatsapp(event, user)
 }
+
+async function sendSlack (m, value) {
+  const from = `${m.from} -> ${value.contacts[0].profile.name}`
+  switch (m.type) {
+    case 'text':
+      await sendText(from, m.text.body)
+      break
+    case 'image':
+      await sendImage(from, await exports.getMediaUrl(m.image.id, m.image.mime_type))
+      break
+    case 'audio':
+      await sendText(from, await exports.getMediaUrl(m.audio.id, m.audio.mime_type))
+      break
+    default:
+      console.error('ignoring', m)
+  }
+}
+
+async function sendMessages (value) {
+  for (const m of value.messages) {
+    await sendSlack(m, value)
+    await setDoc(m, value.metadata.display_phone_number, m.from, 'messages', m.id)
+  }
+}
+
+async function updateContacs (value) {
+  for (const c of value.contacts) {
+    await setDoc({ ...c.profile, wa_id: c.wa_id }, value.metadata.display_phone_number, c.wa_id)
+  }
+}
+
+exports.whatsapp = async (e) => {
+  try {
+    const body = JSON.parse(e.body)
+    for (const e of body.entry) {
+      for (const { value } of e.changes) {
+        console.log(value)
+        if (value.statuses) {
+          value.statuses.forEach(s => s.errors && console.log(s.errors))
+        }
+        // if (value.contacts) { value.contacts.forEach(s => console.log(s)) }
+        if (value.messages) { await sendMessages(value) }
+        if (value.contacts) { await updateContacs(value) }
+      }
+    }
+  } catch (e) {
+    console.error(e)
+  }
+  return { statusCode: 200 }
+}
+
+exports.send = async (user, template) => {
+  axiosReady()
+  const axios = await _axios
+  const code = (user.attributes.lang && user.attributes.lang.replace('-', '_').replace('es_CL', 'ES')) || 'ES'
+  const body = {
+    messaging_product: 'whatsapp',
+    to: user.phone.replace('+', ''),
+    type: 'template',
+    template: {
+      name: template,
+      language: {
+        code
+      }
+    }
+  }
+  console.log('whatsapp', await axios.post('/', body).then(d => d.data).catch(e => e.response))
+}
+
+// eslint-disable-next-line camelcase
+async function sendText (from, text, image_url) {
+  const blocks = {
+    blocks: [
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: `${from}\n>${text || ''}`,
+          // eslint-disable-next-line camelcase
+          ...(image_url ? { attachments: [{ image_url }] } : {})
+        }
+      }
+    ]
+  }
+  console.log(blocks, await require('axios').post(process.env.SLACK_WEB_HOOK, blocks).then(d => d.data))
+}
+exports.sendText = sendText
+const s3 = require('../s3')
+const { setDoc } = require('../firebase')
+
+exports.getMediaUrl = async (id, mimeType) => {
+  const axios = await getWhatsApp()
+  const imageData = await axios.get('/' + id).then(d => d.data)
+  const image = await axios.get(imageData.url, { responseType: 'arraybuffer' }).then(d => d.data)
+  await s3.put(id, image, mimeType, false)
+  return `${process.env.CLOUDFRONT_URL}/${id}`
+}
+
+// eslint-disable-next-line camelcase
+async function sendImage (from, image_url) {
+  const blocks = {
+    blocks: [
+      {
+        type: 'image',
+        title: {
+          type: 'plain_text',
+          text: from
+        },
+        // eslint-disable-next-line camelcase
+        image_url,
+        alt_text: 'image'
+      }
+    ]
+  }
+  await require('axios').post(process.env.SLACK_WEB_HOOK, blocks).then(d => d.data)
+}
+exports.sendImage = sendImage
+
+// eslint-disable-next-line camelcase
+async function sendVideo (from, url) {
+  const blocks = {
+    blocks: [
+      {
+        title: {
+          type: 'plain_text',
+          text: from
+        },
+        // eslint-disable-next-line camelcase
+        video_url: url,
+        thumbnail_url: url,
+        alt_text: 'video'
+      }
+    ]
+  }
+  await require('axios').post(process.env.SLACK_WEB_HOOK, blocks).then(d => d.data)
+}
+exports.sendVideo = sendVideo
+
+
