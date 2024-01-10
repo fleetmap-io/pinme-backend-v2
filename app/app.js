@@ -11,7 +11,7 @@ exports.mainFunction = async (event) => {
         hmac.update(email)
         return okResponse(hmac.digest('hex'), event, [])
     }
-    if (!event.headers.authorization) {
+    if (!event.headers.Authorization) {
         await logError(new Error('Access Token missing from header'), event)
         return { statusCode: 401, body: 'Access Token missing from header' }
     }
