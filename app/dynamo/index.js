@@ -1,4 +1,4 @@
-const { GetItemCommand, PutItemCommand, DynamoDBClient } = require('@aws-sdk/client-dynamodb')
+const { GetItemCommand, UpdateItemCommand, PutItemCommand, DynamoDBClient } = require('@aws-sdk/client-dynamodb')
 const dynamo = new DynamoDBClient({ region: 'us-east-1' })
 const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb')
 
@@ -42,3 +42,26 @@ exports.getItem = async function (params) {
     })
   })
 }
+
+exports.updateIgnitionOff = (deviceId, ignitionOffDate) => {
+  const params = {
+    TableName: process.env.DEVICE_IGNITION_OFF_TABLE,
+    Key: marshall({deviceId}),
+    UpdateExpression: 'set ignitionOffDate = :ignitionOffDate',
+    ExpressionAttributeValues: marshall({':ignitionOffDate': ignitionOffDate})
+  }
+  return dynamo.send(new UpdateItemCommand(params))
+}
+
+
+exports.getDeviceIgnitionOff = (deviceId) => {
+  const params = {
+    TableName: deviceIgnitionOffTable,
+    Key: {
+      deviceId: deviceId
+    }
+  }
+
+  return docClient.get(params).promise()
+}
+

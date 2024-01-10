@@ -2,7 +2,7 @@ const axios = require('axios')
 const parser = require('ua-parser-js')
 
 const logException = (e, ...args) => {
-  console.error(...args, e.message, e.response && e.response.data, (e.config && e.config.method), (e.config && e.config.url) || e)
+  console.error(...args, e.message || e, e.response && e.response.data, (e.config && e.config.method), (e.config && e.config.url) || e)
 }
 exports.logException = logException
 
