@@ -2,11 +2,17 @@ const notifications = require('../event/notifications')
 const secrets = require('../secrets')
 const here = require('../api/here')
 const messages = require('../lang')
-const _axios = secrets.getSecretValue('whatsapp').then(s =>
-  require('axios').create({
-    headers: { Authorization: 'Bearer ' + s.WHATSAPP_TOKEN },
-    baseURL: `https://graph.facebook.com/v13.0/${s.WHATSAPP_PNI}/messages`
-  }))
+let _axios
+
+function axiosReady() {
+  if (!_axios) {
+    _axios = secrets.getSecretValue('whatsapp').then(s =>
+        require('axios').create({
+          headers: {Authorization: 'Bearer ' + s.WHATSAPP_TOKEN},
+          baseURL: `https://graph.facebook.com/v13.0/${s.WHATSAPP_PNI}/messages`
+        }))
+  }
+}
 
 function getLanguageCode (user) {
   return (user.attributes.lang && user.attributes.lang
@@ -58,6 +64,7 @@ const geofenceAlert = async (user, event) => {
     }
   }
   console.dir(body, { depth: null })
+  axiosReady()
   return (await _axios).post('/', body)
 }
 
@@ -98,6 +105,7 @@ const genericAlert = async (user, event) => {
     }
   }
   console.dir(body, { depth: null })
+  axiosReady()
   return (await _axios).post('/', body)
 }
 
@@ -138,6 +146,7 @@ const events = {
       }
     }
     console.log(body)
+    axiosReady()
     return (await _axios).post('/', body)
   },
   geofenceExit: geofenceAlert,
