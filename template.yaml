@@ -16,6 +16,7 @@ Globals:
         DB_HOST: db.pinme.io
         DB_USER: '{{resolve:secretsmanager:db:SecretString:username}}'
         DB_PASSWORD: '{{resolve:secretsmanager:db:SecretString:password}}'
+        DB_DATABASE: '{{resolve:secretsmanager:db:SecretString:database}}'
         IPINFO_TOKEN: df58ccf730ab1c
 
 Resources:
