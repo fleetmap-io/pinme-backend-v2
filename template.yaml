@@ -206,7 +206,6 @@ Resources:
         Name: deviceId
         Type: String
 
-
 Outputs:
   ElasticIPAddress:
     Description: Elastic IP Address
@@ -226,4 +225,9 @@ Outputs:
       !Sub
       - "https://console.aws.amazon.com/cloudwatch/home?region=${AWS::Region}#logsV2:log-groups/log-group/%252Faws%252Flambda%252F${FunctionName}"
       - FunctionName: !Ref ProcessEventsQueue
-
+  PinmeApiLogGroup:
+    Description: CloudWatch Logs log group for PinmeApi
+    Value:
+      !Sub
+      - "https://console.aws.amazon.com/cloudwatch/home?region=${AWS::Region}#logsV2:log-groups/log-group/%252Faws%252Flambda%252F${FunctionName}"
+      - FunctionName: !Ref PinmeApi
