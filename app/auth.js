@@ -1,4 +1,4 @@
-const traccar = require('./traccar')
+const traccar = require('./api/traccar')
 const mysql = require('./mysql')
 const { getPartnerId } = require('fleetmap-partners')
 

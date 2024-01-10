@@ -17,6 +17,7 @@ Globals:
         DB_USER: '{{resolve:secretsmanager:db:SecretString:username}}'
         DB_PASSWORD: '{{resolve:secretsmanager:db:SecretString:password}}'
         DB_DATABASE: '{{resolve:secretsmanager:db:SecretString:database}}'
+        DB_HOST_READER: '{{resolve:secretsmanager:db:SecretString:host_reader}}'
         IPINFO_TOKEN: df58ccf730ab1c
 
 Resources:
@@ -116,7 +117,31 @@ Resources:
           Properties:
             Path: /backend
             Method: get
-
+  ProcessEventsQueue:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: pinme-backend-process-events-queue
+      MemorySize: 512
+      Timeout: 900
+      CodeUri: app/
+      Handler: event/index.process
+      Runtime: nodejs16.x
+      VpcConfig:
+        SubnetIds:
+          - !Ref PrivateSubnet
+        SecurityGroupIds:
+          - !Ref SecurityGroup
+      Events:
+        MySQSEvent2:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt PushEventsQueue.Arn
+            BatchSize: 50
+            MaximumBatchingWindowInSeconds: 3
+            ScalingConfig:
+              MaximumConcurrency: 60
+      Policies:
+        - AmazonDynamoDBFullAccess
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -149,4 +174,10 @@ Outputs:
       !Sub
         - "https://console.aws.amazon.com/cloudwatch/home?region=${AWS::Region}#logsV2:log-groups/log-group/%252Faws%252Flambda%252F${FunctionName}"
         - FunctionName: !Ref MainFunction
+  ProcessEventsQueueLogGroup:
+    Description: CloudWatch Logs log group for ProcessEventsQueue
+    Value:
+      !Sub
+      - "https://console.aws.amazon.com/cloudwatch/home?region=${AWS::Region}#logsV2:log-groups/log-group/%252Faws%252Flambda%252F${FunctionName}"
+      - FunctionName: !Ref ProcessEventsQueue
 
