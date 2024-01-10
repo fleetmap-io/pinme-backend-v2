@@ -2,7 +2,7 @@ const { GetItemCommand, PutItemCommand, DynamoDBClient } = require('@aws-sdk/cli
 const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb')
 const dynamo = new DynamoDBClient({ region: 'us-east-1' })
 const schedulerTable = 'scheduler-1'
-const deviceIgnitionOffTable = 'DevicesIgnitionOff'
+
 
 
 exports.get = async (deviceId) => {
@@ -116,28 +116,4 @@ exports.updateNextExecution = async (id, nextExecutionDate) => {
   await docClient.update(params).promise()
 }
 
-exports.updateIgnitionOff = async (deviceId, ignitionOffDate) => {
-  const params = {
-    TableName: deviceIgnitionOffTable,
-    Key: {
-      deviceId: deviceId
-    },
-    UpdateExpression: 'set ignitionOffDate = :ignitionOffDate',
-    ExpressionAttributeValues: {
-      ':ignitionOffDate': ignitionOffDate
-    }
-  }
 
-  await docClient.update(params).promise()
-}
-
-exports.getDeviceIgnitionOff = (deviceId) => {
-  const params = {
-    TableName: deviceIgnitionOffTable,
-    Key: {
-      deviceId: deviceId
-    }
-  }
-
-  return docClient.get(params).promise()
-}

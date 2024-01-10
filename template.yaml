@@ -19,6 +19,7 @@ Globals:
         DB_DATABASE: '{{resolve:secretsmanager:db:SecretString:database}}'
         DB_HOST_READER: '{{resolve:secretsmanager:db:SecretString:host_reader}}'
         IPINFO_TOKEN: df58ccf730ab1c
+        DEVICE_IGNITION_OFF_TABLE: !Ref DevicesIgnitionOff
 
 Resources:
   VPC:
@@ -161,6 +162,14 @@ Resources:
     Properties:
       QueueName: push-events-queue
       VisibilityTimeout: 900
+
+  DevicesIgnitionOff:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: devicesIgnitionOff
+      PrimaryKey:
+        Name: deviceId
+        Type: String
 
 
 Outputs:

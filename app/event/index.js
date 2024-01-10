@@ -15,7 +15,6 @@ async function sendToRabbit (body, retry = 3) {
 async function pushEvents (event) {
   try {
     event = JSON.parse(event.body)
-    return
 
     if (!event.event) {
       console.warn('ignoring empty event', event)
@@ -35,6 +34,8 @@ async function pushEvents (event) {
     if (event.event.type === 'ignitionOff') {
       await ignition.processIgnitionOff(event)
     }
+
+    return
 
     if (event.event.type === 'driverChanged') {
       await driverChanged.processDriverChanged(event)

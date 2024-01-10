@@ -20,7 +20,7 @@ describe('Tests index', function () {
         expect(response).to.be.equal('');
     });
 
-    it('works on push-events-function', async () => {
+    it('works on push-events-function with ignitionoff', async () => {
         const result = await eventsFunction.process(require('../../../events/pushEvent.json'))
         checkResult(result);
         let response = JSON.parse(result.body);
