@@ -1,10 +1,10 @@
 const secrets = require('../secrets')
-const _apiKey = secrets.getSecretValue('hereSpeedLimits')
 const axios = require('axios')
 
 const speedLimitsCache = {}
-
+let _apiKey
 exports.getSpeedLimit = async (position, event) => {
+  if (!_apiKey) { _apiKey = secrets.getSecretValue('hereSpeedLimits')}
   if (!speedLimitsCache[position.id]) {
     const { hereSpeedLimits } = await _apiKey
     const url = `https://m.fleet.ls.hereapi.com/2/calculateroute.json?apiKey=${hereSpeedLimits}&routeMatch=1&mode=fastest;car;traffic:disabled&waypoint0=${position.latitude},${position.longitude}&attributes=SPEED_LIMITS_FCn(*)`
