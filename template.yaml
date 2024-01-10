@@ -123,6 +123,19 @@ Resources:
       GroupDescription: Security Group for Lambda function
       VpcId: !Ref VPC
 
+  PushLocationsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 900
+      QueueName: push-locations-queue
+
+  PushEventsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: push-events-queue
+      VisibilityTimeout: 900
+
+
 Outputs:
   ElasticIPAddress:
     Description: Elastic IP Address
