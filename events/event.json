@@ -14,6 +14,8 @@
     "baz": "qux"
   },
   "headers": {
+    "x-forwarded-host": "vz.samtech.cl",
+    "Authorization": "eyJraWQiOiIzaVp3d05rQlFoRUhiRTlPeGd6YzNjangxMGRHSDY5NkNaclVKNUJUTDJvPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI3MzI3OGQwYS1lMzc3LTQ0OTktOTM5Ni0yYWYwOTlmOWZkOTYiLCJjb2duaXRvOmdyb3VwcyI6WyJzYS1lYXN0LTFfYjdTRHZrVzFVX0dvb2dsZSJdLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuc2EtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3NhLWVhc3QtMV9iN1NEdmtXMVUiLCJ2ZXJzaW9uIjoyLCJjbGllbnRfaWQiOiIyODBnNjNjNTNiczUycmhuOXUzbWRrcDQ4NyIsIm9yaWdpbl9qdGkiOiI3ZTYzMDhiMi1kNDAwLTRiOWMtODg2Ni02ZDQ0NTAyZDc0MDciLCJ0b2tlbl91c2UiOiJhY2Nlc3MiLCJzY29wZSI6ImF3cy5jb2duaXRvLnNpZ25pbi51c2VyLmFkbWluIHBob25lIG9wZW5pZCBlbWFpbCIsImF1dGhfdGltZSI6MTcwNDg1MzI3NSwiZXhwIjoxNzA0OTM5Njc1LCJpYXQiOjE3MDQ4NTMyNzUsImp0aSI6ImE0ZjJiZmM1LWUwZDAtNDg5ZS1iMTdiLThkYjEzMzY5NmM4ZiIsInVzZXJuYW1lIjoiZ29vZ2xlXzEwODcxMjQ2NDkyODY1MTIzNzIzMCJ9.jZIBvrc9L294ndZeyB_MdHPX3M7QMhKN1cvsTqfxMdm1pUTbqZbqdsizeQvfDUQMX8U8PnSfazmCI51ZhStmvwQXxkNqvgdzi0IRUUPU5mzGXNB80RLsmukTkjnVuEtN35xRyEvSTfN2aAIg3oSmtmjx1djNofS-FidqKiK_9tQ5ikeanZX7SvL8Z7kPk4mZLiojlAvR1X1iBT0qW7scbb5KgRYXzaQMlpC4GRJP5XVc3IZ1_hLPi98A7rMFLfhrqfKEjnUxehesbsQSr-LoQSZ_q73vE64C8MtWaqQNmxrWk4CTyCXbWp4gm9Yjoribpjnvx-AwnAU_Bl2hf652Zg",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
     "Accept-Encoding": "gzip, deflate, sdch",
     "Accept-Language": "en-US,en;q=0.8",

@@ -1,7 +1,7 @@
 const CognitoExpress = require('cognito-express')
-const { getOneSignalTokens } = require('fleetmap-partners')
-const { getUserPool } = require('fleetmap-partners')
+const { getOneSignalTokens, getPartnerData} = require('fleetmap-partners')
 const { logException, logError} = require('./utils')
+const { CognitoIdentityProviderClient, ListUsersCommand } = require('@aws-sdk/client-cognito-identity-provider')
 
 exports.mainFunction = async (event) => {
     if (event.queryStringParameters && event.queryStringParameters.emailAuthHash) {
@@ -15,18 +15,18 @@ exports.mainFunction = async (event) => {
         await logError(new Error('Access Token missing from header'), event)
         return { statusCode: 401, body: 'Access Token missing from header' }
     }
-    const origin = event.headers.Origin || 'https://' + event.headers['X-Forwarded-Host']
+    const host = event.headers['x-forwarded-host']
+    const partner = getPartnerData(host)
     let userPool, response
     try {
-        userPool = getUserPool(origin)
-        const cognitoExpress = new CognitoExpress({
-            region: 'us-east-1',
+        userPool = partner.aws_user_pools_id
+        response = await new CognitoExpress({
+            region: partner.aws_cognito_region || 'us-east-1',
             cognitoUserPoolId: userPool,
             tokenUse: 'access' // Possible Values: access | id
-        })
-        response = await cognitoExpress.validate(event.headers.Authorization)
+        }).validate(event.headers.Authorization)
     } catch (e) {
-        console.warn(e.message, origin, 'try again')
+        console.warn(e.message || e, event.headers, host, 'try again')
         userPool = 'us-east-1_olpbc774t'
         const cognitoExpress = new CognitoExpress({
             region: 'us-east-1',
@@ -37,17 +37,16 @@ exports.mainFunction = async (event) => {
     }
 
     console.log('token auth_time', new Date(response.auth_time * 1000))
-    const listUsersResponse = await cognito.listUsers({
+    const cognito = new CognitoIdentityProviderClient({ region: partner.aws_cognito_region || 'us-east-1' })
+    const listUsersResponse = await cognito.send(new ListUsersCommand({
         UserPoolId: userPool,
         Filter: `sub = "${response.sub}"`,
         Limit: 1
-    }).promise()
-    let email = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'email')
-    if (!email) {
-        email = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'phone_number')
-    }
+    }))
+    let email = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'email') ||
+         listUsersResponse.Users[0].Attributes.find(a => a.Name === 'phone_number')
     try {
-        const cookies = (await require('./auth')).getUserSession(email.Value)
+        const cookies = await (await require('./auth')).getUserSession(email.Value)
         return okResponse('', event, cookies)
     } catch (e) {
         logException(e, 'auth.getUserSession', email)

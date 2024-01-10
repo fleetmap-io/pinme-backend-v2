@@ -6,6 +6,7 @@
   "author": "SAM CLI",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.485.0",
     "axios": "1.6.5",
     "axios-cookiejar-support": "^4.0.7",
     "cognito-express": "^3.0.4",

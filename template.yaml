@@ -8,6 +8,7 @@ Globals:
       AllowOrigin: "'*'"
       AllowHeaders: "'*'"
   Function:
+    Timeout: 30
     Environment:
       Variables:
         TRACCAR_ADMIN_USER: '{{resolve:secretsmanager:traccar:SecretString:username}}'
@@ -102,6 +103,7 @@ Resources:
       CodeUri: ./app/
       Policies:
         - AWSLambdaBasicExecutionRole
+        - AmazonCognitoPowerUser
       VpcConfig:
         SubnetIds:
           - !Ref PrivateSubnet
@@ -127,7 +129,10 @@ Outputs:
   APIEndpoint:
     Description: "API Gateway endpoint URL"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/${ServerlessRestApi.Stage}/"
-
-
-
+  MainFunctionLogGroup:
+    Description: CloudWatch Logs log group for main function
+    Value:
+      !Sub
+        - "https://console.aws.amazon.com/cloudwatch/home?region=${AWS::Region}#logsV2:log-groups/log-group/%252Faws%252Flambda%252F${FunctionName}"
+        - FunctionName: !Ref MainFunction
 

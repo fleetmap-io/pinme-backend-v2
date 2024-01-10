@@ -6,16 +6,13 @@ const expect = chai.expect;
 
 describe('Tests index', function () {
     it('verifies successful response', async () => {
-        const result = await app.lambdaHandler(require('../../../events/event.json'))
-
+        const result = await app.mainFunction(require('../../../events/event.json'))
+        console.log(result)
         expect(result).to.be.an('object');
         expect(result.statusCode).to.equal(200);
         expect(result.body).to.be.an('string');
 
         let response = JSON.parse(result.body);
-
-        expect(response).to.be.an('object');
-        expect(response.message).to.be.equal("hello world");
-        // expect(response.location).to.be.an("string");
+        expect(response).to.be.equal('');
     });
 });
