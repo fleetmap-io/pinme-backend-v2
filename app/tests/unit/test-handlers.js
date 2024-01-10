@@ -2,6 +2,7 @@
 
 const app = require('../../app.js');
 const eventsFunction = require('../../event');
+const pinmeapi = require('../../pinmeapi');
 const chai = require('chai');
 const expect = chai.expect;
 
@@ -21,8 +22,11 @@ describe('Tests index', function () {
     });
 
     it('works on push-events-function with ignitionoff', async () => {
-        const result = await eventsFunction.process(require('../../../events/pushEvent.json'))
+        await eventsFunction.process(require('../../../events/pushEvent.json'))
+    });
+
+    it('works on pinemapi', async () => {
+        const result = await pinmeapi.main(require('../../../events/pinmeapi.json'))
         checkResult(result);
-        let response = JSON.parse(result.body);
     });
 });
