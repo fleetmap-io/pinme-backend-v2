@@ -1,0 +1,27 @@
+
+{
+    "Information" : [
+        "This file provides default values for the deployment wizard inside Visual Studio and the AWS Lambda commands added to the .NET Core CLI.",
+        "To learn more about the Lambda commands with the .NET Core CLI execute the following command at the command line in the project root directory.",
+        "dotnet lambda help",
+        "All the command line options for the Lambda command can be specified in this file."
+    ],
+    "profile"     : "default",
+    "region"      : "us-east-1",
+    "configuration" : "Release",
+    "function-architecture" : "x86_64",
+    "function-runtime"      : "dotnet6",
+    "function-memory-size"  : 1024,
+    "function-timeout"      : 900,
+    "function-handler"      : "S3DailyMigrator::S3DailyMigrator.Function::FunctionHandler",
+    "framework"             : "net6.0",
+    "function-name"         : "S3DailyMigrator",
+    "package-type"          : "Zip",
+    "function-role"         : "arn:aws:iam::903002861645:role/lambda-vpc",
+    "function-subnets"      : "subnet-075c490269a39d746,subnet-033c1b8736acb59f9",
+    "function-security-groups" : "sg-0218b58a60630dbf6",
+    "tracing-mode"             : "PassThrough",
+    "environment-variables"    : "",
+    "image-tag"                : "",
+    "function-description"     : ""
+}
