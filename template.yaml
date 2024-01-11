@@ -19,6 +19,8 @@ Globals:
         DB_PASSWORD: '{{resolve:secretsmanager:db:SecretString:password}}'
         DB_DATABASE: '{{resolve:secretsmanager:db:SecretString:database}}'
         DB_HOST_READER: '{{resolve:secretsmanager:db:SecretString:host_reader}}'
+        DB_HOST_POSITIONS: '{{resolve:secretsmanager:db:SecretString:host_positions}}'
+        DB_HOST_POSITIONS_READER: '{{resolve:secretsmanager:db:SecretString:host_positions_reader}}'
         IPINFO_TOKEN: df58ccf730ab1c
         DEVICE_IGNITION_OFF_TABLE: !Ref DevicesIgnitionOff
 
