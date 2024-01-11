@@ -220,6 +220,27 @@ Resources:
         Name: deviceId
         Type: Number
 
+  S3DailyMigratorUnit:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: true
+      QueueName: 'S3DailyMigratorUnit.fifo'
+      VisibilityTimeout: 120
+
+  S3DailyMigratorUnitDL:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: true
+      QueueName: 'S3DailyMigratorUnitDL.fifo'
+      VisibilityTimeout: 120
+
+  S3DailyMigratorUnit2048:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: true
+      QueueName: 'S3DailyMigratorUnit2048.fifo'
+      VisibilityTimeout: 120
+
 Outputs:
   ElasticIPAddress:
     Description: Elastic IP Address
