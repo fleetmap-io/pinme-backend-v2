@@ -188,11 +188,18 @@ Resources:
       Runtime: dotnet6
       MemorySize: 1024
       Timeout: 900
+      Policies:
+        - AmazonSQSFullAccess
       VpcConfig:
         SubnetIds:
           - !Ref PrivateSubnet
         SecurityGroupIds:
           - !Ref SecurityGroup
+      Events:
+        EveryDay:
+          Type: Schedule
+          Properties:
+            Schedule: cron(5 0 * * ? *)
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
