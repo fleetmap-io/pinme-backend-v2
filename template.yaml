@@ -241,11 +241,11 @@ Resources:
       QueueName: 'S3DailyMigratorUnitDL.fifo'
       VisibilityTimeout: 120
 
-  S3DailyMigratorUnit2048:
+  S3DailyMigratorUnitDLDL:
     Type: AWS::SQS::Queue
     Properties:
       FifoQueue: true
-      QueueName: 'S3DailyMigratorUnit2048.fifo'
+      QueueName: 'S3DailyMigratorUnitDLDL.fifo'
       VisibilityTimeout: 120
 
 Outputs:
