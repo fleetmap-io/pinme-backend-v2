@@ -179,6 +179,20 @@ Resources:
           Properties:
             Path: /scheduler/{proxy+}
             Method: ANY
+  S3DailyMigrator:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: pinme-backend-s3-daily-migrator-api
+      CodeUri: ./S3DailyMigrator/
+      Handler: S3DailyMigrator::S3DailyMigrator.Function::FunctionHandler
+      Runtime: dotnet6
+      MemorySize: 1024
+      Timeout: 900
+      VpcConfig:
+        SubnetIds:
+          - !Ref PrivateSubnet
+        SecurityGroupIds:
+          - !Ref SecurityGroup
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
