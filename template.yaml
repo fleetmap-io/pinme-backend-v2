@@ -235,6 +235,13 @@ Resources:
       FifoQueue: true
       QueueName: 'S3DailyMigratorUnit.fifo'
       VisibilityTimeout: 120
+      MessageRetentionPeriod: 1209600
+      RedrivePolicy: 
+        deadLetterTargetArn: 
+          Fn::GetAtt: 
+            - 'S3DailyMigratorUnitDL'
+            - 'Arn'
+        maxReceiveCount: 2
 
   S3DailyMigratorUnitDL:
     Type: AWS::SQS::Queue
@@ -242,13 +249,21 @@ Resources:
       FifoQueue: true
       QueueName: 'S3DailyMigratorUnitDL.fifo'
       VisibilityTimeout: 120
+      MessageRetentionPeriod: 1209600      
+      RedrivePolicy: 
+        deadLetterTargetArn: 
+          Fn::GetAtt: 
+            - 'S3DailyMigratorUnitDLDL'
+            - 'Arn'
+        maxReceiveCount: 3
 
   S3DailyMigratorUnitDLDL:
     Type: AWS::SQS::Queue
     Properties:
       FifoQueue: true
       QueueName: 'S3DailyMigratorUnitDLDL.fifo'
-      VisibilityTimeout: 120
+      VisibilityTimeout: 30
+      MessageRetentionPeriod: 1209600
 
 Outputs:
   ElasticIPAddress:
