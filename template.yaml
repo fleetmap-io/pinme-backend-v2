@@ -249,6 +249,12 @@ Resources:
         SecurityGroupIds:
           - !Ref SecurityGroup
 
+  S3DailyMigratorUnit3GSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      BatchSize: 1
+      EventSourceArn: !GetAtt SQSS3DailyMigratorUnitDL.Arn
+      FunctionName: !GetAtt S3DailyMigratorUnit3G.Arn
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
