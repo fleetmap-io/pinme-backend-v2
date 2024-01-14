@@ -209,7 +209,7 @@ Resources:
     Properties:
       FunctionName: pinme-backend-s3-daily-migrator-unit-api
       CodeUri: ./S3DailyMigratorUnit/
-      Handler: S3DailyMigratorUnit::S3DailyMigratorUnit.Function::FunctionHandler
+      Handler: S3DailyMigratorUnit::S3DailyMigrator.FunctionSQS::FunctionHandler
       Runtime: dotnet6
       MemorySize: 256
       Timeout: 120

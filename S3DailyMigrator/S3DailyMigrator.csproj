@@ -13,6 +13,8 @@
   <ItemGroup>
     <PackageReference Include="Amazon.Lambda.Core" Version="2.2.0" />
     <PackageReference Include="Amazon.Lambda.Serialization.SystemTextJson" Version="2.4.0" />
+    <PackageReference Include="Amazon.Lambda.SQSEvents" Version="2.2.0" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.302" />
     <PackageReference Include="AWSSDK.SQS" Version="3.7.200.46" />
     <PackageReference Include="MySql.Data" Version="8.2.0" />
   </ItemGroup>
