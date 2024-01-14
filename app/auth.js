@@ -6,7 +6,7 @@ async function getUser (email) {
     const [rows] = await mysql.getRows(`select 
         attributes, id, name, login, email, phone, readonly, administrator, hashedpassword, salt,
         disabled, expirationTime, deviceLimit, userLimit, deviceReadonly, token, limitCommands
-        from tc_users where email='${email}'`)
+        from tc_users where email='${email}'`, process.env.DB_HOST_READER)
     return rows[0]
 }
 

@@ -3,14 +3,11 @@ const osmAndUrl = 'http://server.pinme.io:5055/?'
 const axios = require('axios')
 const querystring = require('querystring')
 const {wrapper} = require('axios-cookiejar-support')
-const tough = require('tough-cookie')
 const NodeCache = require('node-cache')
-const cookieJar = new tough.CookieJar()
 wrapper(axios)
 const _timeout = 10000
 exports.basePath = apiUrl
 exports.axios = axios
-exports.cookieJar = cookieJar
 const cache = new NodeCache({ stdTTL: 600, useClones: false, checkperiod: 120 })
 
 const config = {

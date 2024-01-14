@@ -8,6 +8,7 @@ const expect = chai.expect;
 const email = require('../../email/email')
 const fs = require("fs");
 const path = require("path");
+const cw = require('../../cloudwatch')
 
 function checkResult(result) {
     console.log(result)
@@ -46,4 +47,9 @@ describe('Tests index', function () {
                 content: fs.createReadStream(path.join(__dirname, 'file.txt'))
             })
     });
+
+    it('sends cloudwatch metrics', async () => {
+        await cw.putMetrics({ resources: ['rule/everyMinute'] })
+        await cw.putMetrics({ resources: ['rule/every5'] })
+    })
 });

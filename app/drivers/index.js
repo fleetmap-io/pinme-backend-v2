@@ -1,4 +1,4 @@
-const mysql = require('../mysql-reader')
+const mysql = require('../mysql')
 
 const allDrivers = {}
 
@@ -6,7 +6,7 @@ const getDriver = async (uniqueId, retries = 3) => {
   if (!uniqueId) return null
   try {
     if (!allDrivers[uniqueId]) {
-      const [driver] = await mysql.getRowsArray(`select id, name, uniqueId, attributes from traccar.tc_drivers where uniqueId='${uniqueId}'`)
+      const [driver] = await mysql.getRowsArray(`select id, name, uniqueId, attributes from traccar.tc_drivers where uniqueId='${uniqueId}'`, process.env.DB_HOST_READER)
       console.log('getDriver', uniqueId, driver)
       if (driver && driver.attributes && typeof(driver.attributes) == 'string') { driver.attributes = JSON.parse(driver.attributes) }
       allDrivers[uniqueId] = driver
