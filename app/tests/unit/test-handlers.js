@@ -5,6 +5,9 @@ const eventsFunction = require('../../event');
 const pinmeapi = require('../../pinmeapi');
 const chai = require('chai');
 const expect = chai.expect;
+const email = require('../../email/email')
+const fs = require("fs");
+const path = require("path");
 
 function checkResult(result) {
     console.log(result)
@@ -28,5 +31,19 @@ describe('Tests index', function () {
     it('works on pinemapi', async () => {
         const result = await pinmeapi.main(require('../../../events/pinmeapi.json'))
         checkResult(result);
+    });
+
+    it('sends emails', async () => {
+        await email.email(['joaquim.cardeira@gmail.com'], ['wuizygo@gmail.com'], 'notification', 'teste notification', 'no-reply@gpsmanager.io')
+        await email.emailWithAttachment(
+            ['joaquim.cardeira@gmail.com'],
+            ['admin@fleetmap.io'],
+            'report',
+            'teste report',
+            'no-reply@gpsmanager.io',
+            { // stream as an attachment
+                filename: 'text4.txt',
+                content: fs.createReadStream(path.join(__dirname, 'file.txt'))
+            })
     });
 });

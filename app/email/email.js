@@ -29,7 +29,7 @@ exports.email = (to, bcc, html, subject, source, ContactListName = 'default', To
     FromEmailAddress: source
   }
   console.log('sending to', to, 'subject', subject)
-  return sesV2.sendEmail(params).promise()
+  return sesV2.send(new SendEmailCommand(params))
 }
 
 async function sendOne (html, unsubscribeText, source, to, subject, attachments, ContactListName, TopicName) {
@@ -55,7 +55,7 @@ async function sendOne (html, unsubscribeText, source, to, subject, attachments,
     FromEmailAddress: source
   }
 
-  return sesV2.sendEmail(params).promise()
+  return sesV2.send(new SendEmailCommand(params))
 }
 
 exports.emailWithAttachment = async (to, bcc, html, subject, source, attachments, ContactListName = 'default', TopicName = 'Reporting',
