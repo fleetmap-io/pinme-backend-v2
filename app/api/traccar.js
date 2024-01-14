@@ -2,9 +2,7 @@ const apiUrl = 'https://slowreports.pinme.io/api'
 const osmAndUrl = 'http://server.pinme.io:5055/?'
 const axios = require('axios')
 const querystring = require('querystring')
-const {wrapper} = require('axios-cookiejar-support')
 const NodeCache = require('node-cache')
-wrapper(axios)
 const _timeout = 10000
 exports.basePath = apiUrl
 exports.axios = axios

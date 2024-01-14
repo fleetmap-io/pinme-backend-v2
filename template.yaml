@@ -24,7 +24,6 @@ Globals:
         IPINFO_TOKEN: df58ccf730ab1c
         DEVICE_IGNITION_OFF_TABLE: !Ref DevicesIgnitionOff
         QUEUE_S3_DAILY_MIGRATOR_UNIT: !Ref SQSS3DailyMigratorUnit
-        AWS_REGION: !Ref "AWS::Region"
 
 Resources:
   VPC:
