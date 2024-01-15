@@ -208,6 +208,4 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/osx,node,linux,windows,sam
 S3DailyMigrator/obj/
 S3DailyMigrator/.vs/
-S3DailyMigratorUnit/bin/
-S3DailyMigratorUnit/obj/
-S3DailyMigratorUnit/.vs/
+/S3DailyMigrator/bin/
