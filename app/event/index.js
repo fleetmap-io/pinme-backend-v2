@@ -27,7 +27,7 @@ async function pushEvents (event) {
       case 'deviceMoving':
       case 'deviceStopped':
       case 'deviceUnknown':
-        console.warn('ignoring', event)
+        console.warn('ignoring', event.event.type)
         return
     }
 
