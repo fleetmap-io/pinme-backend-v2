@@ -60,10 +60,7 @@ async function pushEvents (event) {
   }
 }
 
-exports.process = async (e) => {
+exports.process = (e) => {
   console.log(e.Records, 'records')
-  return Promise.all(e.Records.map(event => JSON.parse(event.body).length
-    ? Promise.all(JSON.parse(event.body).map(event => pushEvents({ body: JSON.stringify(event) })))
-    : pushEvents(event)
-  ))
+  return Promise.all(e.Records.map(event => pushEvents(event)))
 }
