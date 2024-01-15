@@ -209,7 +209,7 @@ Resources:
     Properties:
       FunctionName: pinme-backend-s3-daily-migrator-unit-api
       CodeUri: ./S3DailyMigrator/
-      Handler: S3DailyMigrator::S3DailyMigrator.FunctionSQS::FunctionHandlerSQS
+      Handler: S3DailyMigrator::S3DailyMigrator.Function::FunctionHandlerSQS
       Runtime: dotnet6
       MemorySize: 256
       Timeout: 120
@@ -253,6 +253,35 @@ Resources:
           Properties:
             BatchSize: 1
             Queue: !GetAtt SQSS3DailyMigratorUnitDL.Arn
+
+  CloudWatchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      MemorySize: 1024
+      Timeout: 60
+      CodeUri: app/
+      Handler: cloudwatch.putMetrics
+      Runtime: nodejs16.x
+      Events:
+        Scheduled:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 minute)
+            Name: everyMinute
+            Description: cloudwatch
+            Enabled: True
+        Scheduled2:
+          Type: Schedule
+          Properties:
+            Schedule: rate(2 minutes)
+            Name: every3Minutes
+            Description: cloudwatch
+            Enabled: True
+      VpcConfig:
+        SubnetIds:
+          - !Ref PrivateSubnet
+        SecurityGroupIds:
+          - !Ref SecurityGroup
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
