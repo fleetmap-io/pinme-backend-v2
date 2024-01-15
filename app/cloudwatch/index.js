@@ -10,7 +10,7 @@ function getCountByCountry () {
   SELECT
 SUBSTRING_INDEX(p.address,',',-1) country, count(*) count
   FROM tc_positions_last p
- WHERE p.fixtime > DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -1 MINUTE)
+ WHERE p.fixtime > DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -2 MINUTE)
    group by SUBSTRING_INDEX(p.address,',',-1)
   `, process.env.DB_HOST_READER)
 }
