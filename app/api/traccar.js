@@ -180,10 +180,7 @@ exports.updateUser = (user) => {
 
 exports.createSession = (user) => {
   const body = 'email=' + encodeURIComponent(user) + '&password=' + encodeURIComponent(process.env.TRACCAR_ADMIN_PASS)
-  cookieJar.removeAllCookies()
   return axios.post(apiUrl + '/session', body, {
-    withCredentials: true,
-    jar: cookieJar,
     headers: {
       'user-agent': 'pinme-backend',
       'Content-Type': 'application/x-www-form-urlencoded'

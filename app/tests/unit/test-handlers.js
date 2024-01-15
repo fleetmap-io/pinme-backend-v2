@@ -9,6 +9,7 @@ const email = require('../../email/email')
 const fs = require("fs");
 const path = require("path");
 const cw = require('../../cloudwatch')
+const traccar = require("../../auth");
 
 function checkResult(result) {
     console.log(result)
@@ -51,5 +52,11 @@ describe('Tests index', function () {
     it('sends cloudwatch metrics', async () => {
         await cw.putMetrics({ resources: ['rule/everyMinute'] })
         await cw.putMetrics({ resources: ['rule/every5'] })
+    })
+
+    it('works with traccar', async() => {
+        const cookie = await traccar.getUserSession('joaquim@fleetmap.io')
+        expect(cookie).to.be.an('Array')
+        expect(cookie[0]).to.not.equal('')
     })
 });

@@ -1,17 +1,17 @@
 const mysql = require('mysql2/promise');
 
-let conn
+let conn = {}
 
 async function getRows(sql, host = process.env.DB_HOST) {
-  if (!conn) {
-    conn = mysql.createConnection({
+  if (!conn[host]) {
+    conn[host] = mysql.createConnection({
       host,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE
     })
   }
-  return (await conn).query(sql);
+  return (await conn[host]).query(sql);
 }
 
 exports.getRows = getRows;
