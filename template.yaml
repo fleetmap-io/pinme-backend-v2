@@ -185,7 +185,7 @@ Resources:
   S3DailyMigrator:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: pinme-backend-s3-daily-migrator-api
+      FunctionName: pinme-backend-s3-daily-migrator
       CodeUri: ./S3DailyMigrator/
       Handler: S3DailyMigrator::S3DailyMigrator.Function::FunctionHandler
       Runtime: dotnet6
@@ -207,7 +207,7 @@ Resources:
   S3DailyMigratorUnit:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: pinme-backend-s3-daily-migrator-unit-api
+      FunctionName: pinme-backend-s3-daily-migrator-unit
       CodeUri: ./S3DailyMigrator/
       Handler: S3DailyMigrator::S3DailyMigrator.Function::FunctionHandlerSQS
       Runtime: dotnet6
@@ -233,7 +233,7 @@ Resources:
   S3DailyMigratorUnit3G:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: pinme-backend-s3-daily-migrator-unit-3g-api
+      FunctionName: pinme-backend-daily-migrator-unit-3g
       CodeUri: ./S3DailyMigrator/
       Handler: S3DailyMigrator::S3DailyMigrator.Function::FunctionHandlerSQS
       Runtime: dotnet6
@@ -257,6 +257,7 @@ Resources:
   CloudWatchFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: pinme-backend-cloudwatch
       MemorySize: 1024
       Timeout: 60
       CodeUri: app/
@@ -282,7 +283,8 @@ Resources:
           - !Ref PrivateSubnet
         SecurityGroupIds:
           - !Ref SecurityGroup
-
+      Policies:
+          - CloudWatchFullAccess
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
