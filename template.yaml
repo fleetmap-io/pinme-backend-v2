@@ -147,6 +147,14 @@ Resources:
             MaximumBatchingWindowInSeconds: 3
             ScalingConfig:
               MaximumConcurrency: 60
+        QueueLocations:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt PushLocationsQueue.Arn
+            BatchSize: 50
+            MaximumBatchingWindowInSeconds: 3
+            ScalingConfig:
+              MaximumConcurrency: 60
       Policies:
         - AmazonDynamoDBFullAccess
         - SecretsManagerReadWrite
