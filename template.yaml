@@ -124,10 +124,10 @@ Resources:
           Properties:
             Path: /backend
             Method: get
-  ProcessEventsQueue:
+  ProcessEventsAndLocationsQueue:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: pinme-backend-process-events-queue
+      FunctionName: pinme-backend-event-and-locations-consumer
       MemorySize: 512
       Timeout: 900
       CodeUri: ./app/
