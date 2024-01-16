@@ -1,9 +1,5 @@
-const { ralset } = require('./ralset')
-const { centinela } = require('./centinela')
-const { sitrans } = require('./sitrans')
-
-exports.ralset = ralset
-exports.centinela = centinela
-exports.sitrans = sitrans
+exports.ralset = require('./ralset')
+exports.centinela = require('./centinela')
+exports.sitrans = require('./sitrans')
 exports.movup = require('./movup')
 exports.monitrip = async () => {}

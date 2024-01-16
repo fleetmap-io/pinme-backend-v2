@@ -1,5 +1,5 @@
 const axios = require('axios')
-exports.sitrans = async (e, Authorization = 'Basic RmxlZXRyYWNrOmIzV05KMGRnY2k5VQ==',
+module.exports = async (e, Authorization = 'Basic RmxlZXRyYWNrOmIzV05KMGRnY2k5VQ==',
                          url = 'https://interop.altomovup.com/gpssignal/api/v1/data/sitrans-cl') => {
   const data = {
     num_plate: e.device.attributes.license_plate.replace(/-/g, ''),

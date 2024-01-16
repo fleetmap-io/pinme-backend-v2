@@ -1,5 +1,5 @@
 const axios = require('axios')
-exports.centinela = async (e) => {
+module.exports = async (e) => {
   const data = [{
     patente: e.device.name,
     imei: e.device.uniqueId,

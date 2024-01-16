@@ -1,6 +1,6 @@
 const net = require('net')
 
-exports.ralset = async (e) => {
+module.exports = async (e) => {
   console.log('ralset integration', e)
   const start = new Date()
   try {
