@@ -6,3 +6,4 @@ exports.ralset = ralset
 exports.centinela = centinela
 exports.sitrans = sitrans
 exports.movup = movup
+exports.monitrip = async () => {}
