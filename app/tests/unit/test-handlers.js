@@ -10,6 +10,7 @@ const fs = require("fs");
 const path = require("path");
 const cw = require('../../cloudwatch')
 const traccar = require("../../auth");
+const {pushPositions} = require("../../push");
 
 function checkResult(result) {
     console.log(result)
@@ -27,7 +28,7 @@ describe('Tests index', function () {
     });
 
     it('works on push-events-function with ignitionoff', async () => {
-        await eventsFunction.process(require('../../../events/pushEvent.json'))
+        await eventsFunction.pushEvents(require('../../../events/pushEvent.json'))
     });
 
     it('works on pinemapi', async () => {
@@ -58,5 +59,9 @@ describe('Tests index', function () {
         const cookie = await traccar.getUserSession('joaquim@fleetmap.io')
         expect(cookie).to.be.an('Array')
         expect(cookie[0]).to.not.equal('')
+    })
+
+    it ('pushes positions', async() => {
+        await pushPositions(require('../../../events/position.json'))
     })
 });
