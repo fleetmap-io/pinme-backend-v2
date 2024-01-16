@@ -1,5 +1,6 @@
 const axios = require('axios')
-exports.sitrans = async (e) => {
+exports.sitrans = async (e, Authorization = 'Basic RmxlZXRyYWNrOmIzV05KMGRnY2k5VQ==',
+                         url = 'https://interop.altomovup.com/gpssignal/api/v1/data/sitrans-cl') => {
   const data = {
     num_plate: e.device.attributes.license_plate.replace(/-/g, ''),
     gps_id: e.device.uniqueId,
@@ -20,9 +21,9 @@ exports.sitrans = async (e) => {
     nsat: e.position.sats || 0
   }
   console.log(data)
-  console.log(data.num_plate, await axios.post('https://interop.altomovup.com/gpssignal/api/v1/data/sitrans-cl', data, {
+  console.log(data.num_plate, await axios.post(url, data, {
     headers: {
-      Authorization: 'Basic RmxlZXRyYWNrOmIzV05KMGRnY2k5VQ=='
+      Authorization
     }
   }).then(d => d.data))
 }

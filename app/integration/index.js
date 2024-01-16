@@ -4,3 +4,4 @@ const { sitrans } = require('./sitrans')
 exports.ralset = ralset
 exports.centinela = centinela
 exports.sitrans = sitrans
+exports.movup = require('/movup')
