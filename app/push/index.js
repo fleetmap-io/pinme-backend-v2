@@ -9,7 +9,7 @@ exports.pushPositions = async (e) => {
                     if (integration[target]) {
                         return integration[target](devPosition)
                     } else {
-                        console.warn('no integration for', devPosition.device.attributes.integration, devPosition.device.name, e)
+                        console.warn('no integration for', devPosition.device.attributes.integration, devPosition.device.name)
                     }
                 }
             } else {

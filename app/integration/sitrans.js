@@ -21,7 +21,7 @@ module.exports = async (e, Authorization = 'Basic RmxlZXRyYWNrOmIzV05KMGRnY2k5VQ
     nsat: e.position.sats || 0
   }
   console.log(data)
-  console.log(data.num_plate, await axios.post(url, data, {
+  console.log('sitrans', data.num_plate, await axios.post(url, data, {
     headers: {
       Authorization
     }
