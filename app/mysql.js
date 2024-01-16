@@ -19,7 +19,7 @@ function initConn(host, retries = 10) {
 
 async function getRows(sql, host = process.env.DB_HOST) {
   if (!conn[host]) {
-    initConn(host);
+    conn[host] = initConn(host);
   }
   return (await conn[host]).query(sql);
 }
