@@ -1,10 +1,10 @@
-const event = {
+exports.event = {
     body: JSON.stringify({
         device: {
             uniqueId: '865826043498700',
             name: 'GBF0I18',
             attributes: {
-                integration: 'sitrans',
+                integration: 'movup',
                 cnpj: '20529021000106',
                 notes: '0005639243',
                 license_plate: 'AA-BB-00'
