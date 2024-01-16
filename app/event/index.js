@@ -27,7 +27,6 @@ exports.pushEvents = async (event) => {
       case 'deviceMoving':
       case 'deviceStopped':
       case 'deviceUnknown':
-        console.warn('ignoring', event.event.type)
         return
     }
 
