@@ -27,7 +27,7 @@ async function pushEvents (event) {
       case 'deviceMoving':
       case 'deviceStopped':
       case 'deviceUnknown':
-        console.warn('ignoring', event)
+        console.warn('ignoring', event.event.type)
         return
     }
 
@@ -60,10 +60,7 @@ async function pushEvents (event) {
   }
 }
 
-exports.process = async (e) => {
-  console.log(e.Records.length, 'records')
-  return Promise.all(e.Records.map(event => JSON.parse(event.body).length
-    ? Promise.all(JSON.parse(event.body).map(event => pushEvents({ body: JSON.stringify(event) })))
-    : pushEvents(event)
-  ))
+exports.process = (e) => {
+  console.log(e.Records, 'records')
+  return Promise.all(e.Records.map(event => pushEvents(event)))
 }
