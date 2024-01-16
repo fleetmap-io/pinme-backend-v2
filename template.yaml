@@ -24,8 +24,8 @@ Globals:
         IPINFO_TOKEN: df58ccf730ab1c
         DEVICE_IGNITION_OFF_TABLE: !Ref DevicesIgnitionOff
         QUEUE_S3_DAILY_MIGRATOR_UNIT: !Ref SQSS3DailyMigratorUnit
-        QUEUE_EVENTS_ARN: !Ref PushEventsQueue.Arn
-        QUEUE_LOCATIONS_ARN: !Ref PushLocationsQueue.Arn
+        QUEUE_EVENTS_ARN: !GetAtt PushEventsQueue.Arn
+        QUEUE_LOCATIONS_ARN: !GetAtt PushLocationsQueue.Arn
 
 Resources:
   VPC:
