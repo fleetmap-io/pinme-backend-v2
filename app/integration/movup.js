@@ -1,4 +1,4 @@
 const {sitrans} = require("./sitrans");
-exports = async (e) => {
+exports.movup = async (e) => {
     await sitrans(e)
 }
