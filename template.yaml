@@ -138,15 +138,6 @@ Resources:
           - !Ref PrivateSubnet
         SecurityGroupIds:
           - !Ref SecurityGroup
-      Events:
-        QueueEvents:
-          Type: SQS
-          Properties:
-            Queue: !GetAtt PushEventsQueue.Arn
-            BatchSize: 50
-            MaximumBatchingWindowInSeconds: 3
-            ScalingConfig:
-              MaximumConcurrency: 60
       Policies:
         - AmazonDynamoDBFullAccess
         - SecretsManagerReadWrite
