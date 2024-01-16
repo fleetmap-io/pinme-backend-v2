@@ -21,6 +21,8 @@ async function getRows (sql, host = process.env.DB_HOST) {
   if (!conn[host]) {
     conn[host] = initConn(host)
   }
+  const _conn = await conn[host]
+  if (conn.is)
   return (await conn[host]).query(sql)
 }
 
