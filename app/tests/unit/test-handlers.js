@@ -62,6 +62,6 @@ describe('Tests index', function () {
     })
 
     it ('pushes positions', async() => {
-        await pushPositions(require('../../../events/position.json'))
+        await pushPositions(require('../../../events/position'))
     })
 });
