@@ -209,3 +209,4 @@ $RECYCLE.BIN/
 S3DailyMigrator/obj/
 S3DailyMigrator/.vs/
 /S3DailyMigrator/bin/
+.idea/workspace.xml
