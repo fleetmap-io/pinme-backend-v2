@@ -12,7 +12,7 @@ async function sendToRabbit (body, retry = 3) {
   }
 }
 
-async function pushEvents (event) {
+exports.pushEvents = async (event) => {
   try {
     event = JSON.parse(event.body)
 
@@ -58,9 +58,4 @@ async function pushEvents (event) {
     logException(err, 'pushEvents', event.event)
     throw err
   }
-}
-
-exports.process = (e) => {
-  console.log(e.Records, 'records')
-  return Promise.all(e.Records.map(event => pushEvents(event)))
 }

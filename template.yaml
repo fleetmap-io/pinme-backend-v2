@@ -129,7 +129,7 @@ Resources:
       MemorySize: 512
       Timeout: 900
       CodeUri: ./app/
-      Handler: event/index.process
+      Handler: index.eventsAndPositionsConsumer
       Runtime: nodejs16.x
       VpcConfig:
         SubnetIds:
