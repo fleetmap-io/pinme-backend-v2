@@ -14,7 +14,6 @@ async function sendToRabbit (body, retry = 3) {
 
 exports.pushEvents = async (event) => {
   try {
-    console.log('push events', event.eventSourceARN, process.env.QUEUE_EVENTS_ARN)
     event = JSON.parse(event.body)
 
     if (!event.event) {
