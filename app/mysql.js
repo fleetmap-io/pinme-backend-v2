@@ -23,7 +23,7 @@ async function getRows (sql, host = process.env.DB_HOST) {
   if (!conn[host]) {
     conn[host] = initConn(host)
   }
-  if (conn[host].state === 'disconnected') {
+  if ((await conn[host]).state === 'disconnected') {
     conn[host] = initConn(host)
   }
   return (await conn[host]).query(sql)
