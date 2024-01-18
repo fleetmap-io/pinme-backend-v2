@@ -5,7 +5,9 @@ const database = process.env.DB_DATABASE
 
 async function getRows (sql, host = process.env.DB_HOST) {
   const conn = await mysql.createConnection({ host, user, password, database })
-  return conn.query(sql)
+  const result = conn.query(sql)
+  await conn.end()
+  return result
 }
 exports.getRows = getRows
 
