@@ -6,17 +6,16 @@ const logException = (e, ...args) => {
 }
 exports.logException = logException
 
-
 exports.logError = async (e, req, ...args) => {
   try {
     console.error(
-        req.headers['X-Forwarded-For'] && (await this.getCity(req.headers['X-Forwarded-For'].split(',')[0])).region,
-        ...args,
-        req.httpMethod,
-        req.headers.host,
-        req.path,
-        e.message,
-        e.response && e.response.data, (e.config && e.config.url) || e,
+      req.headers['X-Forwarded-For'] && (await this.getCity(req.headers['X-Forwarded-For'].split(',')[0])).region,
+      ...args,
+      req.httpMethod,
+      req.headers.host,
+      req.path,
+      e.message,
+      e.response && e.response.data, (e.config && e.config.url) || e
     )
   } catch (ex) {
     logException(e, ...args)
