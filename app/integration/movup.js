@@ -16,7 +16,7 @@ module.exports = async (e) => {
         gps_id: e.device.id,
         date_time: e.position.fixTime
     }
-    console.log(data,
+    console.log('movup', data,
         await axios.post('https://segmentado.ziyu.cl/api/restapp/gpssignal/external/', data,
             {
                 headers: {
