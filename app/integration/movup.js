@@ -9,7 +9,7 @@ module.exports = async (e) => {
         lng: e.position.longitude,
         lat: e.position.latitude,
         altitude: e.position.altitude,
-        ignition: e.position.ignition,
+        ignition: e.position.attributes.ignition,
         speed: e.position.speed,
         num_plate: e.device.attributes.license_plate,
         provider: 'Fleetrack',
