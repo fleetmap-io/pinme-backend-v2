@@ -24,6 +24,6 @@ module.exports = async (e) => {
           Password: 'yYoHmGkE7mXj'
         }
       }).then(d => d.data).catch(e => {
-      logException(e, 'movup', e.device.name, e.position.address)
+      logException(e, 'movup', e.device && e.device.name, e.position && e.position.address)
     }))
 }
