@@ -11,7 +11,7 @@ module.exports = async (e) => {
     altitude: e.position.altitude,
     ignition: e.position.attributes.ignition,
     speed: e.position.speed,
-    num_plate: e.device.attributes.license_plate,
+    num_plate: e.device.attributes.license_plate && e.device.attributes.license_plate.replace(/ -/g, ''),
     provider: 'Fleetrack',
     gps_id: e.device.id,
     date_time: e.position.fixTime
@@ -24,6 +24,6 @@ module.exports = async (e) => {
           Password: 'yYoHmGkE7mXj'
         }
       }).then(d => d.data).catch(e => {
-      logException(e, 'movup', e.device && e.device.name, e.position && e.position.address)
+      logException(e, 'movup', (e.device && e.device.name) || e, e.position && e.position.address)
     }))
 }
