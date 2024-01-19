@@ -1,10 +1,9 @@
 const axios = require('axios')
 const { logException } = require('../utils')
 module.exports = async (e) => {
-  try { await require('./sitrans')(e, 'Basic RmxlZXRyYWNrOnlZb0htR2tFN21Yag==', 'https://interop.altomovup.com/gpssignal/api/v1/data/ulog-cl') } catch (e) {
-    console.error(e && e.response && e.response.data)
+  try { await require('./sitrans')(e, 'Basic RmxlZXRyYWNrOnlZb0htR2tFN21Yag==', 'https://interop.altomovup.com/gpssignal/api/v1/data/ulog-cl') } catch (ex) {
+    logException(ex, e)
   }
-
   const data = {
     lng: e.position.longitude,
     lat: e.position.latitude,
@@ -23,7 +22,5 @@ module.exports = async (e) => {
           Username: 'Fleetrack',
           Password: 'yYoHmGkE7mXj'
         }
-      }).then(d => d.data).catch(ex => {
-      logException(ex, 'movup', data, e.position && e.position.address)
-    }))
+      }).then(d => d.data).catch(ex => { logException(ex, 'movup', data, e.position && e.position.address) }))
 }
