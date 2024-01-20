@@ -43,7 +43,6 @@ async function sendEmailNotification (event, user, notification) {
   if (emailTo.length) {
     for (const e of emailTo) {
       try {
-        console.log('await email.email(', [e], [], body, subject, senderEmail)
         await email.email([e], [], body, subject, senderEmail)
       } catch (err) {
         console.error(err)
