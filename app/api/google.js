@@ -2,7 +2,7 @@ const { getSecretValue } = require('../secrets')
 const { sign } = require('./url-signer')
 let _secret
 exports.getImageUrl = async (center) => {
-  if (!secret) {
+  if (!_secret) {
     _secret = getSecretValue('GOOGLE_API_KEY')
   }
   const secret = await _secret
