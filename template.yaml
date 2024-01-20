@@ -160,6 +160,7 @@ Resources:
       Policies:
         - AmazonDynamoDBFullAccess
         - SecretsManagerReadWrite
+        - AmazonSESFullAccess
   PinmeApi:
     Type: AWS::Serverless::Function
     Properties:
