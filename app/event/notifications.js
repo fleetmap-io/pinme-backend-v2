@@ -14,7 +14,7 @@ const serverStarted = new Date()
 const { getImageUrl } = require('../api/google')
 const { logException } = require('../utils')
 const integration = require('../integration')
-const {getSecretValue} = require("../secrets");
+const { getSecretValue } = require('../secrets')
 
 let firebaseInitialized
 
@@ -370,13 +370,13 @@ async function processEvent (event) {
             }
           }
           if (users[i].attributes.firebaseToken) {
-            await sendFirebase(notification, users[i].attributes.firebaseToken, users[i].email, users[i])
+            // await sendFirebase(notification, users[i].attributes.firebaseToken, users[i].email, users[i])
           }
           const dUser = await dynamo.get({ user: users[i].email })
           if (dUser && dUser.firebaseTokens) {
             for (const t of dUser.firebaseTokens) {
               if (t !== users[i].attributes.firebaseToken) {
-                await sendFirebase(notification, t, users[i].email)
+                // await sendFirebase(notification, t, users[i].email)
               }
             }
           }
