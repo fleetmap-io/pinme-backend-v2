@@ -196,7 +196,7 @@ async function getSpeed (event) {
         : Math.round(event.event.attributes.speedLimit * 1.852)
       return ` ${speed + ' km/h (' + speedLimit + ' km/h)'}`
     } catch (e) {
-      console.error(e)
+      console.error('getSpeed', e)
     }
   }
 }
