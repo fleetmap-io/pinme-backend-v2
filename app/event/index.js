@@ -30,27 +30,22 @@ exports.pushEvents = async (event) => {
         return
     }
 
-    if (event.event.type === 'ignitionOff') {
-      await ignition.processIgnitionOff(event)
-    }
-
-    return
-
-    if (event.event.type === 'driverChanged') {
-      await driverChanged.processDriverChanged(event)
-    }
-
-    // for tests
-    if (!event.device) {
-      console.log('setting dummy device id 0 on', event)
-      event.device = { id: 0 }
-    }
-
-    const body = await notifications.processEvent(event)
-    if (!body.event.delete) {
-      await sendToRabbit(body)
+    let deleteEvent = false
+    if (!event.notifications) {
+      if (event.event.type === 'ignitionOff') {
+        await ignition.processIgnitionOff(event)
+      }
+      /*      if (event.event.type === 'driverChanged') {
+        await driverChanged.processDriverChanged(event)
+      } */
     } else {
-      console.log('deleting event', body.event)
+      const body = await notifications.processEvent(event)
+      deleteEvent = body.event.delete
+    }
+    if (!deleteEvent) {
+      // await sendToRabbit(event)
+    } else {
+      // console.log('deleting event', event)
     }
     return { statusCode: 200 }
   } catch (err) {

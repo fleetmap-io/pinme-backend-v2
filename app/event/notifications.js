@@ -340,7 +340,7 @@ async function processEvent (event) {
           const deviceGroup = await getDeviceGroup(event, i)
           msg = `${event.device.name}${deviceGroup}${message}`
           console.log('sendSms', users[i].email, users[i].phone, msg)
-          await sms.sendSms(users[i].phone, msg)
+          // await sms.sendSms(users[i].phone, msg)
         } catch (e) {
           logException(e, 'sendSms', users[i].phone, msg)
         }
@@ -348,7 +348,7 @@ async function processEvent (event) {
       if (notification.notificators.includes('mail')) {
         try {
           console.log('sendEmail', users[i].email)
-          await sendEmailNotification(event, i, notification)
+          // await sendEmailNotification(event, i, notification)
         } catch (e) {
           logException(e, 'sendEmailNotification', users[i].email)
         }
@@ -385,14 +385,14 @@ async function processEvent (event) {
         }
       }
       if (notification.notificators.includes('whatsapp')) {
-        await whatsapp.send(users[i], event, message)
+        // await whatsapp.send(users[i], event, message)
       }
       if (notification.notificators.includes('driver')) {
         if (event.position.attributes.driverUniqueId) {
           try {
             const driver = await getDriver(event, i)
             if (driver && driver.attributes && driver.attributes.phone) {
-              await whatsapp.send({ ...users[i], phone: driver.attributes.phone }, event, message)
+              // await whatsapp.send({ ...users[i], phone: driver.attributes.phone }, event, message)
             }
           } catch (e) {
             console.error(e.message, (e.response && e.response.data) || e)
@@ -401,7 +401,7 @@ async function processEvent (event) {
       }
       if (notification.attributes.integration) {
         if (integration[notification.attributes.integration.toLowerCase()]) {
-          await integration[notification.attributes.integration.toLowerCase()](event)
+          // await integration[notification.attributes.integration.toLowerCase()](event)
         } else {
           console.warn('unknown integration', users[i] && users[i].email, notification.attributes.integration)
         }
@@ -418,7 +418,7 @@ function notificationIsActive (notification, event) {
   }
 
   return !(notification.attributes.checkGeofences === 'onlyOutside' &&
-      event.event.geofenceId);
+      event.event.geofenceId)
 }
 
 async function aboveSpeedLimit (position, event, device) {
@@ -481,36 +481,7 @@ async function filterNotification (notification, position, user, device, event) 
   return true
 }
 
-async function tryGetNotifications (userId, retries) {
-  try {
-    return await traccar.getNotifications(userId)
-  } catch (e) {
-    console.warn(retries, 'trying notifications again...', e && e.message, e.response && e.response.statusText)
-    if (retries) {
-      return await tryGetNotifications(userId, --retries)
-    } else {
-      throw e
-    }
-  }
-}
-
-async function tryGetNotificationsByDeviceId (user, deviceId, retries) {
-  try {
-    return await traccar.getNotifications(user.id, deviceId)
-  } catch (e) {
-    console.warn(serverStarted, retries, 'get notifications for', deviceId, user.email
-      , 'trying again', e && e.message, e && e.response && e.response.statusText)
-    if (retries) {
-      return await tryGetNotificationsByDeviceId(user, deviceId, --retries)
-    } else {
-      throw e
-    }
-  }
-}
-
-async function alertActiveForUser (user, { event, position, device }) {
-  let notifications = await tryGetNotifications(user.id, 3)
-
+async function alertActiveForUser (user, { event, position, device, notifications }) {
   for (const a of notifications) {
     if (a.always && alertActive(a, event)) {
       if (await filterNotification(a, position, user, device, event)) {
@@ -523,9 +494,6 @@ async function alertActiveForUser (user, { event, position, device }) {
       }
     }
   }
-
-  notifications = await tryGetNotificationsByDeviceId(user, device.id, 3)
-
   for (const a of notifications) {
     if (alertActive(a, event)) {
       if (await filterNotification(a, position, user, device, event)) {
