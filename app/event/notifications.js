@@ -372,14 +372,14 @@ async function processEvent (event) {
           if (users[i].attributes.firebaseToken) {
             // await sendFirebase(notification, users[i].attributes.firebaseToken, users[i].email, users[i])
           }
-          const dUser = await dynamo.get({ user: users[i].email })
+          /* const dUser = await dynamo.get({ user: users[i].email })
           if (dUser && dUser.firebaseTokens) {
             for (const t of dUser.firebaseTokens) {
               if (t !== users[i].attributes.firebaseToken) {
                 // await sendFirebase(notification, t, users[i].email)
               }
             }
-          }
+          } */
         } catch (e) {
           console.error('error in firebase / onesignal', users[i].email, users[i].attributes.firebaseToken, event.device.name, message, e)
         }
