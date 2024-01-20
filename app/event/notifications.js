@@ -43,7 +43,8 @@ async function sendEmailNotification (event, user, notification) {
   if (emailTo.length) {
     for (const e of emailTo) {
       try {
-        await email.email([e], [], body, subject, senderEmail)
+        console.log('await email.email(',[e], [], body, subject, senderEmail)
+        // await email.email([e], [], body, subject, senderEmail)
       } catch (err) {
         console.error(err)
       }
@@ -348,7 +349,7 @@ async function processEvent (event) {
       if (notification.notificators.includes('mail')) {
         try {
           console.log('sendEmail', users[i].email)
-          // await sendEmailNotification(event, i, notification)
+          await sendEmailNotification(event, i, notification)
         } catch (e) {
           logException(e, 'sendEmailNotification', users[i].email)
         }
