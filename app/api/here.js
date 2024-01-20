@@ -4,10 +4,10 @@ const axios = require('axios')
 const speedLimitsCache = {}
 let _apiKey
 exports.getSpeedLimit = async (position, event) => {
-  if (!_apiKey) { _apiKey = secrets.getSecretValue('hereSpeedLimits')}
+  if (!_apiKey) { _apiKey = secrets.getSecretValue('here-api-key') }
   if (!speedLimitsCache[position.id]) {
-    const { hereSpeedLimits } = await _apiKey
-    const url = `https://m.fleet.ls.hereapi.com/2/calculateroute.json?apiKey=${hereSpeedLimits}&routeMatch=1&mode=fastest;car;traffic:disabled&waypoint0=${position.latitude},${position.longitude}&attributes=SPEED_LIMITS_FCn(*)`
+    const { apiKey } = await _apiKey
+    const url = `https://m.fleet.ls.hereapi.com/2/calculateroute.json?apiKey=${apiKey}&routeMatch=1&mode=fastest;car;traffic:disabled&waypoint0=${position.latitude},${position.longitude}&attributes=SPEED_LIMITS_FCn(*)`
     const r = await axios.get(url).then(r => r.data).catch(e => console.error(url, e.message, e.response && e.response.data))
     const links = r && r.response && r.response.route && r.response.route[0] && r.response.route[0].leg[0].link
     if (links) {
