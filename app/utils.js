@@ -1,25 +1,24 @@
 const axios = require('axios')
 const parser = require('ua-parser-js')
 
-const logException = (e, ...args) => {
-  console.error(...args, e.message || e, e.response && e.response.data, (e.config && e.config.method), (e.config && e.config.url) || e)
+function _logException (e, req, ...args) {
+  console.error(
+    req && req.headers && req.headers.host,
+    req && req.method,
+    req && req.path,
+    e.message,
+    ...args,
+    e.response && e.response.data,
+    (e.config && e.config.url) || e)
 }
-exports.logException = logException
 
-exports.logError = async (e, req, ...args) => {
+exports.logException = async (e, req, ...args) => {
+  let city
   try {
-    console.error(
-      req.headers['X-Forwarded-For'] && (await this.getCity(req.headers['X-Forwarded-For'].split(',')[0])).region,
-      ...args,
-      req.httpMethod,
-      req.headers.host,
-      req.path,
-      e.message,
-      e.response && e.response.data, (e.config && e.config.url) || e
-    )
-  } catch (ex) {
-    logException(e, ...args)
-  }
+    city = req.headers['X-Forwarded-For'] &&
+      (await this.getCity(req.headers['X-Forwarded-For'].split(',')[0])).region
+  } catch (ex) { console.error(ex) }
+  _logException(e, req, ...args, city)
 }
 
 exports.getCity = (ip) => {

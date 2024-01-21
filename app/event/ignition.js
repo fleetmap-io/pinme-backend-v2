@@ -2,7 +2,7 @@ const dynamo = require('../dynamo')
 const traccar = require('../api/traccar')
 const { logException } = require('../utils')
 
-const driverAppCompanies = [] //TODO: [1554, 1159, 2579, 961, 1086]
+const driverAppCompanies = [] // TODO: [1554, 1159, 2579, 961, 1086]
 
 async function processIgnitionOff (event) {
   try {
@@ -28,7 +28,7 @@ async function processIgnitionOff (event) {
       console.log('processIgnitionOff ignoring event without position', event)
     }
   } catch (e) {
-    logException(e,'processIgnitionOff', event.device && event.device.name)
+    logException(e, undefined, 'processIgnitionOff', event.device && event.device.name)
   }
 }
 

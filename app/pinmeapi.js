@@ -27,6 +27,7 @@ const upload = multer({ storage })
 const app = express()
 const serverlessExpress = require('@vendia/serverless-express')
 const { batchGet } = require('./dynamo')
+const { logException } = require('./utils')
 
 // noinspection JSCheckFunctionSignatures
 app.use(cors({ origin: true, credentials: true, methods: 'GET,PUT,POST,DELETE,OPTIONS' }))
@@ -483,7 +484,7 @@ app.put('/pinmeapi/users/:userId', async (req, res) => {
 app.get('/pinmeapi/users/:userId', async (req, res) => {
   let validUser
   try { validUser = await validateUser(req, req.params.userId) } catch (e) {
-    console.error('invalid session?', req.params.userId, req.header('cookie'), e.message, e.response && e.response.data)
+    logException(e, 'invalid session', 'userId', req.params.userId, 'cookie:', req.header('cookie'))
   }
   if (validUser) {
     const auth = await secrets.getSecret('traccar')
@@ -605,10 +606,6 @@ app.get('/pinmeapi/redirect/:param', async (req, res) => {
         req.header('cookie').split(';').find(c => c.includes('JSESSIONID')).trim()}`)
 })
 
-function logException (e, req, ...args) {
-  console.error(req.method, req.path, e.message, ...args, (e.response && e.response.data), (e.config && e.config.url) || e)
-}
-
 app.post('/reports/quicksight/:report', async (req, res) => {
   try {
     const axios = require('axios').create({ headers: { cookie: req.header('cookie') }, baseURL: apiConfig.basePath })
@@ -664,7 +661,7 @@ app.get('/pinmeapi/traccar/*', async (req, res) => {
     console.log(resp)
     res.json(resp)
   } catch (e) {
-    logException(e, req)
+    await logException(e, req)
     res.status(500).send(e.message)
   }
 })

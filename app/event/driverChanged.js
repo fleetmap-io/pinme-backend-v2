@@ -35,7 +35,8 @@ async function processDriverChanged (event, retries = 3) {
       console.warn('concurrent exception trying again', retries, event.event)
       return processDriverChanged(event, retries--)
     } else {
-      logException(e, 'processDriverChanged', event.event && event.event.attributes, 'after', new Date()-date, 'ms')
+      logException(e, undefined, 'processDriverChanged', event.event && event.event.attributes,
+        'after', new Date() - date, 'ms')
     }
   }
 }

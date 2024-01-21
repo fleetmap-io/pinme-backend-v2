@@ -49,7 +49,7 @@ exports.pushEvents = async (event) => {
     }
     return { statusCode: 200 }
   } catch (err) {
-    logException(err, 'pushEvents', event.event)
+    logException(err, undefined, 'pushEvents', event.event)
     throw err
   }
 }

@@ -10,7 +10,6 @@ const here = require('../api/here')
 const { getUserPartner } = require('fleetmap-partners')
 const dynamo = require('../dynamo')
 const whatsapp = require('../whatsapp')
-const serverStarted = new Date()
 const { getImageUrl } = require('../api/google')
 const { logException } = require('../utils')
 const integration = require('../integration')
@@ -214,7 +213,7 @@ async function getDriver (event, user) {
         }
         return driverCache[position.attributes.driverUniqueId]
       } catch (e) {
-        logException(e, 'getDriver')
+        logException(e, undefined, 'getDriver')
       }
     }
   }
@@ -227,7 +226,7 @@ async function getGroup (event, user) {
       const groups = await traccar.getGroups(event.users[user].id, 2000)
       return groups.find(g => g.id === event.device.groupId)
     } catch (e) {
-      logException(e, 'getGroup after', new Date() - start, 'ms', event.event, user)
+      logException(e, undefined, 'getGroup after', new Date() - start, 'ms', event.event, user)
     }
   }
 }
@@ -348,7 +347,7 @@ async function processEvent (event) {
           console.log('sendSms', users[i].email, users[i].phone, msg)
           // await sms.sendSms(users[i].phone, msg)
         } catch (e) {
-          logException(e, 'sendSms', users[i].phone, msg)
+          logException(e, undefined, 'sendSms', users[i].phone, msg)
         }
       }
       if (notification.notificators.includes('mail')) {
@@ -356,7 +355,7 @@ async function processEvent (event) {
           console.log('sendEmail', users[i].email)
           await sendEmailNotification(event, i, notification)
         } catch (e) {
-          logException(e, 'sendEmailNotification', users[i].email)
+          logException(e, undefined, 'sendEmailNotification', users[i].email)
         }
       }
       if (notification.notificators.includes('web')) {
