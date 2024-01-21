@@ -1,9 +1,10 @@
 const moment = require('moment')
-const {getRowsArray} = require("../mysql");
-const { CloudWatchClient, PutMetricDataCommand } = require("@aws-sdk/client-cloudwatch");
+const { getRowsArray } = require('../mysql')
+const { CloudWatchClient, PutMetricDataCommand } = require('@aws-sdk/client-cloudwatch')
+const { checkCountries } = require('../scheduledtasks')
 
 // Create CloudWatch service client object
-const cw = new CloudWatchClient({ region: process.env.AWS_REGION });
+const cw = new CloudWatchClient({ region: process.env.AWS_REGION })
 
 function getCountByCountry () {
   return getRowsArray(`
