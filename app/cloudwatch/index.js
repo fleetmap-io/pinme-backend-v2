@@ -76,6 +76,7 @@ exports.putMetrics = async (e) => {
     await addDBDefinedMetrics(process.env.DB_HOST_READER, metricsData)
     await addDBDefinedMetrics(process.env.DB_HOST_POSITIONS_READER, metricsData)
   } else {
+    await checkCountries()
     metrics = await getCountByCountry()
     metricsData = metricsData.concat(metrics.map(m => {
       return {
