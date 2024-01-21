@@ -323,6 +323,13 @@ Resources:
       PrimaryKey:
         Name: deviceId
         Type: Number
+  TraccarUserLogins:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: TraccarUserLogins
+      PrimaryKey:
+        Name: user
+        Type: String
 
   SQSS3DailyMigratorUnit:
     Type: AWS::SQS::Queue
