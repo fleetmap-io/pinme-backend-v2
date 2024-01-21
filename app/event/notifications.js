@@ -290,11 +290,17 @@ async function removeToken (token, email, user) {
   }
 }
 
+let firebaseSecret
+
 async function sendFirebase (notification, token, email, user, retries = 3) {
+  if (!firebaseSecret) {
+    firebaseSecret = getSecretValue('firebase-key')
+  }
+  const certificate = await firebaseSecret
   if (!firebaseInitialized) {
     try {
       admin.initializeApp({
-        credential: admin.credential.cert(await getSecretValue('firebase-key')),
+        credential: admin.credential.cert(certificate),
         databaseURL: 'https://pinme-9e6a3.firebaseio.com'
       })
       firebaseInitialized = true
