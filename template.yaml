@@ -27,6 +27,7 @@ Globals:
         QUEUE_EVENTS_ARN: !GetAtt PushEventsQueue.Arn
         QUEUE_LOCATIONS_ARN: !GetAtt PushLocationsQueue.Arn
         S3_BUCKET: !Ref responsesBucket
+        USERS: !Ref TraccarUserLogins
 
 
 Resources:
