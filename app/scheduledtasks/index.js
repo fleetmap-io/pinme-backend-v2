@@ -10,10 +10,7 @@ const partnerByCountry = {
   Morocco: 5,
   Spain: 14
 }
-const disabledByCountry = {
-  Mozambique: 8,
-  Angola: 2
-}
+const disabledByCountry = {}
 
 exports.checkCountries = async () => {
   const rows = await mysql.getRowsArray(`
