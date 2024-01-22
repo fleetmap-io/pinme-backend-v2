@@ -17,7 +17,7 @@ exports.checkCountries = async () => {
         select d.id, p.address, d.uniqueId, d.phone, d.attributes, d.partnerid, p.protocol, 
         p.attributes pAttributes, p.latitude, p.longitude, d.name, d.positionId
         from tc_devices d 
-        left join tc_positions_last p on p.deviceid = d.id and d.positionid = p.id 
+        left join tc_positions_last p on p.deviceid = d.id
         where partnerid = -1 and d.disabled = 0
         `, process.env.DB_HOST_READER)
   const countries = {}
