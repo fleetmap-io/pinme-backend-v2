@@ -484,7 +484,7 @@ app.put('/pinmeapi/users/:userId', async (req, res) => {
 app.get('/pinmeapi/users/:userId', async (req, res) => {
   let validUser
   try { validUser = await validateUser(req, req.params.userId) } catch (e) {
-    await logException(e, req, 'invalid session', 'userId', req.params.userId, 'cookie:', req.header('cookie'))
+    await logException({message: e.message}, req, 'invalid session', 'userId', req.params.userId, 'cookie:', req.header('cookie'))
   }
   if (validUser) {
     const auth = await secrets.getSecret('traccar')
@@ -500,7 +500,7 @@ app.post('/pinmeapi/users/firebase', async (req, res) => {
   try {
     user = await new SessionApi(apiConfig).sessionGet(null, { headers: { cookie: req.header('cookie') } }).then(d => d.data)
   } catch (e) {
-    console.error(req.path, req.header('cookie'), e.message, e.response && e.response.data)
+    logException(e, req, req.header('cookie'))
     return res.status(500).end()
   }
   let dUser = await users.get(user.email)
