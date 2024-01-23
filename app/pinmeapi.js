@@ -484,8 +484,9 @@ app.put('/pinmeapi/users/:userId', async (req, res) => {
 app.get('/pinmeapi/users/:userId', async (req, res) => {
   let validUser
   try { validUser = await validateUser(req, req.params.userId) } catch (e) {
-    await logException({message: e.message}, req, 'invalid session', 'userId', req.params.userId, 'cookie:', req.header('cookie'))
+    await logException({ message: e.message }, req, 'invalid session', 'userId', req.params.userId, 'cookie:', req.header('cookie'))
   }
+
   if (validUser) {
     const auth = await secrets.getSecret('traccar')
     res.json(await new UsersApi(apiConfig).usersGet(req.params.userId, { auth }).then(d => d.data))
