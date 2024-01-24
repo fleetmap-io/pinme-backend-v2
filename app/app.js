@@ -1,5 +1,5 @@
 const CognitoExpress = require('cognito-express')
-const { getOneSignalTokens, getPartnerData, newDomains } = require('fleetmap-partners')
+const { getOneSignalTokens } = require('fleetmap-partners')
 const { logException } = require('./utils')
 const { CognitoIdentityProviderClient, ListUsersCommand } = require('@aws-sdk/client-cognito-identity-provider')
 
@@ -11,36 +11,22 @@ exports.mainFunction = async (event) => {
     hmac.update(email)
     return okResponse(hmac.digest('hex'), event)
   }
+
   if (!event.headers.Authorization) {
     await logException(new Error('Access Token missing from header'), event)
     return { statusCode: 401, body: 'Access Token missing from header' }
   }
-  const host = event.headers['x-forwarded-host']
-  const partner = getPartnerData(host)
-  let userPool, response
-  const newDomain = newDomains.indexOf(host) !== -1
-  try {
-    userPool = partner.aws_user_pools_id
-    response = await new CognitoExpress({
-      region: newDomain ? 'sa-east-1' : 'us-east-1',
-      cognitoUserPoolId: newDomain ? 'sa-east-1_b7SDvkW1U' : userPool,
-      tokenUse: 'access' // Possible Values: access | id
-    }).validate(event.headers.Authorization)
-  } catch (e) {
-    console.warn(e.message || e, event.headers, host, 'try again')
-    userPool = 'us-east-1_olpbc774t'
-    const cognitoExpress = new CognitoExpress({
-      region: 'us-east-1',
-      cognitoUserPoolId: userPool,
-      tokenUse: 'access' // Possible Values: access | id
-    })
-    response = await cognitoExpress.validate(event.headers.Authorization)
-  }
+
+  const response = await new CognitoExpress({
+    region: 'sa-east-1',
+    cognitoUserPoolId: 'sa-east-1_b7SDvkW1U',
+    tokenUse: 'access' // Possible Values: access | id
+  }).validate(event.headers.Authorization)
 
   console.log('token auth_time', new Date(response.auth_time * 1000))
-  const cognito = new CognitoIdentityProviderClient({ region: partner.aws_cognito_region || 'us-east-1' })
+  const cognito = new CognitoIdentityProviderClient({ region: 'sa-east-1' })
   const listUsersResponse = await cognito.send(new ListUsersCommand({
-    UserPoolId: userPool,
+    UserPoolId: 'sa-east-1_b7SDvkW1U',
     Filter: `sub = "${response.sub}"`,
     Limit: 1
   }))
