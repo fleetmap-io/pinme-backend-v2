@@ -1,5 +1,5 @@
 const CognitoExpress = require('cognito-express')
-const { getOneSignalTokens, getPartnerData } = require('fleetmap-partners')
+const { getOneSignalTokens, getPartnerData, newDomains } = require('fleetmap-partners')
 const { logException } = require('./utils')
 const { CognitoIdentityProviderClient, ListUsersCommand } = require('@aws-sdk/client-cognito-identity-provider')
 
@@ -18,11 +18,12 @@ exports.mainFunction = async (event) => {
   const host = event.headers['x-forwarded-host']
   const partner = getPartnerData(host)
   let userPool, response
+  const newDomain = newDomains.indexOf(host) !== -1
   try {
     userPool = partner.aws_user_pools_id
     response = await new CognitoExpress({
       region: partner.aws_cognito_region || 'us-east-1',
-      cognitoUserPoolId: (partner.aws_cognito_region === 'sa-east-1' && '280g63c53bs52rhn9u3mdkp487') || userPool,
+      cognitoUserPoolId: newDomain ? '280g63c53bs52rhn9u3mdkp487' : userPool,
       tokenUse: 'access' // Possible Values: access | id
     }).validate(event.headers.Authorization)
   } catch (e) {
