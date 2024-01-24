@@ -29,7 +29,6 @@ Globals:
         S3_BUCKET: !Ref responsesBucket
         USERS: !Ref TraccarUserLogins
 
-
 Resources:
   VPC:
     Type: AWS::EC2::VPC

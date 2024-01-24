@@ -10,7 +10,7 @@ module.exports = async (e) => {
     altitude: e.position.altitude,
     ignition: e.position.attributes.ignition,
     speed: e.position.speed,
-    num_plate: e.device.attributes.license_plate && e.device.attributes.license_plate.replace(/[ -]/g, ''),
+    num_plate: e.device.attributes.license_plate && e.device.attributes.license_plate.replace(/[ \t-]/g, ''),
     provider: 'Fleetrack',
     gps_id: e.device.id,
     date_time: e.position.fixTime
