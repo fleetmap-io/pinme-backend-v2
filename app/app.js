@@ -22,7 +22,7 @@ exports.mainFunction = async (event) => {
     userPool = partner.aws_user_pools_id
     response = await new CognitoExpress({
       region: partner.aws_cognito_region || 'us-east-1',
-      cognitoUserPoolId: userPool,
+      cognitoUserPoolId: (partner.aws_cognito_region === 'sa-east-1' && '280g63c53bs52rhn9u3mdkp487') || userPool,
       tokenUse: 'access' // Possible Values: access | id
     }).validate(event.headers.Authorization)
   } catch (e) {
@@ -49,7 +49,7 @@ exports.mainFunction = async (event) => {
     const [cookies] = await (await require('./auth')).getUserSession(email.Value)
     return okResponse('', event, cookies)
   } catch (e) {
-    logException(e, undefined, 'auth.getUserSession', email)
+    await logException(e, undefined, 'auth.getUserSession', email)
     return { statusCode: 500, body: e.message }
   }
 }
