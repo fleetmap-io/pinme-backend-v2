@@ -2,8 +2,12 @@ const CognitoExpress = require('cognito-express')
 const { getOneSignalTokens } = require('fleetmap-partners')
 const { logException } = require('./utils')
 const { CognitoIdentityProviderClient, ListUsersCommand } = require('@aws-sdk/client-cognito-identity-provider')
+const { migrateUser } = require('./cognito')
 
 exports.mainFunction = async (event) => {
+  if (event.triggerSource === 'UserMigration_Authentication') {
+    return migrateUser(event)
+  }
   if (event.queryStringParameters && event.queryStringParameters.emailAuthHash) {
     const email = event.queryStringParameters.emailAuthHash
     const crypto = require('crypto')
