@@ -22,7 +22,7 @@ exports.mainFunction = async (event) => {
   try {
     userPool = partner.aws_user_pools_id
     response = await new CognitoExpress({
-      region: partner.aws_cognito_region || 'us-east-1',
+      region: newDomain ? 'sa-east-1' : 'us-east-1',
       cognitoUserPoolId: newDomain ? 'sa-east-1_b7SDvkW1U' : userPool,
       tokenUse: 'access' // Possible Values: access | id
     }).validate(event.headers.Authorization)
