@@ -1,4 +1,5 @@
 const CognitoExpress = require('cognito-express')
+const traccar = require('./api/traccar')
 
 exports.validate = async (req, res) => {
   await _validate(req, res)
@@ -23,4 +24,16 @@ async function _validate (req, res, retries = 10) {
     console.error(e)
     if (retries > 0) { await _validate(req, res, retries--) }
   }
+}
+
+exports.migrateUser = async (e, context) => {
+  console.log(e)
+  /* await traccar.createSession(e.userName, e.request.password).then(d => d.headers['set-cookie'])
+  e.response.userAttributes = {
+    username: e.userName,
+    email: e.userName,
+    email_verified: true
+  }
+  e.response.finalUserStatus = 'CONFIRMED'
+  context.succeed(e) */
 }

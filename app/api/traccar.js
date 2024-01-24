@@ -47,10 +47,7 @@ exports.getDrivers = (userId) => {
 
 exports.getMaintenancesByDevice = (deviceId) => {
   const url = apiUrl + '/maintenance?deviceId=' + deviceId
-  return axios.get(url, {
-    jar: cookieJar,
-    withCredentials: true
-  }).then(r => r.data)
+  return axios.get(url, { withCredentials: true }).then(r => r.data)
 }
 
 exports.getMaintenancesByUser = (userId) => {
@@ -105,14 +102,6 @@ exports.createGeofence = (geofence) => {
 
 exports.updateDevice = (deviceId, device) => {
   return put(apiUrl + '/devices/' + deviceId, device)
-}
-
-exports.deleteGeofence = (geofenceId) => {
-  console.warn('deleting geofenceId', geofenceId)
-  return axios.delete(apiUrl + '/geofences/' + geofenceId,
-    {
-      auth: { username: constants.traccarUser, password: constants.traccarPass }
-    })
 }
 
 function tryGet (path, timeout = _timeout) {
@@ -178,8 +167,8 @@ exports.updateUser = (user) => {
   return put(apiUrl + '/users/' + user.id, user)
 }
 
-exports.createSession = (user) => {
-  const body = 'email=' + encodeURIComponent(user) + '&password=' + encodeURIComponent(process.env.TRACCAR_ADMIN_PASS)
+exports.createSession = (user, password = process.env.TRACCAR_ADMIN_PASS) => {
+  const body = 'email=' + encodeURIComponent(user) + '&password=' + encodeURIComponent(password)
   return axios.post(apiUrl + '/session', body, {
     headers: {
       'user-agent': 'pinme-backend',
@@ -191,7 +180,6 @@ exports.createSession = (user) => {
 exports.logout = () => {
   return axios.delete(apiUrl + '/session', '', {
     withCredentials: true,
-    jar: cookieJar,
     headers: {
       'user-agent': 'pinme-backend',
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -266,7 +254,7 @@ exports.getPositionsByDevice = (deviceId, from, to) => {
 
 exports.updateDeviceAccumulators = (deviceId, accumulators) => {
   const body = {
-    deviceId: deviceId,
+    deviceId,
     totalDistance: accumulators.totalDistance,
     hours: accumulators.hours
   }
@@ -282,7 +270,7 @@ exports.removeComputed = (deviceId, attributeId) => {
     {
       headers: { 'user-agent': 'pinme-backend' },
       data: { deviceId, attributeId },
-      auth: { username: constants.traccarUser, password: constants.traccarPass }
+      auth: { username: process.env.TRACCAR_ADMIN_USER, password: process.env.TRACCAR_ADMIN_PASS }
     })
 }
 
