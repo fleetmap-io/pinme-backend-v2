@@ -15,7 +15,7 @@ exports.mainFunction = async (event) => {
     await logException(new Error('Access Token missing from header'), event)
     return { statusCode: 401, body: 'Access Token missing from header' }
   }
-  const region = 'eu-west-1'
+  const region = 'eu-west-3'
   let email
   try {
     const response = await new CognitoExpress({
