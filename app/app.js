@@ -16,27 +16,28 @@ exports.mainFunction = async (event) => {
     return { statusCode: 401, body: 'Access Token missing from header' }
   }
   const region = 'eu-west-1'
-
-  const response = await new CognitoExpress({
-    region,
-    cognitoUserPoolId: process.env.USER_POOL_ID,
-    tokenUse: 'access' // Possible Values: access | id
-  }).validate(event.headers.Authorization)
-
-  console.log('token auth_time', new Date(response.auth_time * 1000))
-  const cognito = new CognitoIdentityProviderClient({ region })
-  const listUsersResponse = await cognito.send(new ListUsersCommand({
-    UserPoolId: process.env.USER_POOL_ID,
-    Filter: `sub = "${response.sub}"`,
-    Limit: 1
-  }))
-  const email = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'email') ||
-         listUsersResponse.Users[0].Attributes.find(a => a.Name === 'phone_number')
+  let email
   try {
+    const response = await new CognitoExpress({
+      region,
+      cognitoUserPoolId: process.env.USER_POOL_ID,
+      tokenUse: 'access' // Possible Values: access | id
+    }).validate(event.headers.Authorization)
+
+    console.log('token auth_time', new Date(response.auth_time * 1000))
+    const cognito = new CognitoIdentityProviderClient({ region })
+    const listUsersResponse = await cognito.send(new ListUsersCommand({
+      UserPoolId: process.env.USER_POOL_ID,
+      Filter: `sub = "${response.sub}"`,
+      Limit: 1
+    }))
+    email = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'email') ||
+         listUsersResponse.Users[0].Attributes.find(a => a.Name === 'phone_number')
+
     const [cookies] = await (await require('./auth')).getUserSession(email.Value)
     return okResponse('', event, cookies)
   } catch (e) {
-    await logException(e, undefined, 'auth.getUserSession', email)
+    await logException(e, undefined, 'auth.getUserSession', email, process.env.USER_POOL_ID)
     return { statusCode: 500, body: e.message }
   }
 }
