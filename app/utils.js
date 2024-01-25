@@ -15,7 +15,7 @@ function _logException (e, req, ...args) {
 exports.logException = async (e, req, ...args) => {
   let city
   try {
-    city = req.headers['X-Forwarded-For'] &&
+    city = req && req.headers && req.headers['X-Forwarded-For'] &&
       (await this.getCity(req.headers['X-Forwarded-For'].split(',')[0])).region
   } catch (ex) { console.error(ex) }
   _logException(e, req, ...args, city)
