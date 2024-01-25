@@ -21,6 +21,7 @@ Globals:
         DB_HOST_READER: '{{resolve:secretsmanager:db:SecretString:host_reader}}'
         DB_HOST_POSITIONS: '{{resolve:secretsmanager:db:SecretString:host_positions}}'
         DB_HOST_POSITIONS_READER: '{{resolve:secretsmanager:db:SecretString:host_positions_reader}}'
+        USER_POOL_ID: '{{resolve:ssm:/traccar/user-pool-id}}'
         IPINFO_TOKEN: df58ccf730ab1c
         DEVICE_IGNITION_OFF_TABLE: !Ref DevicesIgnitionOff
         QUEUE_S3_DAILY_MIGRATOR_UNIT: !Ref SQSS3DailyMigratorUnit

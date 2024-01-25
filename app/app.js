@@ -15,17 +15,18 @@ exports.mainFunction = async (event) => {
     await logException(new Error('Access Token missing from header'), event)
     return { statusCode: 401, body: 'Access Token missing from header' }
   }
+  const region = 'eu-west-1'
 
   const response = await new CognitoExpress({
-    region: 'sa-east-1',
-    cognitoUserPoolId: 'sa-east-1_b7SDvkW1U',
+    region,
+    cognitoUserPoolId: process.env.USER_POOL_ID,
     tokenUse: 'access' // Possible Values: access | id
   }).validate(event.headers.Authorization)
 
   console.log('token auth_time', new Date(response.auth_time * 1000))
-  const cognito = new CognitoIdentityProviderClient({ region: 'sa-east-1' })
+  const cognito = new CognitoIdentityProviderClient({ region })
   const listUsersResponse = await cognito.send(new ListUsersCommand({
-    UserPoolId: 'sa-east-1_b7SDvkW1U',
+    UserPoolId: process.env.USER_POOL_ID,
     Filter: `sub = "${response.sub}"`,
     Limit: 1
   }))
