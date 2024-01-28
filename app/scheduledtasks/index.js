@@ -35,7 +35,7 @@ exports.checkCountries = async () => {
       device.disabled = true
       console.log('disable device from', country, r)
       await traccar.updateDevice(device.id, device)
-    } else if (!r.positionId) {
+    } else if (!r.address) {
       console.log('deleting', r)
       await traccar.deleteDevice(r.id)
     } else {
