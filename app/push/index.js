@@ -7,7 +7,7 @@ exports.pushPositions = async (e) => {
       if (devPosition.device.attributes.integration) {
         for (const target of devPosition.device.attributes.integration.split(',')) {
           if (integration[target.toLowerCase()]) {
-            return integration[target.toLowerCase()](devPosition)
+            await integration[target.toLowerCase()](devPosition)
           } else {
             console.warn('no integration for', devPosition.device.attributes.integration, devPosition.device.name)
           }
