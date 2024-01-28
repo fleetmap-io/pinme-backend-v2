@@ -37,8 +37,10 @@ describe('Tests index', function () {
 
   // eslint-disable-next-line no-undef
   it('works on pinemapi', async () => {
-    const result = await pinmeapi.main(require('../../../events/pinmeapi.json'))
+    let result = await pinmeapi.main(require('../../../events/pinmeapi.json'))
     checkResult(result)
+    result = await pinmeapi.main(require('../../../events/pinmeapi.json'))
+    console.log(result)
   })
 
   // eslint-disable-next-line no-undef

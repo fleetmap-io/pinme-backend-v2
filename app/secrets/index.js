@@ -1,7 +1,7 @@
 const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager')
 const client = new SecretsManagerClient({ region: 'us-east-1' })
 
-exports.getSecretValue = async secretName => {
+const getSecretValue = async secretName => {
   const data = await client.send(new GetSecretValueCommand(({ SecretId: secretName })))
   // Decrypts secret using the associated KMS CMK.
   // Depending on whether the secret is a string or binary, one of these fields will be populated.
@@ -12,6 +12,9 @@ exports.getSecretValue = async secretName => {
     return JSON.parse(buff.toString('ascii'))
   }
 }
+
+exports.getSecret = getSecretValue
+exports.getSecretValue = getSecretValue
 
 exports.getSecretObject = async (secretName) => {
   const command = new GetSecretValueCommand({ SecretId: secretName })
