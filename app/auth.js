@@ -49,8 +49,9 @@ exports.insertUser = async (userName, name, email, clientId) => {
   console.log(await mysql.getRows(`update tc_users set partnerid=${partnerId} where id=${newUser.data.id}`))
 }
 
-async function updateUser (user) {
+async function updateUser (user, token) {
   user.password = process.env.TRACCAR_ADMIN_PASS
+  user.token = token
   return traccar.updateUser(user)
 }
 exports.updateUser = updateUser
@@ -59,7 +60,7 @@ exports.logout = async () => {
   await traccar.logout()
 }
 
-exports.getUserSession = async (email) => {
+exports.getUserSession = async (email, token) => {
   console.log('getUserSession', email)
   let user = await getUser(email)
   if (!user) {
@@ -68,7 +69,7 @@ exports.getUserSession = async (email) => {
   const oldHash = user.hashedpassword
   const oldSalt = user.salt
   user = await traccar.getUser(user.id)
-  await updateUser(user)
+  await updateUser(user, token)
   const cookie = await traccar.createSession(email).then(d => d.headers['set-cookie'])
   await resetHash(user.id, oldHash, oldSalt)
   return cookie
