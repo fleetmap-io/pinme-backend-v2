@@ -1,12 +1,10 @@
-const apiUrl = 'https://slowreports.pinme.io/api'
 const osmAndUrl = 'http://server.pinme.io:5055/?'
 const axios = require('axios')
 const querystring = require('querystring')
 const NodeCache = require('node-cache')
 const _timeout = 10000
-exports.basePath = apiUrl
-exports.axios = axios
 const cache = new NodeCache({ stdTTL: 600, useClones: false, checkperiod: 120 })
+const apiUrl = process.env.TRACCAR_API_BASE_PATH
 
 const config = {
   auth: { username: process.env.TRACCAR_ADMIN_USER, password: process.env.TRACCAR_ADMIN_PASS },
