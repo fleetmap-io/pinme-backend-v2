@@ -21,7 +21,7 @@ exports.pushPositions = async (e) => {
   } catch (err) {
     const deviceName = devPosition && devPosition.device && devPosition.device.name
     const integration = devPosition && devPosition.device && devPosition.device.attributes.integration
-    console.warn(integration, deviceName, err.message, err.response && err.response.data)
+    console.warn(integration, deviceName, err.message && err.message.replace(/ERROR/g, 'error'), err.response && err.response.data)
     // don't send 500, it will put weight on traccar
     return { statusCode: 200 }
   }
