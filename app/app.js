@@ -33,7 +33,7 @@ exports.mainFunction = async (event) => {
     const [cookies] = await (await require('./auth')).getUserSession(email.Value, event.headers.Authorization)
     return okResponse('', event, cookies)
   } catch (e) {
-    await logException(e, undefined, 'auth.getUserSession', email || process.env.USER_POOL_ID)
+    await logException(e, undefined, 'auth.getUserSession', email || process.env.USER_POOL_ID, event.headers.Authorization)
     return { statusCode: 500, body: e.message }
   }
 }
