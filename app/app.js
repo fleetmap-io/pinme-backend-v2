@@ -30,7 +30,7 @@ exports.mainFunction = async (event) => {
       Limit: 1
     }))
     email = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'email')
-    const [cookies] = await (await require('./auth')).getUserSession(email.Value, event.headers.Authorization)
+    const [cookies] = await (await require('./auth')).getUserSession(email.Value, crypto.randomUUID())
     return okResponse('', cookies)
   } catch (e) {
     await logException(e, undefined, 'auth.getUserSession', email || process.env.USER_POOL_ID, event.headers.Authorization)
