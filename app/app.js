@@ -8,7 +8,7 @@ exports.mainFunction = async (event) => {
     const crypto = require('crypto')
     const hmac = crypto.createHmac('sha256', getOneSignalTokens(event.headers.host).token)
     hmac.update(email)
-    return okResponse(hmac.digest('hex'), event)
+    return okResponse(hmac.digest('hex'))
   }
   if (!event.headers.Authorization) {
     await logException(new Error('Access Token missing from header'), event)
@@ -31,14 +31,14 @@ exports.mainFunction = async (event) => {
     }))
     email = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'email')
     const [cookies] = await (await require('./auth')).getUserSession(email.Value, event.headers.Authorization)
-    return okResponse('', event, cookies)
+    return okResponse('', cookies)
   } catch (e) {
     await logException(e, undefined, 'auth.getUserSession', email || process.env.USER_POOL_ID, event.headers.Authorization)
     return { statusCode: 500, body: e.message }
   }
 }
 
-function okResponse (result, event, cookie) {
+function okResponse (result, cookie) {
   return {
     statusCode: 200,
     headers: cookie ? { 'Set-Cookie': cookie } : {},
