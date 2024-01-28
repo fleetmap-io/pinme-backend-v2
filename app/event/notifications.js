@@ -226,7 +226,7 @@ async function getGroup (event, user) {
       const groups = await traccar.getGroups(event.users[user].id, 2000)
       return groups.find(g => g.id === event.device.groupId)
     } catch (e) {
-      logException(e, undefined, 'getGroup after', new Date() - start, 'ms', event.event, user)
+      await logException(e, undefined, 'getGroup after', new Date() - start, 'ms', event.event, user)
     }
   }
 }
