@@ -2,10 +2,11 @@ const CognitoExpress = require('cognito-express')
 const { getOneSignalTokens } = require('fleetmap-partners')
 const { logException } = require('./utils')
 const { CognitoIdentityProviderClient, ListUsersCommand } = require('@aws-sdk/client-cognito-identity-provider')
+const crypto = require('crypto')
+
 exports.mainFunction = async (event) => {
   if (event.queryStringParameters && event.queryStringParameters.emailAuthHash) {
     const email = event.queryStringParameters.emailAuthHash
-    const crypto = require('crypto')
     const hmac = crypto.createHmac('sha256', getOneSignalTokens(event.headers.host).token)
     hmac.update(email)
     return okResponse(hmac.digest('hex'))
@@ -33,7 +34,7 @@ exports.mainFunction = async (event) => {
     const [cookies] = await (await require('./auth')).getUserSession(email.Value, crypto.randomUUID())
     return okResponse('', cookies)
   } catch (e) {
-    await logException(e, undefined, 'auth.getUserSession', email || process.env.USER_POOL_ID, event.headers.Authorization)
+    await logException(e, undefined, 'auth.getUserSession', email || process.env.USER_POOL_ID)
     return { statusCode: 500, body: e.message }
   }
 }
