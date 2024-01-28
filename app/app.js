@@ -41,12 +41,7 @@ exports.mainFunction = async (event) => {
 function okResponse (result, event, cookie) {
   return {
     statusCode: 200,
-    headers: {
-      'Access-Control-Allow-Origin': event.headers.origin || '*',
-      'Access-Control-Allow-Headers': 'content-type, authorization',
-      'Access-Control-Allow-Credentials': 'true',
-      ...(cookie ? { 'Set-Cookie': cookie } : {})
-    },
+    headers: cookie ? { 'Set-Cookie': cookie } : {},
     body: JSON.stringify(result)
   }
 }
