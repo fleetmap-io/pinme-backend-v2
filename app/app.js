@@ -12,7 +12,7 @@ exports.mainFunction = async (event) => {
     const email = event.queryStringParameters.emailAuthHash
     const hmac = crypto.createHmac('sha256', getOneSignalTokens(event.headers.host).token)
     hmac.update(email)
-    return okResponse(hmac.digest('hex'))
+    return okResponse(hmac.digest('hex'), event)
   }
   if (!event.headers.Authorization) {
     await logException(new Error('Access Token missing from header'), event)
@@ -35,14 +35,14 @@ exports.mainFunction = async (event) => {
     }))
     email = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'email')
     const [cookies] = await (await require('./auth')).getUserSession(email.Value, crypto.randomUUID())
-    return okResponse('', cookies)
+    return okResponse('', event, cookies)
   } catch (e) {
     await logException(e, undefined, 'auth.getUserSession', email || process.env.USER_POOL_ID)
     return { statusCode: 500, body: e.message }
   }
 }
 
-function okResponse (result, cookie) {
+function okResponse (result, event, cookie) {
   return {
     statusCode: 200,
     headers: {
