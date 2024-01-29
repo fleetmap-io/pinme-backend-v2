@@ -5,6 +5,9 @@ const { CognitoIdentityProviderClient, ListUsersCommand } = require('@aws-sdk/cl
 const crypto = require('crypto')
 
 exports.mainFunction = async (event) => {
+  if (event.queryStringParameters.jsessionid && event.queryStringParameters.jsessionid) {
+    return okResponse('', event, `JSESSIONID=${event.queryStringParameters.jsessionid}; SameSite=None; Secure; Path=/`])
+  }
   if (event.queryStringParameters && event.queryStringParameters.emailAuthHash) {
     const email = event.queryStringParameters.emailAuthHash
     const hmac = crypto.createHmac('sha256', getOneSignalTokens(event.headers.host).token)
@@ -42,7 +45,12 @@ exports.mainFunction = async (event) => {
 function okResponse (result, cookie) {
   return {
     statusCode: 200,
-    headers: cookie ? { 'Set-Cookie': cookie } : {},
+    headers: {
+      'Access-Control-Allow-Origin': event.headers.origin || '*',
+      'Access-Control-Allow-Headers': 'content-type, authorization',
+      'Access-Control-Allow-Credentials': 'true',
+      ...(cookie ? { 'Set-Cookie': cookie } : {})
+    },
     body: JSON.stringify(result)
   }
 }
