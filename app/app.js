@@ -5,6 +5,9 @@ const { CognitoIdentityProviderClient, ListUsersCommand } = require('@aws-sdk/cl
 const crypto = require('crypto')
 
 exports.mainFunction = async (event) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return okResponse('', event)
+  }
   if (event.queryStringParameters.jsessionid && event.queryStringParameters.jsessionid) {
     return okResponse('', event, `JSESSIONID=${event.queryStringParameters.jsessionid}; SameSite=None; Secure; Path=/`])
   }
