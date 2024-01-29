@@ -49,7 +49,7 @@ function okResponse (result, event, cookie) {
   const r = {
     statusCode: 200,
     headers: {
-      'Access-Control-Allow-Origin': event.headers.origin || '*',
+      'Access-Control-Allow-Origin': 'https://gpsmanager.io',
       'Access-Control-Allow-Headers': 'content-type, authorization',
       'Access-Control-Allow-Credentials': 'true',
       ...(cookie ? { 'Set-Cookie': cookie } : {})
