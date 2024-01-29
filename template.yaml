@@ -6,9 +6,8 @@ Globals:
   Api:
     Cors:
       AllowOrigin: "'https://gpsmanager.io'"
-      AllowHeaders:
-        - "authorization"
-        - "content-type"
+      AllowHeaders: "'content-type,authorization'"
+      AllowCredentials: true
   Function:
     Timeout: 30
     Environment:
