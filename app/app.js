@@ -9,7 +9,7 @@ exports.mainFunction = async (event) => {
     return okResponse('', event)
   }
   if (event.queryStringParameters.jsessionid && event.queryStringParameters.jsessionid) {
-    return okResponse('', event, `JSESSIONID=${event.queryStringParameters.jsessionid}; SameSite=None; Secure; Path=/`])
+    return okResponse('', event, `JSESSIONID=${event.queryStringParameters.jsessionid}; SameSite=None; Secure; Path=/`)
   }
   if (event.queryStringParameters && event.queryStringParameters.emailAuthHash) {
     const email = event.queryStringParameters.emailAuthHash

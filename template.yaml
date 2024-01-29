@@ -128,7 +128,7 @@ Resources:
           Type: Api
           Properties:
             Path: /backend
-            Method: get
+            Method: any
   ProcessEventsAndLocationsQueue:
     Type: AWS::Serverless::Function
     Properties:
