@@ -5,7 +5,7 @@ Description: Pinme backend v2
 Globals:
   Api:
     Cors:
-      AllowOrigin: "'*'"
+      AllowOrigin: "'https://gpsmanager.io'"
       AllowHeaders: "'*'"
   Function:
     Timeout: 30

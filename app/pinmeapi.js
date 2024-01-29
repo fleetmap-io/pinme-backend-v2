@@ -500,16 +500,16 @@ app.post('/pinmeapi/users/firebase', async (req, res) => {
   let user
   try {
     user = await new SessionApi(apiConfig).sessionGet(null, { headers: { cookie: req.header('cookie') } }).then(d => d.data)
+    let dUser = await users.get(user.email)
+    if (!dUser) { dUser = { user: user.email } }
+    if (!dUser.firebaseTokens) { dUser.firebaseTokens = [] }
+    if (!dUser.firebaseTokens.includes(req.body.token)) {
+      dUser.firebaseTokens.push(req.body.token)
+      await users.put(dUser)
+    }
   } catch (e) {
-    logException(e, req, req.header('cookie'))
+    await logException(e, req, req.header('cookie'))
     return res.status(500).end()
-  }
-  let dUser = await users.get(user.email)
-  if (!dUser) { dUser = { user: user.email } }
-  if (!dUser.firebaseTokens) { dUser.firebaseTokens = [] }
-  if (!dUser.firebaseTokens.includes(req.body.token)) {
-    dUser.firebaseTokens.push(req.body.token)
-    await users.put(dUser)
   }
   res.status(200).end()
 })
