@@ -1,10 +1,9 @@
-const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager')
-const client = new SecretsManagerClient({ region: 'us-east-1' })
-const _mapillary = client.send(new GetSecretValueCommand({ SecretId: 'mapillary' })).then(s => JSON.parse(s.SecretString))
 const axios = require('axios')
 const circle = require('@turf/circle')
 const bbox = require('@turf/bbox')
+const { getSecretValue } = require('./secrets')
 const crg = require('country-reverse-geocoding').country_reverse_geocoding()
+let _mapillary
 
 exports.get = async (params) => {
   const country = crg.get_country(parseFloat(params.latitude), parseFloat(params.longitude))
@@ -25,6 +24,9 @@ exports.imageUrl = async (params) => {
 
 async function mapillary (params) {
   let url
+  if (!_mapillary) {
+    _mapillary = getSecretValue('mapillary')
+  }
   try {
     const secret = await _mapillary
     const baseUrl = `https://graph.mapillary.com/images?access_token=${secret.token}&fields=id,compass_angle,thumb_256_url`
