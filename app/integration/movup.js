@@ -1,8 +1,7 @@
 const axios = require('axios')
-const { logException } = require('../utils')
 module.exports = async (e) => {
   try { await require('./sitrans')(e, 'Basic RmxlZXRyYWNrOnlZb0htR2tFN21Yag==', 'https://interop.altomovup.com/gpssignal/api/v1/data/ulog-cl') } catch (ex) {
-    await logException(ex, undefined, e)
+    console.warn('sitrans', (ex.response && ex.response.data) || ex.message, e)
   }
   const data = {
     lng: e.position.longitude,
