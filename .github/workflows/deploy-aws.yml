@@ -13,4 +13,3 @@ jobs:
           aws-region: us-east-1
       - run: sam build
       - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
-      - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --region eu-west-1
