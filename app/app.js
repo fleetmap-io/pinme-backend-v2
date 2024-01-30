@@ -56,6 +56,6 @@ function okResponse (result, event, cookie) {
     },
     body: JSON.stringify(result)
   }
-  console.log(r)
+  console.log(event, r)
   return r
 }
