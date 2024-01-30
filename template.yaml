@@ -3,10 +3,6 @@ Transform: AWS::Serverless-2016-10-31
 Description: Pinme backend v2
 
 Globals:
-  Api:
-    Cors:
-      AllowHeaders: "'content-type,authorization'"
-      AllowCredentials: true
   Function:
     Timeout: 30
     Environment:
