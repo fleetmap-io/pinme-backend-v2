@@ -105,6 +105,7 @@ Resources:
   MainFunction:
     Type: AWS::Serverless::Function
     Properties:
+      MemorySize: 2048
       FunctionName: pinme-backend-main-function
       Handler: app.mainFunction
       Runtime: nodejs16.x
