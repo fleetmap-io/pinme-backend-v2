@@ -25,6 +25,7 @@ Globals:
         QUEUE_LOCATIONS_ARN: !GetAtt PushLocationsQueue.Arn
         S3_BUCKET: !Ref responsesBucket
         USERS: !Ref TraccarUserLogins
+        FORCE_RELOAD: 1
 
 Resources:
   VPC:
