@@ -46,7 +46,7 @@ exports.mainFunction = async (event) => {
 }
 
 function okResponse (result, event, cookie) {
-  const r = {
+  return {
     statusCode: 200,
     headers: {
       'Access-Control-Allow-Origin': event.headers.origin,
@@ -56,6 +56,4 @@ function okResponse (result, event, cookie) {
     },
     body: JSON.stringify(result)
   }
-  console.log(event, r)
-  return r
 }
