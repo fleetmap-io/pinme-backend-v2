@@ -496,6 +496,7 @@ app.get('/pinmeapi/users/:userId', async (req, res) => {
 })
 
 app.get('/pinmeapi/syncdata/:userId', async (req, res) => {
+  console.log('syncdata', req.params.userId)
   let validUser
   try { validUser = await validateUser(req, req.params.userId) } catch (e) {
     await logException({ message: e.message }, req, 'invalid session', 'userId', req.params.userId, 'cookie:', req.header('cookie'))
