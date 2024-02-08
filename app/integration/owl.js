@@ -2,7 +2,7 @@ const idProvider = '77056973-7'
 const idCompany = '96799790-0'
 const axios = require('axios').create({ baseURL: 'https://caserones.owlchile.cl/v1/' + idProvider })
 module.exports = async (e) => {
-  // const token = await axios.get('login', { headers: { auth: 'Fleetrack2024' } }).then(d => d.data)
+  const token = await axios.get('login', { headers: { auth: 'Fleetrack2024' } }).then(d => d.data)
   const licensePlate = e.device.attributes.license_plate.replace('-', '').trim()
   const url = `${idCompany}/${licensePlate}/event`
   const data = {
@@ -27,5 +27,5 @@ module.exports = async (e) => {
     id_driver: ''
   }
   console.log('owl', data, url)
-  console.log('owl', await axios.post(url, data).then(d => d.data))
+  console.log('owl', await axios.post(url, data, { headers: { authentication: 'Bearer ' + token.access_token } }).then(d => d.data))
 }
