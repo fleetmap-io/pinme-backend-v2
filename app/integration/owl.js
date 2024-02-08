@@ -15,7 +15,7 @@ module.exports = async (e) => {
     license_plate: licensePlate,
     head: e.position.course,
     velocity: parseInt(e.position.speed),
-    engine: e.position.attributes.ignition,
+    engine: e.position.attributes.ignition ? 1 : 0,
     altitude: e.position.altitude,
     satellites: 0,
     bpanic: -1,
