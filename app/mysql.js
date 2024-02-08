@@ -15,3 +15,5 @@ exports.getRowsArray = async (sql, host = process.env.DB_HOST) => {
   const [result] = await getRows(sql, host)
   return result
 }
+
+exports.query = getRows

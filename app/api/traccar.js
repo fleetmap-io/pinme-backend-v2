@@ -1,6 +1,4 @@
-const osmAndUrl = 'http://server.pinme.io:5055/?'
 const axios = require('axios')
-const querystring = require('querystring')
 const NodeCache = require('node-cache')
 const _timeout = 10000
 const cache = new NodeCache({ stdTTL: 600, useClones: false, checkperiod: 120 })
@@ -13,12 +11,6 @@ const config = {
 
 exports.getNotifications = (userId, deviceId) => {
   return get(`/notifications?userId=${userId}` + (deviceId ? `&deviceId=${deviceId}` : ''))
-}
-
-exports.sendPosition = (position) => {
-  const url = osmAndUrl + querystring.stringify(position)
-  console.log(url)
-  return axios.get(url)
 }
 
 exports.getUser = (id) => {
@@ -133,6 +125,10 @@ function post (url, data) {
     config)
 }
 
+function del (url, data) {
+  return axios.delete(url, data)
+}
+
 function put (url, data) {
   return axios.put(url, data,
     config)
@@ -238,11 +234,11 @@ exports.getPosition = (positionId, deviceId) => {
   return get(`/positions?id=${positionId}&deviceId=${deviceId}`)
 }
 
-exports.getPositions = (positionIds) => {
-  positionIds = positionIds.map(id => 'id=' + id).join('&')
-  const url = '/positions' + '?' + positionIds
-  console.log(url)
-  return get(url)
+exports.getPositions = (body) => {
+  if (body.from && body.to) {
+    return get(`/reports/route?deviceId=${body.deviceId}&from=${body.from}T00:00:00Z&to=${body.to}T23:59:59Z`).then(r => r.data)
+  }
+  return []
 }
 
 exports.getPositionsByDevice = (deviceId, from, to) => {
@@ -274,4 +270,18 @@ exports.removeComputed = (deviceId, attributeId) => {
 
 exports.sendCommand = (deviceId, data) => {
   return post(apiUrl + '/commands/send', { deviceId, type: 'custom', attributes: { data }, description: 'pinme-backend' }).then(r => r.data)
+}
+
+exports.getCommands = (deviceId) => {
+  const url = `/commands?deviceId=${deviceId}`
+  console.log(url)
+  return get(url).then(r => r.data)
+}
+
+exports.addPermission = async (permission) => {
+  return post('/permissions', permission).then(r => r.data)
+}
+
+exports.deletePermission = async (permission) => {
+  return del('/permissions', { data: permission }).then(r => r.data)
 }

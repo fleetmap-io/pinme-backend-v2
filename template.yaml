@@ -103,6 +103,31 @@ Resources:
         - Key: Name
           Value: pinme-backend-v2
 
+  GpsManager:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./app/
+      Handler: gpsmanager.main
+      Runtime: nodejs16.x
+      MemorySize: 1024
+      Policies:
+        - SecretsManagerReadWrite
+        - AmazonS3FullAccess
+        - AmazonCognitoPowerUser
+        - CloudWatchFullAccess
+        - AmazonSQSFullAccess
+        - AmazonDynamoDBFullAccess
+      Events:
+        ProxyApiRoot:
+          Type: Api
+          Properties:
+            Path: /gpsmanager
+            Method: ANY
+        ProxyApiGreedy:
+          Type: Api
+          Properties:
+            Path: /gpsmanager/{proxy+}
+            Method: ANY
   MainFunction:
     Type: AWS::Serverless::Function
     Properties:
