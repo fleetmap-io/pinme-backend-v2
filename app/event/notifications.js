@@ -347,7 +347,7 @@ async function processEvent (event) {
           console.log('sendSms', users[i].email, users[i].phone, msg)
           // await sms.sendSms(users[i].phone, msg)
         } catch (e) {
-          logException(e, undefined, 'sendSms', users[i].phone, msg)
+          await logException(e, undefined, 'sendSms', users[i].phone, msg)
         }
       }
       if (notification.notificators.includes('mail')) {
@@ -355,7 +355,7 @@ async function processEvent (event) {
           console.log('sendEmail', users[i].email)
           await sendEmailNotification(event, i, notification)
         } catch (e) {
-          logException(e, undefined, 'sendEmailNotification', users[i].email)
+          await logException(e, undefined, 'sendEmailNotification', users[i].email)
         }
       }
       if (notification.notificators.includes('web')) {
