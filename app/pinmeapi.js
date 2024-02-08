@@ -502,52 +502,69 @@ app.post('/pinmeapi/syncdata/:userId', async (req, res) => {
   }
 
   if (validUser) {
-    const auth = await secrets.getSecret('traccar')
-    const axios = require('axios').create({ headers: { cookie: req.header('cookie') }, baseURL: apiConfig.basePath })
-    const subUsers = await new UsersApi(apiConfig).usersGet(req.params.userId, { headers: { cookie: req.header('cookie') } }).then(d => d.data)
+    try {
+      const auth = await secrets.getSecret('traccar')
+      const axios = require('axios').create({ headers: { cookie: req.header('cookie') }, baseURL: apiConfig.basePath })
+      const subUsers = await new UsersApi(apiConfig).usersGet(req.params.userId, { headers: { cookie: req.header('cookie') } }).then(d => d.data)
 
-    // Sync Users
-    const currentSubUserIds = subUsers.map(u => u.id)
-    for (const subUser of subUsers) {
-      const subUserSubUsers = await new UsersApi(apiConfig).usersGet(subUser.id, { auth }).then(d => d.data)
-      if (subUserSubUsers.length) {
-        const usersToAdd = subUserSubUsers.filter(u => !currentSubUserIds.includes(u.id))
-        currentSubUserIds.push(...(usersToAdd.map(u => u.id)))
-        const permissionsToAdd = usersToAdd.map(u => { return { userId: req.params.userId, managedUserId: u.id } })
-        console.log(permissionsToAdd)
-        await axios.post('/permissions/bulk', permissionsToAdd, { withCredentials: true })
+      // Sync Users
+      const currentSubUserIds = subUsers.map(u => u.id)
+      for (const subUser of subUsers) {
+        const subUserSubUsers = await new UsersApi(apiConfig).usersGet(subUser.id, { auth }).then(d => d.data)
+        if (subUserSubUsers.length) {
+          const usersToAdd = subUserSubUsers.filter(u => !currentSubUserIds.includes(u.id))
+          currentSubUserIds.push(...(usersToAdd.map(u => u.id)))
+          const permissionsToAdd = usersToAdd.map(u => {
+            return { userId: req.params.userId, managedUserId: u.id }
+          })
+          await addPermissions(permissionsToAdd, axios)
+        }
       }
-    }
 
-    // Sync Drivers
-    const currentDriversIds = await new DriversApi(apiConfig).driversGet(false, req.params.userId, undefined, undefined, undefined, { headers: { cookie: req.header('cookie') } }).then(d => d.data.map(d => d.id))
-    for (const subUser of subUsers) {
-      const subUserDrivers = await new DriversApi(apiConfig).driversGet(false, subUser.id, undefined, undefined, undefined, { auth }).then(d => d.data)
-      if (subUserDrivers.length) {
-        const driversToAdd = subUserDrivers.filter(u => !currentDriversIds.includes(u.id))
-        currentDriversIds.push(...(currentDriversIds.map(d => d.id)))
-        const permissionsToAdd = driversToAdd.map(d => { return { userId: req.params.userId, driverId: d.id } })
-        console.log(permissionsToAdd)
-        await axios.post('/permissions/bulk', permissionsToAdd, { withCredentials: true })
+      // Sync Drivers
+      const currentDriversIds = await new DriversApi(apiConfig).driversGet(false, req.params.userId, undefined, undefined, undefined, { headers: { cookie: req.header('cookie') } }).then(d => d.data.map(d => d.id))
+      for (const subUser of subUsers) {
+        const subUserDrivers = await new DriversApi(apiConfig).driversGet(false, subUser.id, undefined, undefined, undefined, { auth }).then(d => d.data)
+        if (subUserDrivers.length) {
+          const driversToAdd = subUserDrivers.filter(u => !currentDriversIds.includes(u.id))
+          currentDriversIds.push(...(currentDriversIds.map(d => d.id)))
+          const permissionsToAdd = driversToAdd.map(d => {
+            return { userId: req.params.userId, driverId: d.id }
+          })
+          await addPermissions(permissionsToAdd, axios)
+        }
       }
-    }
 
-    // Sync POIs
-    for (const subUser of subUsers) {
-      const subUserGeofences = await new GeofencesApi(apiConfig).geofencesGet(false, subUser.id, undefined, undefined, undefined, { auth }).then(d => d.data)
-      if (subUserGeofences.length) {
-        const currentGeofenceIds = await new GeofencesApi(apiConfig).geofencesGet(false, req.params.userId, undefined, undefined, undefined, { headers: { cookie: req.header('cookie') } }).then(d => d.data.map(d => d.id))
-        const geofencesToAdd = subUserGeofences.filter(u => !currentGeofenceIds.includes(u.id))
-        currentGeofenceIds.push(...(geofencesToAdd.map(g => g.id)))
-        const permissionsToAdd = geofencesToAdd.map(d => { return { userId: req.params.userId, geofenceId: d.id } })
-        console.log(permissionsToAdd)
-        await axios.post('/permissions/bulk', permissionsToAdd, { withCredentials: true })
+      // Sync POIs
+      for (const subUser of subUsers) {
+        const subUserGeofences = await new GeofencesApi(apiConfig).geofencesGet(false, subUser.id, undefined, undefined, undefined, { auth }).then(d => d.data)
+        if (subUserGeofences.length) {
+          const currentGeofenceIds = await new GeofencesApi(apiConfig).geofencesGet(false, req.params.userId, undefined, undefined, undefined, { headers: { cookie: req.header('cookie') } }).then(d => d.data.map(d => d.id))
+          const geofencesToAdd = subUserGeofences.filter(u => !currentGeofenceIds.includes(u.id))
+          currentGeofenceIds.push(...(geofencesToAdd.map(g => g.id)))
+          const permissionsToAdd = geofencesToAdd.map(d => {
+            return { userId: req.params.userId, geofenceId: d.id }
+          })
+          await addPermissions(permissionsToAdd, axios)
+        }
       }
+
+      res.status(200).end()
+    } catch (e) {
+      await logException(e, req)
+      res.status(500).end()
     }
   } else {
     res.status(401).end()
   }
 })
+
+async function addPermissions (permissionsToAdd, axios) {
+  if (permissionsToAdd.length) {
+    console.log(permissionsToAdd)
+    await axios.post('/permissions/bulk', permissionsToAdd, { withCredentials: true })
+  }
+}
 
 app.post('/pinmeapi/users/firebase', async (req, res) => {
   const users = require('./users')
