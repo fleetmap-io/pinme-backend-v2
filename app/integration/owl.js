@@ -26,5 +26,6 @@ module.exports = async (e) => {
     roadscope: -1,
     id_driver: ''
   }
+  console.log('owl', data, url)
   console.log('owl', await axios.post(url, data).then(d => d.data))
 }
