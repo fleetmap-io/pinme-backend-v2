@@ -1,13 +1,14 @@
-const axios = require('axios')
 const NodeCache = require('node-cache')
 const _timeout = 10000
 const cache = new NodeCache({ stdTTL: 600, useClones: false, checkperiod: 120 })
-const apiUrl = process.env.TRACCAR_API_BASE_PATH
 
-const config = {
+const conf = {
   auth: { username: process.env.TRACCAR_ADMIN_USER, password: process.env.TRACCAR_ADMIN_PASS },
+  baseURL: process.env.TRACCAR_API_BASE_PATH,
   headers: { 'User-Agent': 'pinme-backend' }
 }
+
+const axios = require('axios').create(conf)
 
 exports.getNotifications = (userId, deviceId) => {
   return get(`/notifications?userId=${userId}` + (deviceId ? `&deviceId=${deviceId}` : ''))
@@ -20,7 +21,6 @@ exports.getUser = (id) => {
 
 exports.getUsers = (userId) => {
   const url = '/users?userId=' + userId
-  console.log(url)
   return get(url)
 }
 
@@ -36,7 +36,7 @@ exports.getDrivers = (userId) => {
 }
 
 exports.getMaintenancesByDevice = (deviceId) => {
-  const url = apiUrl + '/maintenance?deviceId=' + deviceId
+  const url = '/maintenance?deviceId=' + deviceId
   return axios.get(url, { withCredentials: true }).then(r => r.data)
 }
 
@@ -53,7 +53,7 @@ exports.getAllMaintenances = () => {
 }
 
 exports.updateMaintenance = (maintenance) => {
-  return put(apiUrl + '/maintenance/' + maintenance.id, maintenance)
+  return put('/maintenance/' + maintenance.id, maintenance)
 }
 
 exports.getGeofences = (userId) => {
@@ -67,38 +67,38 @@ exports.getGroups = (userId, timeout) => {
 }
 
 exports.createUser = (user) => {
-  return post(apiUrl + '/users', user)
+  return post('/users', user)
 }
 
 exports.createDevice = (device) => {
-  return post(apiUrl + '/devices', device)
+  return post('/devices', device)
 }
 
 exports.createGroup = (device) => {
-  return post(apiUrl + '/groups', device)
+  return post('/groups', device)
 }
 
 exports.createDriver = (driver) => {
-  return post(apiUrl + '/drivers', driver)
+  return post('/drivers', driver)
 }
 
 exports.updateDriver = (driver) => {
-  return put(apiUrl + '/drivers/' + driver.id, driver)
+  return put('/drivers/' + driver.id, driver)
 }
 
 exports.createGeofence = (geofence) => {
-  return post(apiUrl + '/geofences', geofence)
+  return post('/geofences', geofence)
 }
 
 exports.updateDevice = (deviceId, device) => {
-  return put(apiUrl + '/devices/' + deviceId, device)
+  return put('/devices/' + deviceId, device)
 }
 
 function tryGet (path, timeout = _timeout) {
   return new Promise((resolve, reject) => {
     const date = new Date()
     const id = setTimeout(() => reject(new Error(`${path} timed out after  ${new Date() - date} ms`)), timeout)
-    axios.get(apiUrl + path, config).then(r => {
+    axios.get(path).then(r => {
       clearTimeout(id)
       resolve(r.data)
     }).catch(e => reject(e))
@@ -121,21 +121,20 @@ async function get (path, timeout = _timeout, retries = 3) {
 }
 
 function post (url, data) {
-  return axios.post(url, data, config)
+  return axios.post(url, data)
 }
 
 function del (url) {
-  return axios.delete(url, config)
+  return axios.delete(url)
 }
 
 function put (url, data) {
-  return axios.put(url, data, config)
+  return axios.put(url, data)
 }
 
 exports.deleteDevice = (deviceId) => {
   console.warn('deleting deviceId', deviceId)
-  return axios.delete(apiUrl + '/devices/' + deviceId,
-    config)
+  return axios.delete('/devices/' + deviceId)
 }
 
 exports.getDevices = (uniqueId) => {
@@ -156,12 +155,12 @@ exports.getDevicesByUserId = (userId) => {
 }
 
 exports.updateUser = (user) => {
-  return put(apiUrl + '/users/' + user.id, user)
+  return put('/users/' + user.id, user)
 }
 
 exports.createSession = (user, password = process.env.TRACCAR_ADMIN_PASS) => {
   const body = 'email=' + encodeURIComponent(user) + '&password=' + encodeURIComponent(password)
-  return axios.post(apiUrl + '/session', body, {
+  return axios.post('/session', body, {
     headers: {
       'user-agent': 'pinme-backend',
       'Content-Type': 'application/x-www-form-urlencoded'
@@ -170,7 +169,7 @@ exports.createSession = (user, password = process.env.TRACCAR_ADMIN_PASS) => {
 }
 
 exports.logout = () => {
-  return axios.delete(apiUrl + '/session', '', {
+  return axios.delete('/session', '', {
     withCredentials: true,
     headers: {
       'user-agent': 'pinme-backend',
@@ -180,7 +179,7 @@ exports.logout = () => {
 }
 
 exports.createPermission = (permission) => {
-  return post(apiUrl + '/permissions', permission)
+  return post('/permissions', permission)
 }
 
 exports.reportTrip = (from, to, groupId, deviceIds) => {
@@ -218,7 +217,7 @@ exports.reportEventsSession = (from, to, groupId, deviceIds, types, session) => 
     url = '/reports/events?from=' + from + '&to=' + to + '&' + types + '&' + deviceIds.map(d => 'deviceId=' + d).join('&')
   }
   console.log(url)
-  return axios.get(apiUrl + url,
+  return axios.get(url,
     {
       headers: {
         cookie: session,
@@ -250,7 +249,7 @@ exports.updateDeviceAccumulators = (deviceId, accumulators) => {
     totalDistance: accumulators.totalDistance,
     hours: accumulators.hours
   }
-  return put(apiUrl + '/devices/' + deviceId + '/accumulators', body)
+  return put('/devices/' + deviceId + '/accumulators', body)
 }
 
 exports.getComputed = (deviceId) => {
@@ -258,7 +257,7 @@ exports.getComputed = (deviceId) => {
 }
 
 exports.removeComputed = (deviceId, attributeId) => {
-  return axios.delete(apiUrl + '/permissions',
+  return axios.delete('/permissions',
     {
       headers: { 'user-agent': 'pinme-backend' },
       data: { deviceId, attributeId },
@@ -267,7 +266,7 @@ exports.removeComputed = (deviceId, attributeId) => {
 }
 
 exports.sendCommand = (deviceId, data) => {
-  return post(apiUrl + '/commands/send', { deviceId, type: 'custom', attributes: { data }, description: 'pinme-backend' }).then(r => r.data)
+  return post('/commands/send', { deviceId, type: 'custom', attributes: { data }, description: 'pinme-backend' }).then(r => r.data)
 }
 
 exports.getCommands = (deviceId) => {
@@ -284,6 +283,6 @@ exports.deletePermission = async (permission) => {
   return del('/permissions', { data: permission }).then(r => r.data)
 }
 
-exports.postUser = (body) => post(apiUrl + '/users', body)
+exports.postUser = (body) => post('/users', body)
 
-exports.deleteUser = (id) => del(`${apiUrl}/users/${id}`).then(r => r.data)
+exports.deleteUser = (id) => del(`/users/${id}`).then(r => r.data)
