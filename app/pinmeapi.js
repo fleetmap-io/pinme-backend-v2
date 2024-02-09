@@ -504,7 +504,7 @@ app.post('/pinmeapi/syncdata/:userId', async (req, res) => {
   if (validUser) {
     try {
       const auth = await secrets.getSecret('traccar')
-      const axios = require('axios').create({ headers: { cookie: req.header('cookie') }, baseURL: apiConfig.basePath })
+      const axios = require('axios').create({ baseURL: apiConfig.basePath, withCredentials: true, auth })
       const users = await new UsersApi(apiConfig).usersGet(req.params.userId, { headers: { cookie: req.header('cookie') } }).then(d => d.data)
 
       const currentSubUserIds = users.filter(u => u.id !== validUser.id).map(u => u.id)
@@ -564,7 +564,7 @@ app.post('/pinmeapi/syncdata/:userId', async (req, res) => {
 async function addPermissions (permissionsToAdd, axios) {
   if (permissionsToAdd.length) {
     console.log(permissionsToAdd)
-    await axios.post('/permissions/bulk', permissionsToAdd, { withCredentials: true })
+    await axios.post('/permissions/bulk', permissionsToAdd)
   }
 }
 
