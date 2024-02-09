@@ -169,7 +169,7 @@ exports.createSession = (user, password = process.env.TRACCAR_ADMIN_PASS) => {
 }
 
 exports.logout = () => {
-  return axios.delete('/session', '', {
+  return axios.delete('/session', {
     withCredentials: true,
     headers: {
       'user-agent': 'pinme-backend',
@@ -217,14 +217,13 @@ exports.reportEventsSession = (from, to, groupId, deviceIds, types, session) => 
     url = '/reports/events?from=' + from + '&to=' + to + '&' + types + '&' + deviceIds.map(d => 'deviceId=' + d).join('&')
   }
   console.log(url)
-  return axios.get(url,
-    {
-      headers: {
-        cookie: session,
-        'user-agent': 'pinme-backend'
-      },
-      withCredentials: true
-    })
+  return axios.get(url, {
+    headers: {
+      cookie: session,
+      'user-agent': 'pinme-backend'
+    },
+    withCredentials: true
+  })
 }
 
 exports.getPosition = (positionId, deviceId) => {
