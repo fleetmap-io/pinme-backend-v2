@@ -110,15 +110,15 @@ app.get('/gpsmanager/devices/conf/:deviceId', async (req, res) => {
   await processRequest(devices.getConfById, res, req.params.deviceId, res.locals.user)
 })
 
-app.get('/devices/uniqueId/:uniqueId', async (req, res) => {
+app.get('/gpsmanager/devices/uniqueId/:uniqueId', async (req, res) => {
   await processRequest(devices.getByUniqueId, res, req.params.uniqueId, res.locals.user)
 })
 
-app.get('/devices/:id', async (req, res) => {
+app.get('/gpsmanager/devices/:id', async (req, res) => {
   await processRequest(devices.getById, res, req.params.id)
 })
 
-app.get('/canprotocols', async (req, res) => {
+app.get('/gpsmanager/canprotocols', async (req, res) => {
   console.log('Request CanProtocols')
   res.json(await devices.getCanProtocols())
 })
