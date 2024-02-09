@@ -3,6 +3,7 @@
 const app = require('../../app.js')
 require('../../event')
 const pinmeapi = require('../../pinmeapi')
+const gpsmanager = require('../../gpsmanager')
 const chai = require('chai')
 const expect = chai.expect
 const email = require('../../email/email')
@@ -40,6 +41,13 @@ describe('Tests index', function () {
     let result = await pinmeapi.main(require('../../../events/pinmeapi.json'))
     checkResult(result)
     result = await pinmeapi.main(require('../../../events/pinmeapi.json'))
+    console.log(result)
+  })
+
+  // eslint-disable-next-line no-undef
+  it('works on gpsmanager', async () => {
+    const result = await gpsmanager.main(require('../../../events/gpsmanager.json'))
+    checkResult(result)
     console.log(result)
   })
 
