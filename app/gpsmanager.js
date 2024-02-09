@@ -102,11 +102,11 @@ app.use(async (req, res, next) => {
   console.log(res.locals.user, req.method, req.path, req.query, req.body)
 })
 
-app.get('/', async (req, res) => {
+app.get('/gpsmanager', async (req, res) => {
   await processRequest(devices.get, res, req.query, res.locals.user, res.locals.partners)
 })
 
-app.get('/devices/conf/:deviceId', async (req, res) => {
+app.get('/gpsmanager/devices/conf/:deviceId', async (req, res) => {
   await processRequest(devices.getConfById, res, req.params.deviceId, res.locals.user)
 })
 
@@ -133,7 +133,7 @@ app.post('/', async (req, res) => {
   }
 })
 
-app.put('/devices', async (req, res) => {
+app.put('/gpsmanager/devices', async (req, res) => {
   console.log(req.body)
   res.json(await devices.put(req.body, res.locals.user))
 })
@@ -318,7 +318,7 @@ app.post('/cloudwatch/widget', async (req, res) => {
   res.json(await require('./cloudwatch').getWidget(res.locals.user, req.body))
 })
 
-app.get('/partners', async (req, res) => {
+app.get('/gpsmanager/partners', async (req, res) => {
   res.json(await require('users').getPartners(res.locals.partners && res.locals.partners.Value, res.locals.user))
 })
 
