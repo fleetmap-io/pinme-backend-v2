@@ -88,7 +88,7 @@ exports.delete = (id) => {
   return deleteUser(id)
 }
 
-exports.get = async (options, user) => {
+exports.getDB = async (options, user) => {
   const [_user] = await this.getUser(user)
   if (!user) throw new Error(`can't find ${user}`)
   const partnerid = _user.partnerid
