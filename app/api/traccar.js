@@ -121,17 +121,15 @@ async function get (path, timeout = _timeout, retries = 3) {
 }
 
 function post (url, data) {
-  return axios.post(url, data,
-    config)
+  return axios.post(url, data, config)
 }
 
-function del (url, data) {
-  return axios.delete(url, data)
+function del (url) {
+  return axios.delete(url, config)
 }
 
 function put (url, data) {
-  return axios.put(url, data,
-    config)
+  return axios.put(url, data, config)
 }
 
 exports.deleteDevice = (deviceId) => {
@@ -285,3 +283,9 @@ exports.addPermission = async (permission) => {
 exports.deletePermission = async (permission) => {
   return del('/permissions', { data: permission }).then(r => r.data)
 }
+
+exports.postUser = (body) => post('/users', body)
+
+exports.updateUser = (user) => put('/users/' + user.id, user)
+
+exports.deleteUser = (id) => del(`/users/${id}`).then(r => r.data)
