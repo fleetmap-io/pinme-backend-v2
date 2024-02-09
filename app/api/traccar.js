@@ -284,8 +284,6 @@ exports.deletePermission = async (permission) => {
   return del('/permissions', { data: permission }).then(r => r.data)
 }
 
-exports.postUser = (body) => post('/users', body)
+exports.postUser = (body) => post(apiUrl + '/users', body)
 
-exports.updateUser = (user) => put('/users/' + user.id, user)
-
-exports.deleteUser = (id) => del(`/users/${id}`).then(r => r.data)
+exports.deleteUser = (id) => del(`${apiUrl}/users/${id}`).then(r => r.data)
