@@ -506,7 +506,7 @@ app.post('/pinmeapi/syncdata/:userId', async (req, res) => {
       const auth = await secrets.getSecret('traccar')
       const axios = require('axios').create({ headers: { cookie: req.header('cookie') }, baseURL: apiConfig.basePath })
       const subUsers = await new UsersApi(apiConfig).usersGet(req.params.userId, { headers: { cookie: req.header('cookie') } }).then(d => d.data)
-
+      console.log(subUsers)
       // Sync Users
       const currentSubUserIds = subUsers.map(u => u.id)
       for (const subUser of subUsers) {
@@ -538,6 +538,7 @@ app.post('/pinmeapi/syncdata/:userId', async (req, res) => {
       // Sync POIs
       for (const subUser of subUsers) {
         const subUserGeofences = await new GeofencesApi(apiConfig).geofencesGet(false, subUser.id, undefined, undefined, undefined, { auth }).then(d => d.data)
+        console.log(subUser, subUserGeofences)
         if (subUserGeofences.length) {
           const currentGeofenceIds = await new GeofencesApi(apiConfig).geofencesGet(false, req.params.userId, undefined, undefined, undefined, { headers: { cookie: req.header('cookie') } }).then(d => d.data.map(d => d.id))
           const geofencesToAdd = subUserGeofences.filter(u => !currentGeofenceIds.includes(u.id))
