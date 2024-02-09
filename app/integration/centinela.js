@@ -18,5 +18,5 @@ module.exports = async (e) => {
     headers: {
       Authorization: 'Bearer b17d25abe4202457daeb84c87dac0fce16d512586c35d5a0b3dc8a94d0c5ba19db5e2c84715a42a9cea67bc48187ab2a3d569fb795435f6f017bea4d9d935350'
     }
-  }).then(d => d.data))
+  }).then(d => d.data).catch(e => console.warn('centinela', data, e.message)))
 }
