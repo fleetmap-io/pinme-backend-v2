@@ -23,7 +23,7 @@ Globals:
         QUEUE_S3_DAILY_MIGRATOR_UNIT: !Ref SQSS3DailyMigratorUnit
         QUEUE_EVENTS_ARN: !GetAtt PushEventsQueue.Arn
         QUEUE_LOCATIONS_ARN: !GetAtt PushLocationsQueue.Arn
-        S3_BUCKET: !Ref responsesBucket
+        S3_BUCKET: alb-reports
         USERS: !Ref TraccarUserLogins
         FORCE_RELOAD: 1
 
@@ -392,8 +392,6 @@ Resources:
       MessageRetentionPeriod: 1209600
       ContentBasedDeduplication: true
 
-  responsesBucket:
-    Type: AWS::S3::Bucket
 
 Outputs:
   ElasticIPAddress:
