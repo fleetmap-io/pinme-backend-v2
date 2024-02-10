@@ -33,7 +33,7 @@
     "multer": "1.4.5-lts.1",
     "mysql2": "3.8.0",
     "node-cache": "^5.1.2",
-    "nodemailer": "^6.9.8",
+    "nodemailer": "6.9.9",
     "papaparse": "^5.4.1",
     "traccar-api": "^1.0.5",
     "ua-parser-js": "^1.0.37"

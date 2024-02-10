@@ -198,6 +198,7 @@ Resources:
         - SecretsManagerReadWrite
         - AmazonDynamoDBFullAccess
         - AmazonCognitoPowerUser
+        - AmazonS3FullAccess
       Events:
         ProxyApiRoot:
           Type: Api
