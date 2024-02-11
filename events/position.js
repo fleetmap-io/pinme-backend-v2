@@ -14,7 +14,8 @@ module.exports = {
         '{"apn":"m2m.entel.cl","client":"TRANSPORTES M ROJAS  LTDA","subtel":"2023-01-12T03:00:00.000Z",' +
         '"clientId":2646,"deviceType":2,"speedLimit":49.676025917926566,' +
         '"integration":"owl"' +
-        ',"minIdleTime":0,"serialNumber":"FMC 130 4G","license_plate":"GDKY-51","fuel_tank_capacity":0,"report.ignoreOdometer":"1152967","overspeedMinimalDuration":0,"minUnidentifiedDriverTime":0},"groupId":0,"name":"GDKY-51","uniqueId":"860896052046372","status":"online","lastUpdate":"2024-01-16T04:55:16.395+00:00","positionId":24005687139,"geofenceIds":[],"phone":"56920292944","model":"VOLVO // FH // 2015","contact":null,"category":"truck","disabled":false}}',
+        ',"minIdleTime":0,"serialNumber":"FMC 130 4G","license_plate":"RLPR-15","fuel_tank_capacity":0,"report.ignoreOdometer":"1152967","overspeedMinimalDuration":0,"minUnidentifiedDriverTime":0},' +
+        '"groupId":0,"name":"RLPR15","uniqueId":"860896052046372","status":"online","lastUpdate":"2024-01-16T04:55:16.395+00:00","positionId":24005687139,"geofenceIds":[],"phone":"56920292944","model":"VOLVO // FH // 2015","contact":null,"category":"truck","disabled":false}}',
     attributes: {
     ApproximateReceiveCount: '1',
         SentTimestamp: '1705380916413',
