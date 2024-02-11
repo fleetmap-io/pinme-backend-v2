@@ -43,9 +43,13 @@ exports.pushEvents = async (event) => {
       deleteEvent = body.event.delete
     }
     if (!deleteEvent) {
-      if (event.device.attributes.partnerId === '6') {
-        console.log('forward to rabbit', event.device)
-        await sendToRabbit(event)
+      try {
+        if (event.device.attributes.partnerId === '6') {
+          console.log('forward to rabbit', event.device)
+          await sendToRabbit(event)
+        }
+      } catch (e) {
+        console.error(e)
       }
     } else {
       // console.log('deleting event', event)
