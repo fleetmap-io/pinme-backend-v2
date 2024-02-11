@@ -26,6 +26,6 @@ module.exports = async (e) => {
     roadscope: -1,
     id_driver: ''
   }
-  console.log('owl', data, url)
+  console.log('owl', data, url, token.access_token)
   console.log('owl', await axios.post(url, data, { headers: { authentication: 'Bearer ' + token.access_token } }).then(d => d.data))
 }
