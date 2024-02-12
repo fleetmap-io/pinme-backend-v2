@@ -37,6 +37,24 @@ exports.mainFunction = async (event) => {
       Limit: 1
     }))
     email = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'email')
+    try {
+      await cognito.send(new AdminUpdateUserAttributesCommand({
+        UserPoolId: process.env.USER_POOL_ID,
+        Username: listUsersResponse.Users[0].Username,
+        UserAttributes: [ // AttributeListType // required
+          { // AttributeType
+            Name: "custom:SERVER_HOST", // required
+            Value: "api2.pinme.io",
+          },
+          { // AttributeType
+            Name: "custom:WEB_SOCKET_HOST", // required
+            Value: "traccar-eu.fleetmap.pt",
+          },
+        ]
+      }))
+    } catch (e) {
+      console.error(e)
+    }
     const [cookies] = await (await require('./auth')).getUserSession(email.Value, crypto.randomUUID())
     return okResponse('', event, cookies)
   } catch (e) {
