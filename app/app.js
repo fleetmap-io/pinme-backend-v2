@@ -1,7 +1,7 @@
 const CognitoExpress = require('cognito-express')
 const { getOneSignalTokens } = require('fleetmap-partners')
 const { logException } = require('./utils')
-const { CognitoIdentityProviderClient, ListUsersCommand } = require('@aws-sdk/client-cognito-identity-provider')
+const { CognitoIdentityProviderClient, ListUsersCommand, AdminUpdateUserAttributesCommand } = require('@aws-sdk/client-cognito-identity-provider')
 const crypto = require('crypto')
 
 exports.mainFunction = async (event) => {
