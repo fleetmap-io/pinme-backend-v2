@@ -46,7 +46,7 @@ exports.pushEvents = async (event) => {
       try {
         if (event.device.attributes.partnerId === '6') {
           console.log('forward to rabbit', event.device)
-          await sendToRabbit(event)
+          // await sendToRabbit(event)
         }
       } catch (e) {
         console.error(e)
