@@ -25,7 +25,7 @@ Globals:
         QUEUE_LOCATIONS_ARN: !GetAtt PushLocationsQueue.Arn
         S3_BUCKET: alb-reports
         USERS: !Ref TraccarUserLogins
-        FORCE_RELOAD: 1
+        FORCE_RELOAD: 2
 
 Resources:
   VPC:
