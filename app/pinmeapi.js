@@ -693,7 +693,4 @@ app.post('/pinmeapi/commands', async (req, res) => {
   res.status(200).end()
 })
 
-exports.main = (event, context) => {
-  console.log(event, context)
-  return serverlessExpress({ app })
-}
+exports.main = serverlessExpress({ app })

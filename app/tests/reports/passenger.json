@@ -1,5 +1,5 @@
 {
-  "body": "{\n  selectedDevices: [\n     26742, 28263, 287172, 68883,\n     41842, 27974,  41846, 29557,\n     25692, 33943,  33892, 27060,\n    287315, 27339, 289756, 27704,\n     29158, 28630,  28814, 31365,\n     33944, 30657,  26958, 27665,\n     33941, 30580,  31051\n  ],\n  dateRange: [ 1705363200000, 1708041599000 ]}",
+  "body": "{\n  \"selectedDevices\": [\n     26742, 28263, 287172, 68883,\n     41842, 27974,  41846, 29557,\n     25692, 33943,  33892, 27060,\n    287315, 27339, 289756, 27704,\n     29158, 28630,  28814, 31365,\n     33944, 30657,  26958, 27665,\n     33941, 30580,  31051\n  ],\n  \"dateRange\": [ 1705363200000, 1708041599000 ]}",
   "resource": "/{proxy+}",
   "httpMethod": "POST",
   "isBase64Encoded": false,
@@ -13,7 +13,8 @@
     "baz": "qux"
   },
   "headers": {
-    "cookie": "JSESSIONID=node05d85qv7m6sm0kawmdrb5mtmy19179.node0"
+    "cookie": "JSESSIONID=node05d85qv7m6sm0kawmdrb5mtmy19179.node0",
+    "content-type": "application/json"
   },
   "requestContext": {
     "accountId": "123456789012",
