@@ -625,7 +625,6 @@ app.post('/pinmeapi/reports/quicksight/:report', async (req, res) => {
     const user = await new SessionApi(apiConfig).sessionGet(null, {
       headers: { cookie: req.header('cookie') }
     }).then(d => d.data)
-    console.log(user)
     res.json(await quicksight.getEmbeddedDashboard(user, req.body, req.params.report, traccar, axios))
   } catch (e) {
     await logException(e, req)
