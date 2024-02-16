@@ -1,6 +1,7 @@
 const index = require('./index')
 const quicksight = require('../quicksight')
 const secrets = require('../secrets')
+const { getPositions } = require('./index')
 
 exports.getReport = async (user, parameters, traccar, axios) => {
   await index.saveToS3('passenger.csv', await createReport(user, parameters, axios))
@@ -28,19 +29,7 @@ async function createReport (user, { dateRange, selectedDevices }, axios) {
         }&to=${new Date(dateRange[1]).toISOString()
         }`
   const events = await axios.get(eventsUrl).then(d => d.data)
-  console.log('get positions')
-  let positions = []
-  if (devices.length > 10) {
-    const firstPart = devices.slice(0, Math.floor(devices.length / 2))
-    const secondPart = devices.slice(Math.floor(devices.length / 2))
-    const positionsUrl1 = getPositionsUrl(firstPart, dateRange)
-    const positionsUrl2 = getPositionsUrl(secondPart, dateRange)
-    positions = await axios.get(positionsUrl1).then(d => d.data)
-    positions = positions.concat(await axios.get(positionsUrl2).then(d => d.data))
-  } else {
-    const positionsUrl = getPositionsUrl(devices, dateRange)
-    positions = await axios.get(positionsUrl).then(d => d.data)
-  }
+  const positions = await getPositions(user, { dateRange, selectedDevices }, axios)
   events.forEach(e => {
     delete e.attributes
     const driver = getDriver(e, positions, drivers)
@@ -52,13 +41,6 @@ async function createReport (user, { dateRange, selectedDevices }, axios) {
     e.driverName = (driver && driver.name) || (position && position.attributes.driverUniqueId)
   })
   return events
-}
-
-function getPositionsUrl (devices, dateRange) {
-  return `/reports/route?${devices.map(d => 'deviceId=' + d.id).join('&')
-  }&from=${new Date(dateRange[0]).toISOString()
-  }&to=${new Date(dateRange[1]).toISOString()
-  }`
 }
 
 function getDriver (event, positions, drivers) {

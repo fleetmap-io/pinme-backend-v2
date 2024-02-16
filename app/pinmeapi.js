@@ -18,7 +18,7 @@ const { sendSms } = require('./sms')
 const { sendReport } = require('./scheduler')
 const { deleteGeofences } = require('./geofences')
 const apiConfig = {
-  basePath: process.env.TRACCAR_API_BASE_PATH,
+  basePath: process.env.TRACCAR_API_BASE_PATH || 'https://traccar-eu.fleetmap.pt/api',
   baseOptions: { withCredentials: true }
 }
 const storage = multer.memoryStorage()
@@ -499,13 +499,6 @@ app.post('/pinmeapi/syncdata/:userId', async (req, res) => {
   res.status(200).end()
 })
 
-async function addPermissions (permissionsToAdd, axios) {
-  if (permissionsToAdd.length) {
-    console.log(permissionsToAdd)
-    await axios.post('/permissions/bulk', permissionsToAdd)
-  }
-}
-
 app.post('/pinmeapi/users/firebase', async (req, res) => {
   const users = require('./users')
   let user
@@ -618,7 +611,7 @@ app.get('/pinmeapi/redirect/:param', async (req, res) => {
         req.header('cookie').split(';').find(c => c.includes('JSESSIONID')).trim()}`)
 })
 
-app.post('/reports/quicksight/:report', async (req, res) => {
+app.post('/pinmeapi/reports/quicksight/:report', async (req, res) => {
   try {
     const axios = require('axios').create({ headers: { cookie: req.header('cookie') }, baseURL: apiConfig.basePath })
     const traccar = {
@@ -635,7 +628,7 @@ app.post('/reports/quicksight/:report', async (req, res) => {
     console.log(user)
     res.json(await quicksight.getEmbeddedDashboard(user, req.body, req.params.report, traccar, axios))
   } catch (e) {
-    logException(e, req)
+    await logException(e, req)
     res.status(500).send(e.message)
   }
 })
@@ -700,4 +693,7 @@ app.post('/pinmeapi/commands', async (req, res) => {
   res.status(200).end()
 })
 
-exports.main = serverlessExpress({ app })
+exports.main = (event, context) => {
+  console.log(event, context)
+  return serverlessExpress({ app })
+}
