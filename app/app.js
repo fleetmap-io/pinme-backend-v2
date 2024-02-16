@@ -38,20 +38,25 @@ exports.mainFunction = async (event) => {
     }))
     email = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'email')
     try {
-      await cognito.send(new AdminUpdateUserAttributesCommand({
-        UserPoolId: process.env.USER_POOL_ID,
-        Username: listUsersResponse.Users[0].Username,
-        UserAttributes: [ // AttributeListType // required
-          { // AttributeType
-            Name: "custom:SERVER_HOST", // required
-            Value: "api2.pinme.io",
-          },
-          { // AttributeType
-            Name: "custom:WEB_SOCKET_HOST", // required
-            Value: "traccar-eu.fleetmap.pt",
-          },
-        ]
-      }))
+      if (!listUsersResponse.Users[0].Attributes.find(a => a.Name === 'custom:SERVER_HOST')) {
+        console.log('setting custom attributes', email)
+        await cognito.send(new AdminUpdateUserAttributesCommand({
+          UserPoolId: process.env.USER_POOL_ID,
+          Username: listUsersResponse.Users[0].Username,
+          UserAttributes: [ // AttributeListType // required
+            { // AttributeType
+              Name: 'custom:SERVER_HOST', // required
+              Value: 'api2.pinme.io'
+            },
+            { // AttributeType
+              Name: 'custom:WEB_SOCKET_HOST', // required
+              Value: 'traccar-eu.fleetmap.pt'
+            }
+          ]
+        }))
+      } else {
+        console.log(email, 'already has custom attributes')
+      }
     } catch (e) {
       console.error(e)
     }
