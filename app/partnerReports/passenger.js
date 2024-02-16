@@ -24,27 +24,36 @@ async function createReport (user, { dateRange, selectedDevices }, axios) {
       }
     })
   }))
-  const eventsUrl = `/reports/events?${devices.map(d => 'deviceId=' + d.id).join('&')
-        }&from=${new Date(dateRange[0]).toISOString()
-        }&to=${new Date(dateRange[1]).toISOString()
-        }`
-  const events = await axios.get(eventsUrl).then(d => d.data)
-  const positions = await getPositions(user, { dateRange, selectedDevices }, axios)
-  events.forEach(e => {
-    delete e.attributes
-    const driver = getDriver(e, positions, drivers)
-    const position = positions.find(p => p.id === e.positionId)
-    e.deviceName = devices.find(d => d.id === e.deviceId).name
-    e.groupName = driver.groupName || ''
-    e.fixtime = position && new Date(position.fixTime)
-    e.notes = driver && driver.attributes.notes
-    e.driverName = (driver && driver.name) || (position && position.attributes.driverUniqueId)
+  const promises = selectedDevices.map(async deviceId => {
+    const positions = await getPositions(user, { dateRange, selectedDevices: [deviceId] }, axios)
+    const eventsUrl = `/reports/events?deviceId=${deviceId
+      }&from=${new Date(dateRange[0]).toISOString()
+      }&to=${new Date(dateRange[1]).toISOString()
+      }`
+    const events = await axios.get(eventsUrl).then(d => d.data)
+    events.forEach(e => {
+      delete e.attributes
+      const position = positions.find(p => p.id === e.positionId)
+      const driver = getDriver(e, position, drivers)
+      e.deviceName = devices.find(d => d.id === e.deviceId).name
+      e.groupName = driver.groupName || ''
+      e.fixtime = position && new Date(position.fixTime)
+      e.notes = driver && driver.attributes.notes
+      e.driverName = (driver && driver.name) || (position && position.attributes.driverUniqueId)
+    })
+    console.log('returning', events.length, 'events')
+    return events
   })
-  return events
+  const events = []
+  const maxParallelRequests = 4
+  for (let i = 0; i < promises.length; i += maxParallelRequests) {
+    const slice = await Promise.all(promises.slice(i, i + maxParallelRequests))
+    events.push(slice.flat())
+  }
+  return events.flat()
 }
 
-function getDriver (event, positions, drivers) {
-  const p = positions.find(p => p.id === event.positionId)
+function getDriver (event, p, drivers) {
   if (!p) { return '' }
   const d = drivers.find(d => d.uniqueId === p.attributes.driverUniqueId)
   if (!d) { return '' }
