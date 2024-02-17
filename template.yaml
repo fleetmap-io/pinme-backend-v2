@@ -199,6 +199,14 @@ Resources:
         - AmazonDynamoDBFullAccess
         - AmazonCognitoPowerUser
         - AmazonS3FullAccess
+        - Statement:
+            - Effect: Allow
+              Action:
+                - 'quicksight:DescribeDashboard'
+                - 'quicksight:ListDashboards'
+                - 'quicksight:CreateIngestion'
+                - 'quicksight:UpdateDashboardPermissions'
+              Resource: '*'
       Events:
         ProxyApiRoot:
           Type: Api
