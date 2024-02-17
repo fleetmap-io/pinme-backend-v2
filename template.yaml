@@ -192,8 +192,8 @@ Resources:
       CodeUri: ./app/
       Handler: pinmeapi.main
       Runtime: nodejs16.x
-      MemorySize: 512
-      Timeout: 100
+      MemorySize: 10240
+      Timeout: 900
       Policies:
         - SecretsManagerReadWrite
         - AmazonDynamoDBFullAccess
