@@ -202,10 +202,8 @@ Resources:
         - Statement:
             - Effect: Allow
               Action:
-                - 'quicksight:DescribeDashboard'
-                - 'quicksight:ListDashboards'
                 - 'quicksight:CreateIngestion'
-                - 'quicksight:UpdateDashboardPermissions'
+                - 'quicksight:DescribeIngestion'
               Resource: '*'
       Events:
         ProxyApiRoot:
