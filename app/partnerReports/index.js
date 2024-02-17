@@ -50,5 +50,5 @@ exports.getUserData = async (user, traccar, parameters) => {
 
 exports.saveToS3 = async (key, reportData) => {
   const body = Papa.unparse(reportData)
-  return await s3.put(key, body, 'application/json', true, 'alb-reports-bucket')
+  return await s3.put(key, body, 'application/json', true, process.env.S3_BUCKET)
 }

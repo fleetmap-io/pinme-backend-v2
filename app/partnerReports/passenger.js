@@ -1,12 +1,11 @@
-const index = require('./index')
 const quicksight = require('../quicksight')
 const secrets = require('../secrets')
-const { getPositions } = require('./index')
+const { getPositions, saveToS3 } = require('./index')
 
 exports.getReport = async (user, parameters, traccar, axios) => {
-  await index.saveToS3('passenger.csv', await createReport(user, parameters, axios))
-  await quicksight.datasetIngestion('0e2a6ed7-2be1-4c0f-931e-b6f7d008756d')
-  return quicksight.GetDashboardEmbedUrl('9a17358e-8caa-46f9-a653-276b36735114')
+  await saveToS3('passenger.csv', await createReport(user, parameters, axios))
+  await quicksight.datasetIngestion('3d2ec6ce-e62e-40fd-b8f8-4a8fa6fdcc72')
+  return quicksight.GetDashboardEmbedUrl('28d3425c-fa2a-46d4-a8de-fab448a4cb93')
 }
 
 async function createReport (user, { dateRange, selectedDevices }, axios) {

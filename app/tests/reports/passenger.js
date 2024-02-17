@@ -14,6 +14,7 @@ function checkResult (result) {
 describe('Tests index', function () {
   // eslint-disable-next-line no-undef
   it('works on pinemapi', async () => {
+    process.env.S3_BUCKET = 'alb-reports'
     const result = await pinmeapi.main(require('./passenger.json'))
     checkResult(result)
     console.log(result)
