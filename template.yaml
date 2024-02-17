@@ -203,6 +203,7 @@ Resources:
             - Effect: Allow
               Action:
                 - 'quicksight:CreateIngestion'
+                - 'quicksight:GetDashboardEmbedUrl'
                 - 'quicksight:DescribeIngestion'
               Resource: '*'
       Events:
