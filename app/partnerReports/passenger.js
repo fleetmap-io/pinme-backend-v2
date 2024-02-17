@@ -3,7 +3,7 @@ const secrets = require('../secrets')
 const { getPositions, saveToS3 } = require('./index')
 
 exports.getReport = async (user, parameters, traccar, axios) => {
-  await saveToS3('passenger.csv', await createReport(user, parameters, axios))
+  await saveToS3('passenger.csv', [] /* await createReport(user, parameters, axios) */)
   await quicksight.datasetIngestion('3d2ec6ce-e62e-40fd-b8f8-4a8fa6fdcc72')
   return quicksight.GetDashboardEmbedUrl('28d3425c-fa2a-46d4-a8de-fab448a4cb93')
 }
