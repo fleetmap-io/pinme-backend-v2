@@ -200,6 +200,7 @@ Resources:
         - AmazonDynamoDBFullAccess
         - AmazonCognitoPowerUser
         - AmazonS3FullAccess
+        - AmazonSQSFullAccess
         - Statement:
             - Effect: Allow
               Action:
