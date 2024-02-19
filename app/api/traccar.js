@@ -4,7 +4,7 @@ const cache = new NodeCache({ stdTTL: 600, useClones: false, checkperiod: 120 })
 
 const conf = {
   auth: { username: process.env.TRACCAR_ADMIN_USER, password: process.env.TRACCAR_ADMIN_PASS },
-  baseURL: process.env.TRACCAR_API_BASE_PATH,
+  baseURL: process.env.TRACCAR_API_BASE_PATH || 'https://api2.pinme.io/api',
   headers: { 'User-Agent': 'pinme-backend' }
 }
 
