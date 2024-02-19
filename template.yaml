@@ -242,6 +242,7 @@ Resources:
       Handler: reports/index.consumeMessage
       Runtime: nodejs16.x
       Policies:
+        - AmazonS3FullAccess
         - SecretsManagerReadWrite
         - Statement:
             - Effect: Allow
