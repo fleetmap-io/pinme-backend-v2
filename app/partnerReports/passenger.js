@@ -30,7 +30,8 @@ async function createReport ({ dateRange, selectedDevices }, cookie) {
     })
   }))
   const promises = selectedDevices.map(async deviceId => {
-    const positions = await getPositions({ dateRange, selectedDevices: [deviceId] }, createReports(cookie))
+    const allDevices = await axios.get('/devices').then(d => d.data)
+    const positions = await getPositions({ dateRange, selectedDevices: [deviceId] }, createReports(cookie), allDevices)
     const eventsUrl = `/reports/events?deviceId=${deviceId
       }&from=${new Date(dateRange[0]).toISOString()
       }&to=${new Date(dateRange[1]).toISOString()
