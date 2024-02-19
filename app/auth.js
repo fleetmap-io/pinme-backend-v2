@@ -51,7 +51,7 @@ exports.insertUser = async (userName, name, email, clientId) => {
 
 async function updateUser (user, token) {
   user.password = process.env.TRACCAR_ADMIN_PASS
-  if (token) { user.token = token }
+  if (token && user.token !== token) { user.token = token }
   return traccar.updateUser(user)
 }
 exports.updateUser = updateUser
