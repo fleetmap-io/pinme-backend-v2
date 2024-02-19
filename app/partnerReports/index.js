@@ -20,21 +20,32 @@ function getPositionsUrl (devices, dateRange) {
 
 exports.getPositions = getPositions
 
-async function getPositions ({ dateRange, selectedDevices }, axios, allDevices) {
-  const devices = selectedDevices.map(deviceId => allDevices.find(d => d.id === deviceId)).filter(d => d)
-  const maxDevices = 4
-  const promises = []
-  for (let i = 0; i < devices.length; i += maxDevices) {
-    promises.push(axios.get(getPositionsUrl(devices.slice(i, i + maxDevices), dateRange)).then(d => {
-      console.log('got', d.data.length, 'from', i, 'to', i + maxDevices)
-      return d.data
-    }))
+async function getPositions ({ dateRange, selectedDevices }, axios, allDevices, retries = 3) {
+  try {
+    const devices = selectedDevices.map(deviceId => allDevices.find(d => d.id === deviceId)).filter(d => d)
+    const maxDevices = 4
+    const promises = []
+    for (let i = 0; i < devices.length; i += maxDevices) {
+      promises.push(axios.get(getPositionsUrl(devices.slice(i, i + maxDevices), dateRange)).then(d => {
+        console.log('got', d.data.length, 'from', i, 'to', i + maxDevices)
+        return d.data
+      }))
+    }
+    const results = await Promise.all(promises)
+    const result = results.flat()
+    console.log('got', result.length, 'positions')
+    result.forEach(p => {
+      p.Temperatura = p.attributes.temp1 ? parseFloat(p.attributes.temp1) : 0
+    })
+    return result
+  } catch (e) {
+    if (retries--) {
+      console.error(e.message, 'retrying', retries)
+      return getPositions({ dateRange, selectedDevices }, axios, allDevices, retries)
+    } else {
+      throw e
+    }
   }
-  const results = await Promise.all(promises)
-  const result = results.flat()
-  console.log('got', result.length, 'positions')
-  result.forEach(p => { p.Temperatura = p.attributes.temp1 ? parseFloat(p.attributes.temp1) : 0 })
-  return result
 }
 
 exports.getUserData = async (user, traccar, parameters) => {
