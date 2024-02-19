@@ -618,7 +618,7 @@ app.post('/pinmeapi/reports/quicksight/:report', async (req, res) => {
     ingestionId,
     params: req.body,
     cookie: req.body.cookie || req.header('cookie')
-  }), process.env.REPORTS_QUEUE1)
+  }), process.env.REPORTS_QUEUE2)
   res.json({ ingestionId })
 })
 

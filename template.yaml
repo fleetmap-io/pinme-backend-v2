@@ -26,6 +26,7 @@ Globals:
         S3_BUCKET: alb-reports
         USERS: !Ref TraccarUserLogins
         REPORTS_QUEUE1: !Ref AutomaticReportsQueue1
+        REPORTS_QUEUE2: !Ref AutomaticReportsQueue2
         FORCE_RELOAD: 2
 
 Resources:
