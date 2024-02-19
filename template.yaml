@@ -25,6 +25,7 @@ Globals:
         QUEUE_LOCATIONS_ARN: !GetAtt PushLocationsQueue.Arn
         S3_BUCKET: alb-reports
         USERS: !Ref TraccarUserLogins
+        REPORTS_QUEUE1: !Ref AutomaticReportsQueue1
         FORCE_RELOAD: 2
 
 Resources:
@@ -399,6 +400,29 @@ Resources:
       VisibilityTimeout: 30
       MessageRetentionPeriod: 1209600
       ContentBasedDeduplication: true
+
+  AutomaticReportsQueue1:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "AutomaticReportsSlow"
+      VisibilityTimeout: 900
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt AutomaticReportsQueue2.Arn
+        maxReceiveCount: 1
+  AutomaticReportsQueue2:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "AutomaticReportsFast"
+      VisibilityTimeout: 900
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt AutomaticReportsDLQ.Arn
+        maxReceiveCount: 1
+
+  AutomaticReportsDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "AutomaticReportsDLQ"
+      VisibilityTimeout: 900
 
 
 Outputs:

@@ -10,7 +10,6 @@ const secrets = require('./secrets')
 const uniqueId = require('./uniqueId')
 const { validate } = require('./cognito')
 const whatsapp = require('./whatsapp')
-const quicksight = require('./quicksight')
 const { put } = require('./s3')
 const schedulerTable = 'scheduler-1'
 const multer = require('multer')
@@ -611,25 +610,13 @@ app.get('/pinmeapi/redirect/:param', async (req, res) => {
         req.header('cookie').split(';').find(c => c.includes('JSESSIONID')).trim()}`)
 })
 
-app.post('/pinmeapi/reports/quicksight/:report', async (req, res) => {
-  try {
-    const axios = require('axios').create({ headers: { cookie: req.header('cookie') }, baseURL: apiConfig.basePath })
-    const traccar = {
-      devices: new DevicesApi(apiConfig, null, axios),
-      groups: new GroupsApi(apiConfig, null, axios),
-      drivers: new DriversApi(apiConfig, null, axios),
-      geofences: new GeofencesApi(apiConfig, null, axios),
-      axios
-    }
+const { v1: uuidv1 } = require('uuid')
+const { send } = require('./sqs')
 
-    const user = await new SessionApi(apiConfig).sessionGet(null, {
-      headers: { cookie: req.header('cookie') }
-    }).then(d => d.data)
-    res.json(await quicksight.getEmbeddedDashboard(user, req.body, req.params.report, traccar, axios))
-  } catch (e) {
-    await logException(e, req)
-    res.status(500).send(e.message)
-  }
+app.post('/pinmeapi/reports/quicksight/:report', async (req, res) => {
+  const ingestionId = uuidv1()
+  await send(JSON.stringify({ report: req.params.report, ingestionId, params: req.body }), process.env.REPORTS_QUEUE1)
+  res.json({ ingestionId })
 })
 
 app.post('/reports/speeding-report/getEvents', async (req, res) => {
