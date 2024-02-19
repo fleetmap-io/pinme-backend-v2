@@ -20,9 +20,9 @@ function getPositionsUrl (devices, dateRange) {
 
 exports.getPositions = getPositions
 
-async function getPositions ({ dateRange, selectedDevices }, axios, allDevices, retries = 3) {
+async function getPositions ({ dateRange, selectedDevices }, axios, allDevices, retries = 5) {
+  const devices = selectedDevices.map(deviceId => allDevices.find(d => d.id === deviceId)).filter(d => d)
   try {
-    const devices = selectedDevices.map(deviceId => allDevices.find(d => d.id === deviceId)).filter(d => d)
     const maxDevices = 4
     const promises = []
     for (let i = 0; i < devices.length; i += maxDevices) {
@@ -40,7 +40,7 @@ async function getPositions ({ dateRange, selectedDevices }, axios, allDevices, 
     return result
   } catch (e) {
     if (retries--) {
-      console.error(e.message, 'retrying', retries)
+      console.error(e.message, devices, 'retrying', retries)
       return getPositions({ dateRange, selectedDevices }, axios, allDevices, retries)
     } else {
       throw e
