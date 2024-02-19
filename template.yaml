@@ -230,6 +230,27 @@ Resources:
           Properties:
             Path: /scheduler/{proxy+}
             Method: ANY
+
+  ProcessUserSchedulesSlow:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: ProcessUserSchedulesSlow
+      ReservedConcurrentExecutions: 2
+      MemorySize: 2048
+      Timeout: 900
+      CodeUri: backend/
+      Handler: reports/index.consumeMessage
+      Runtime: nodejs16.x
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            BatchSize: 1
+            Queue: !GetAtt AutomaticReportsQueue1.Arn
+            Enabled: true
+            ScalingConfig:
+              MaximumConcurrency: 2
+
   S3DailyMigrator:
     Type: AWS::Serverless::Function
     Properties:

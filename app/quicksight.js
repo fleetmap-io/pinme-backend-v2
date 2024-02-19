@@ -64,6 +64,20 @@ exports.createManifest = async () => {
   console.log(data)
 }
 
+exports.checkReport = async (_report, IngestionId) => {
+  const { DataSetId, DashboardId } = require('./partnerReports/' + _report)
+  const ingestion = await client.send(new DescribeIngestionCommand({
+    AwsAccountId,
+    IngestionId,
+    DataSetId
+  }))
+  console.log(ingestion && ingestion.Ingestion)
+  if (ingestion.Ingestion.IngestionStatus === 'RUNNING') {
+    return { ...ingestion.Ingestion, ingestionId: IngestionId }
+  }
+  return GetDashboardEmbedUrl(DashboardId)
+}
+
 exports.datasetIngestion = async (datasetId) => {
   const dataset = {
     DataSetId: datasetId,

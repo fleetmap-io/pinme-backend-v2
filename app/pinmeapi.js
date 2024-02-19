@@ -612,11 +612,16 @@ app.get('/pinmeapi/redirect/:param', async (req, res) => {
 
 const { v1: uuidv1 } = require('uuid')
 const { send } = require('./sqs')
+const { checkReport } = require('./quicksight')
 
 app.post('/pinmeapi/reports/quicksight/:report', async (req, res) => {
   const ingestionId = uuidv1()
   await send(JSON.stringify({ report: req.params.report, ingestionId, params: req.body, cookie: req.header('cookie') }), process.env.REPORTS_QUEUE1)
   res.json({ ingestionId })
+})
+
+app.get('/pinmeapi/reports/quicksight/:report', async (req, res) => {
+  res.json(await checkReport(req.params.report, req.query.ingestionId))
 })
 
 app.post('/reports/speeding-report/getEvents', async (req, res) => {

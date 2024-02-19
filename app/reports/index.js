@@ -40,3 +40,9 @@ async function process (report, req) {
   }).then(d => d.data)
   return quicksight.getEmbeddedDashboard(user, req.body, req.params.report, traccar, axios)
 }
+
+exports.consumeMessage = async (e) => {
+  for (const r of e.Records) {
+    console.log('processing', r)
+  }
+}

@@ -1,13 +1,16 @@
 const quicksight = require('../quicksight')
 const secrets = require('../secrets')
 const { getPositions, saveToS3 } = require('./index')
+const DataSetId = '3d2ec6ce-e62e-40fd-b8f8-4a8fa6fdcc72'
+const DashboardId = '28d3425c-fa2a-46d4-a8de-fab448a4cb93'
 
 exports.getReport = async (user, parameters, traccar, axios) => {
-  await saveToS3('passenger.csv', [] /* await createReport(user, parameters, axios) */)
-  await quicksight.datasetIngestion('3d2ec6ce-e62e-40fd-b8f8-4a8fa6fdcc72')
-  return quicksight.GetDashboardEmbedUrl('28d3425c-fa2a-46d4-a8de-fab448a4cb93')
+  await saveToS3('passenger.csv', await createReport(user, parameters, axios))
+  await quicksight.datasetIngestion(DataSetId)
 }
 
+exports.DatasetId = DataSetId
+exports.DashboardId = DashboardId
 async function createReport (user, { dateRange, selectedDevices }, axios) {
   const allDevices = await axios.get('/devices').then(d => d.data)
   const devices = selectedDevices.map(deviceId => allDevices.find(d => d.id === deviceId)).filter(d => d)
