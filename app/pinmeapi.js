@@ -16,10 +16,7 @@ const multer = require('multer')
 const { sendSms } = require('./sms')
 const { sendReport } = require('./scheduler')
 const { deleteGeofences } = require('./geofences')
-const apiConfig = {
-  basePath: process.env.TRACCAR_API_BASE_PATH || 'https://api2.pinme.io/api',
-  baseOptions: { withCredentials: true }
-}
+const { apiConfig } = require('./api/traccar')
 const storage = multer.memoryStorage()
 const upload = multer({ storage })
 
