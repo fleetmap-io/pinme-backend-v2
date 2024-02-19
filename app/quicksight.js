@@ -7,7 +7,6 @@ const AwsAccountId = '925447205804'
 const baseArn = `arn:aws:quicksight:us-east-1:${AwsAccountId}:`
 const userArn = baseArn + `user/default/${AwsAccountId}`
 const s3 = require('./s3')
-const { v1: uuidv1 } = require('uuid')
 const partnerReports = require('./partnerReports')
 
 function GetDashboardEmbedUrl (DashboardId) {
@@ -65,23 +64,28 @@ exports.createManifest = async () => {
 }
 
 exports.checkReport = async (_report, IngestionId) => {
-  const { DataSetId, DashboardId } = require('./partnerReports/' + _report)
-  const ingestion = await client.send(new DescribeIngestionCommand({
-    AwsAccountId,
-    IngestionId,
-    DataSetId
-  }))
-  console.log(ingestion && ingestion.Ingestion)
-  if (ingestion.Ingestion.IngestionStatus === 'RUNNING') {
-    return { ...ingestion.Ingestion, ingestionId: IngestionId }
+  try {
+    const { DataSetId, DashboardId } = require('./partnerReports/' + _report)
+    const ingestion = await client.send(new DescribeIngestionCommand({
+      AwsAccountId,
+      IngestionId,
+      DataSetId
+    }))
+    console.log(ingestion && ingestion.Ingestion)
+    if (ingestion.Ingestion.IngestionStatus === 'RUNNING') {
+      return { ...ingestion.Ingestion, ingestionId: IngestionId }
+    }
+    return GetDashboardEmbedUrl(DashboardId)
+  } catch (e) {
+    console.error(e)
+    return { ingestionId: IngestionId, ...e }
   }
-  return GetDashboardEmbedUrl(DashboardId)
 }
 
-exports.datasetIngestion = async (datasetId) => {
+exports.datasetIngestion = async (datasetId, IngestionId) => {
   const dataset = {
     DataSetId: datasetId,
-    IngestionId: uuidv1()
+    IngestionId
   }
 
   await createIngestion({

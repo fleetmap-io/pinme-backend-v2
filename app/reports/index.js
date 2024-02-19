@@ -1,6 +1,4 @@
 const s3 = require('../s3')
-const { DevicesApi, GroupsApi, DriversApi, GeofencesApi, SessionApi } = require('traccar-api')
-const quicksight = require('../quicksight')
 const apiConfig = {
   basePath: process.env.TRACCAR_API_BASE_PATH || 'https://api2.pinme.io/api',
   baseOptions: { withCredentials: true }
@@ -27,22 +25,16 @@ exports.getReport = async (report, traccar, { from, to, userData }) => {
 }
 
 async function process (report, req) {
-  const axios = require('axios').create({ headers: { cookie: req.header('cookie') }, baseURL: apiConfig.basePath })
-  const traccar = {
-    devices: new DevicesApi(apiConfig, null, axios),
-    groups: new GroupsApi(apiConfig, null, axios),
-    drivers: new DriversApi(apiConfig, null, axios),
-    geofences: new GeofencesApi(apiConfig, null, axios),
-    axios
-  }
-  const user = await new SessionApi(apiConfig).sessionGet(null, {
-    headers: { cookie: req.header('cookie') }
-  }).then(d => d.data)
-  return quicksight.getEmbeddedDashboard(user, req.body, req.params.report, traccar, axios)
 }
 
 exports.consumeMessage = async (e) => {
   for (const r of e.Records) {
     console.log('processing', r)
+    const { report, cookie, params, ingestionId } = JSON.parse(r.body)
+    const _report = require('../partnerReports/' + report)
+    if (report) {
+      const axios = require('axios').create({ headers: { cookie }, baseURL: apiConfig.basePath })
+      await _report.ingestReport(params, axios, ingestionId)
+    }
   }
 }

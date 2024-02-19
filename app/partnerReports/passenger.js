@@ -4,14 +4,14 @@ const { getPositions, saveToS3 } = require('./index')
 const DataSetId = '3d2ec6ce-e62e-40fd-b8f8-4a8fa6fdcc72'
 const DashboardId = '28d3425c-fa2a-46d4-a8de-fab448a4cb93'
 
-exports.getReport = async (user, parameters, traccar, axios) => {
-  await saveToS3('passenger.csv', await createReport(user, parameters, axios))
-  await quicksight.datasetIngestion(DataSetId)
+exports.ingestReport = async (parameters, axios, ingestionId) => {
+  await saveToS3('passenger.csv', await createReport(parameters, axios))
+  await quicksight.datasetIngestion(DataSetId, ingestionId)
 }
 
 exports.DatasetId = DataSetId
 exports.DashboardId = DashboardId
-async function createReport (user, { dateRange, selectedDevices }, axios) {
+async function createReport ({ dateRange, selectedDevices }, axios) {
   const allDevices = await axios.get('/devices').then(d => d.data)
   const devices = selectedDevices.map(deviceId => allDevices.find(d => d.id === deviceId)).filter(d => d)
   const auth = await secrets.getSecret('traccar')
@@ -27,7 +27,7 @@ async function createReport (user, { dateRange, selectedDevices }, axios) {
     })
   }))
   const promises = selectedDevices.map(async deviceId => {
-    const positions = await getPositions(user, { dateRange, selectedDevices: [deviceId] }, axios)
+    const positions = await getPositions({ dateRange, selectedDevices: [deviceId] }, axios)
     const eventsUrl = `/reports/events?deviceId=${deviceId
       }&from=${new Date(dateRange[0]).toISOString()
       }&to=${new Date(dateRange[1]).toISOString()

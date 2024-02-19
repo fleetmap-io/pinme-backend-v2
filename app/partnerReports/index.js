@@ -20,7 +20,7 @@ function getPositionsUrl (devices, dateRange) {
 
 exports.getPositions = getPositions
 
-async function getPositions (user, { dateRange, selectedDevices }, axios) {
+async function getPositions ({ dateRange, selectedDevices }, axios) {
   const allDevices = await axios.get('/devices').then(d => d.data)
   const devices = selectedDevices.map(deviceId => allDevices.find(d => d.id === deviceId)).filter(d => d)
   const maxDevices = 4
