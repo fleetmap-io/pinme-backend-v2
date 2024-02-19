@@ -40,7 +40,7 @@ async function getPositions ({ dateRange, selectedDevices }, axios, allDevices, 
     return result
   } catch (e) {
     if (retries--) {
-      console.error(e.message, devices, 'retrying', retries)
+      console.error(e.message, devices.length, devices[0] && devices[0].id, 'retrying', retries)
       return getPositions({ dateRange, selectedDevices }, axios, allDevices, retries)
     } else {
       throw e
