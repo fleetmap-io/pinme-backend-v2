@@ -13,6 +13,20 @@ exports.ingestReport = async (parameters, ingestionId, cookie) => {
 
 exports.DataSetId = DataSetId
 exports.DashboardId = DashboardId
+
+async function getEvents (cookie, eventsUrl, retries = 5) {
+  try {
+    return createReports(cookie).get(eventsUrl).then(d => d.data)
+  } catch (e) {
+    if (retries--) {
+      console.error(e.message, eventsUrl, 'retry', retries)
+      return getEvents(cookie, eventsUrl, retries)
+    } else {
+      throw e
+    }
+  }
+}
+
 async function createReport ({ dateRange, selectedDevices }, cookie) {
   const axios = create(cookie)
   const allDevices = await axios.get('/devices').then(d => d.data)
@@ -36,7 +50,7 @@ async function createReport ({ dateRange, selectedDevices }, cookie) {
       }&from=${new Date(dateRange[0]).toISOString()
       }&to=${new Date(dateRange[1]).toISOString()
       }`
-    const events = await createReports(cookie).get(eventsUrl).then(d => d.data)
+    const events = await getEvents(cookie, eventsUrl)
     events.forEach(e => {
       delete e.attributes
       const position = positions.find(p => p.id === e.positionId)
