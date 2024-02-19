@@ -1,17 +1,20 @@
 const quicksight = require('../quicksight')
 const secrets = require('../secrets')
 const { getPositions, saveToS3 } = require('./index')
+const { create } = require('../api/traccar')
+const { createReports } = require('../api/traccar')
 const DataSetId = '3d2ec6ce-e62e-40fd-b8f8-4a8fa6fdcc72'
 const DashboardId = '28d3425c-fa2a-46d4-a8de-fab448a4cb93'
 
-exports.ingestReport = async (parameters, axios, ingestionId) => {
-  await saveToS3('passenger.csv', await createReport(parameters, axios))
+exports.ingestReport = async (parameters, ingestionId, cookie) => {
+  await saveToS3('passenger.csv', await createReport(parameters, cookie))
   await quicksight.datasetIngestion(DataSetId, ingestionId)
 }
 
 exports.DataSetId = DataSetId
 exports.DashboardId = DashboardId
-async function createReport ({ dateRange, selectedDevices }, axios) {
+async function createReport ({ dateRange, selectedDevices }, cookie) {
+  const axios = create(cookie)
   const allDevices = await axios.get('/devices').then(d => d.data)
   const devices = selectedDevices.map(deviceId => allDevices.find(d => d.id === deviceId)).filter(d => d)
   const auth = await secrets.getSecret('traccar')
@@ -27,12 +30,12 @@ async function createReport ({ dateRange, selectedDevices }, axios) {
     })
   }))
   const promises = selectedDevices.map(async deviceId => {
-    const positions = await getPositions({ dateRange, selectedDevices: [deviceId] }, axios)
+    const positions = await getPositions({ dateRange, selectedDevices: [deviceId] }, createReports(cookie))
     const eventsUrl = `/reports/events?deviceId=${deviceId
       }&from=${new Date(dateRange[0]).toISOString()
       }&to=${new Date(dateRange[1]).toISOString()
       }`
-    const events = await axios.get(eventsUrl).then(d => d.data)
+    const events = createReports(cookie).get(eventsUrl).then(d => d.data)
     events.forEach(e => {
       delete e.attributes
       const position = positions.find(p => p.id === e.positionId)

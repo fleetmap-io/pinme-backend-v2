@@ -2,6 +2,7 @@ const NodeCache = require('node-cache')
 const _timeout = 10000
 const cache = new NodeCache({ stdTTL: 600, useClones: false, checkperiod: 120 })
 const baseURL = process.env.TRACCAR_API_BASE_PATH || 'https://api2.pinme.io/api'
+const baseUrlReports = process.env.TRACCAR_API_REPORTS || 'https://0uu3hlen0d.execute-api.us-east-1.amazonaws.com/Prod/api'
 
 const conf = {
   auth: { username: process.env.TRACCAR_ADMIN_USER, password: process.env.TRACCAR_ADMIN_PASS },
@@ -18,6 +19,10 @@ exports.apiConfig = {
 
 exports.create = (cookie) => {
   return require('axios').create({ headers: { cookie }, baseURL: conf.baseURL })
+}
+
+exports.createReports = (cookie) => {
+  return require('axios').create({ headers: { cookie }, baseURL: baseUrlReports })
 }
 
 exports.getNotifications = (userId, deviceId) => {

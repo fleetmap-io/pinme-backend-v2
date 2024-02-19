@@ -1,5 +1,4 @@
 const s3 = require('../s3')
-const { create } = require('../api/traccar')
 
 exports.getReport = async (report, traccar, { from, to, userData }) => {
   console.log('getReport', report, new Date(from), to, userData)
@@ -30,7 +29,7 @@ exports.consumeMessage = async (e) => {
     const { report, cookie, params, ingestionId } = JSON.parse(r.body)
     const _report = require('../partnerReports/' + report)
     if (report) {
-      await _report.ingestReport(params, create(cookie), ingestionId)
+      await _report.ingestReport(params, ingestionId, cookie)
     }
   }
 }
