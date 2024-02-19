@@ -9,7 +9,7 @@ exports.ingestReport = async (parameters, axios, ingestionId) => {
   await quicksight.datasetIngestion(DataSetId, ingestionId)
 }
 
-exports.DatasetId = DataSetId
+exports.DataSetId = DataSetId
 exports.DashboardId = DashboardId
 async function createReport ({ dateRange, selectedDevices }, axios) {
   const allDevices = await axios.get('/devices').then(d => d.data)
