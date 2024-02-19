@@ -238,7 +238,7 @@ Resources:
       ReservedConcurrentExecutions: 2
       MemorySize: 2048
       Timeout: 900
-      CodeUri: backend/
+      CodeUri: ./app/
       Handler: reports/index.consumeMessage
       Runtime: nodejs16.x
       Events:
