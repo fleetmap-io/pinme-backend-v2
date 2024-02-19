@@ -262,6 +262,41 @@ Resources:
             ScalingConfig:
               MaximumConcurrency: 2
 
+  ProcessUserSchedulesFast:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: pinme-backend-process-schedules-fast
+      ReservedConcurrentExecutions: 2
+      MemorySize: 10240
+      Timeout: 900
+      CodeUri: ./app/
+      Handler: reports/index.consumeMessage
+      Runtime: nodejs16.x
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            BatchSize: 1
+            Queue: !GetAtt AutomaticReportsQueue2.Arn
+            Enabled: true
+            ScalingConfig:
+              MaximumConcurrency: 2
+      Policies:
+        - AmazonSQSFullAccess
+        - CloudWatchFullAccess
+        - AmazonSESFullAccess
+        - AmazonDynamoDBFullAccess
+        - AmazonS3FullAccess
+        - SecretsManagerReadWrite
+        - Statement:
+            - Effect: Allow
+              Action:
+                - 'quicksight:CreateIngestion'
+                - 'quicksight:GetDashboardEmbedUrl'
+                - 'quicksight:DescribeIngestion'
+                - 'quicksight:GetAuthCode'
+              Resource: '*'
+
   S3DailyMigrator:
     Type: AWS::Serverless::Function
     Properties:
