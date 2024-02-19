@@ -36,7 +36,7 @@ async function createReport ({ dateRange, selectedDevices }, cookie) {
       }&from=${new Date(dateRange[0]).toISOString()
       }&to=${new Date(dateRange[1]).toISOString()
       }`
-    const events = createReports(cookie).get(eventsUrl).then(d => d.data)
+    const events = await createReports(cookie).get(eventsUrl).then(d => d.data)
     events.forEach(e => {
       delete e.attributes
       const position = positions.find(p => p.id === e.positionId)
