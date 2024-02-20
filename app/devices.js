@@ -1,6 +1,7 @@
 const { GetItemCommand, PutItemCommand, DynamoDBClient } = require('@aws-sdk/client-dynamodb')
 const dynamo = new DynamoDBClient({ region: 'us-east-1' })
 const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb')
+const traccar = require('./api/traccar')
 
 exports.getIgnitionOff = async (deviceId) => {
   const device = await dynamo.send(new GetItemCommand({
@@ -20,7 +21,6 @@ exports.put = (device) => {
 }
 
 const mysql = require('./mysql')
-const traccar = require('./traccar')
 const { safeSearch } = require('./util')
 
 exports.delete = async (id) => {
