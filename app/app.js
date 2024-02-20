@@ -38,7 +38,18 @@ exports.mainFunction = async (event) => {
     }))
     email = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'email')
     try {
-      if (!listUsersResponse.Users[0].Attributes.find(a => a.Name === 'custom:SERVER_HOST')) {
+      let skip = false
+      const xforwarded = event.headers && event.headers['X-Forwarded-For']
+      if (xforwarded) {
+        try {
+          const country = await this.getCity(xforwarded.split(',')[0]).country
+          if (country === 'CL') {
+            skip = true
+            console.log('skipping for chile', xforwarded, email)
+          }
+        } catch (e) { console.error(e) }
+      }
+      if (!skip && !listUsersResponse.Users[0].Attributes.find(a => a.Name === 'custom:SERVER_HOST')) {
         console.log('setting custom attributes', email)
         await cognito.send(new AdminUpdateUserAttributesCommand({
           UserPoolId: process.env.USER_POOL_ID,
