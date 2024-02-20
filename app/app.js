@@ -43,9 +43,9 @@ exports.mainFunction = async (event) => {
       if (xforwarded) {
         try {
           const country = await this.getCity(xforwarded.split(',')[0]).country
-          if (country === 'CL') {
+          if (country === 'CL' || country === 'PT') {
             skip = true
-            console.log('skipping for chile', xforwarded, email)
+            console.log(xforwarded, 'skipping for', country, email)
           }
         } catch (e) { console.error(e) }
       }
