@@ -289,11 +289,10 @@ exports.getCanProtocols = async () => {
 
 exports.put = async (item, user) => {
   console.log('add new device', item)
-  let newDevice = await traccar.devices.put(item)
+  const newDevice = await traccar.devices.put(item)
   if (!newDevice.id) {
     console.log('new device already exists')
-    newDevice = await traccar.devices.getUniqueId(item.uniqueId)
-
+    [newDevice] = await traccar.getDevices(item.uniqueId)
     // check partner
     const select = `select d.id from traccar.tc_devices d where d.id=${newDevice.id}`
     const [result] = await mysql.query(select)
