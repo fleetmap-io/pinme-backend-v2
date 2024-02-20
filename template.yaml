@@ -108,6 +108,7 @@ Resources:
   GpsManager:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: pinme-backend-gpsmanager
       CodeUri: ./app/
       Handler: gpsmanager.main
       Runtime: nodejs16.x
