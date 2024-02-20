@@ -47,6 +47,8 @@ exports.mainFunction = async (event) => {
           if (country === 'CL' || country === 'PT') {
             skip = true
             console.log(xforwarded, 'skipping for', country, email)
+          } else {
+            console.log('moving on for', country, email, xforwarded)
           }
         } catch (e) { console.error(e) }
       }
