@@ -52,8 +52,8 @@ exports.postById = async (deviceId, user, body) => {
   console.log('post by id', deviceId, user, body)
   const { device, columns } = body
   let query = `
-        insert ignore into traccar.bo_device_details (deviceid)
-        values (${deviceId})`
+    insert ignore into traccar.bo_device_details (deviceid)
+    values (${deviceId})`
   if (device) {
     query += `on duplicate key update ${columns.map(key => key + '=\'' + device[key] + '\'').join(',')} `
   }
@@ -116,6 +116,12 @@ exports.get = async (options, user, partners) => {
     case 'subtel':
       orderColumn = 'd.attributes->\'$.subtel\''
       break
+    case 'license_plate':
+      orderColumn = 'LOWER(d.attributes->\'$.license_plate\')'
+      break
+    case 'apn':
+      orderColumn = 'd.attributes->\'$.apn\''
+      break
     case 'device':
       orderColumn = 'json_extract(d.attributes, "$.deviceType")'
       break
@@ -123,7 +129,6 @@ exports.get = async (options, user, partners) => {
       orderColumn = 'c.name'
       break
     case '':
-    case 'apn':
     case null:
     case undefined:
       orderColumn = 'd.id'
@@ -144,7 +149,7 @@ exports.get = async (options, user, partners) => {
         p.attributes->>'$.rpm' rpm, p.attributes->>'$.fuelUsed' fuelUsed, p.attributes->>'$.versionFw' versionFw,
         d.phone, dd.lastaction, c.name client, d.licenseplate, p.latitude, p.longitude,
         g.name groupName, dt.name device, d.uniqueid, d.model, dd.lastsms, dd.lastsmsstatus, dd.immobilizationType,
-        d.attributes->>'$.apn' apn, d.attributes, d.firstlocationdate, dd.lastactiondate, d.attributes->>'$.deviceType' devicetype, p.speed, p.protocol
+        d.attributes->>'$.apn' apn, d.attributes, p.firstlocationdate, dd.lastactiondate, d.attributes->>'$.deviceType' devicetype, p.speed, p.protocol
         `
   const querySelect = `${select} ${from} ${orderBy}`
   console.log(querySelect)
@@ -211,8 +216,8 @@ exports.post = async (item, user) => {
 
   if (item.updatePartnerId) {
     const query2 = `
-            update traccar.tc_devices set partnerid = (select partnerid from traccar.tc_users where email = '${user}') where id = ${item.id}
-        `
+      update traccar.tc_devices set partnerid = (select partnerid from traccar.tc_users where email = '${user}') where id = ${item.id}
+    `
     console.log(query2)
     console.log(await mysql.query(query2))
   }
@@ -307,8 +312,8 @@ exports.put = async (item, user) => {
   }
   console.log('newDevice', newDevice)
   const query2 = `
-            update traccar.tc_devices set partnerid = (select partnerid from traccar.tc_users where email = '${user}') where id = ${newDevice.id}
-            `
+    update traccar.tc_devices set partnerid = (select partnerid from traccar.tc_users where email = '${user}') where id = ${newDevice.id}
+  `
   console.log(query2)
   console.log(await mysql.query(query2))
   try {
