@@ -42,7 +42,7 @@ exports.getConfById = async (deviceId, user) => {
 
 exports.getByUniqueId = async (uniqueId, user) => {
   console.log('getByUniqueId', uniqueId, user)
-  const response = await traccar.devices.getUniqueId(uniqueId)
+  const [response] = await traccar.getDevices(uniqueId)
   console.log(response)
   return response
 }
@@ -289,10 +289,11 @@ exports.getCanProtocols = async () => {
 
 exports.put = async (item, user) => {
   console.log('add new device', item)
-  const newDevice = await traccar.devices.put(item)
+  let newDevice = await traccar.devices.put(item)
   if (!newDevice.id) {
     console.log('new device already exists')
-    [newDevice] = await traccar.getDevices(item.uniqueId)
+    newDevice = await traccar.devices.getUniqueId(item.uniqueId)
+
     // check partner
     const select = `select d.id from traccar.tc_devices d where d.id=${newDevice.id}`
     const [result] = await mysql.query(select)
