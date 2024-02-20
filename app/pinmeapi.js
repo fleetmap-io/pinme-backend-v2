@@ -446,7 +446,7 @@ app.get('/pinmeapi/tokens/:deviceId', async (req, res) => {
   const traccarDevice = await getDevice(req)
   console.log('traccarDevice', traccarDevice)
   const devices = require('./devices')
-  let device = await devices.get(traccarDevice.id)
+  let device = await devices.getIgnitionOff(traccarDevice.id)
   if (!device) { device = { deviceId: traccarDevice.id } }
   if (!device.token) {
     device.token = Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2)
