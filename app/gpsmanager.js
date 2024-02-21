@@ -178,7 +178,7 @@ app.post('/gpsmanager/users/create', async (req, res) => {
 })
 
 app.get('/gpsmanager/users', async (req, res) => {
-  await processRequest(users.get, res, req.query, res.locals.user)
+  await processRequest(users.getDB, res, req.query, res.locals.user)
 })
 
 app.get('/gpsmanager/user', async (req, res) => {
