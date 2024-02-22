@@ -305,9 +305,9 @@ exports.postUser = (body) => post('/users', body)
 
 exports.deleteUser = (id) => del(`/users/${id}`).then(r => r.data)
 
-exports.put = async (item, user) => {
+exports.putDevice = async (item, user) => {
   console.log('add new device', item)
-  let newDevice = await put(item)
+  let newDevice = await put('/devices/', item)
   if (!newDevice.id) {
     console.log('new device already exists')
     newDevice = await getDevices(item.uniqueId)

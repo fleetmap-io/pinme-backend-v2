@@ -289,37 +289,5 @@ exports.getCanProtocols = async () => {
 
 exports.put = async (item, user) => {
   console.log('add new device', item)
-  let newDevice = await traccar.putDevice(item)
-  if (!newDevice.id) {
-    console.log('new device already exists')
-    newDevice = await traccar.devices.getUniqueId(item.uniqueId)
-
-    // check partner
-    const select = `select d.id from traccar.tc_devices d where d.id=${newDevice.id}`
-    const [result] = await mysql.query(select)
-    if (result.length) {
-      newDevice.name = item.name
-      newDevice.phone = item.phone || newDevice.phone
-      newDevice.attributes.apn = item.attributes.apn || newDevice.attributes.apn
-      newDevice.attributes.client = item.attributes.client
-      newDevice.attributes.clientId = item.attributes.clientId
-      newDevice.attributes.deviceType = item.attributes.deviceType
-      newDevice.attributes.license_plate = item.attributes.license_plate
-      newDevice.attributes.serialNumber = item.attributes.serialNumber
-      console.log('update device', newDevice)
-      await traccar.devices.update(newDevice)
-    }
-  }
-  console.log('newDevice', newDevice)
-  const query2 = `
-    update traccar.tc_devices set partnerid = (select partnerid from traccar.tc_users where email = '${user}') where id = ${newDevice.id}
-  `
-  console.log(query2)
-  console.log(await mysql.query(query2))
-  try {
-    console.log('remove admin', await traccar.permissions.delete({ userId: 1, deviceId: newDevice.id }))
-  } catch (e) {
-    console.warn(e)
-  }
-  return newDevice
+  return await traccar.putDevice(item, user)
 }
