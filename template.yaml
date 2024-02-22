@@ -507,7 +507,7 @@ Resources:
       Handler: GeofenceDeleteLambda::GeofenceDeleteLambda.Function::FunctionHandler
       Runtime: dotnet6
       MemorySize: 256
-      Timeout: 120
+      Timeout: 30
       Policies:
         - AmazonSQSFullAccess
       VpcConfig:
