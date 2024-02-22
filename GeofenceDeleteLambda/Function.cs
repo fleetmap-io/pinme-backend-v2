@@ -18,7 +18,7 @@ public class Function
         await MySqlHelper.ExecuteNonQueryAsync(Settings.mysqlcs, $"DELETE FROM tc_geofences WHERE id IN ({ids})");
 
         var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Settings.TraccarUser}:{Settings.TraccarUser}")));
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Settings.TraccarUser}:{Settings.TraccarPass}")));
         var result = await httpClient.GetAsync("https://api.pinme.io/api/geofences?refresh=true");
         result.EnsureSuccessStatusCode();
         return "ok";

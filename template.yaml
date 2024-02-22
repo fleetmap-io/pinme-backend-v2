@@ -502,7 +502,7 @@ Resources:
   GeofenceDeleteLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: pinme-backend-gepfence-delete-lambda
+      FunctionName: pinme-backend-geofence-delete-lambda
       CodeUri: ./GeofenceDeleteLambda/
       Handler: GeofenceDeleteLambda::GeofenceDeleteLambda.Function::FunctionHandler
       Runtime: dotnet6
