@@ -510,11 +510,6 @@ Resources:
       Timeout: 30
       Policies:
         - AmazonSQSFullAccess
-      VpcConfig:
-        SubnetIds:
-          - !Ref PrivateSubnet
-        SecurityGroupIds:
-          - !Ref SecurityGroup
       Events:
         SQSEvent:
           Type: SQS
