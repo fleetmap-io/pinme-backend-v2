@@ -516,6 +516,7 @@ Resources:
           Type: SQS
           Properties:
             BatchSize: 10
+            MaximumBatchingWindow: 60
             Queue: '{{resolve:ssm:/traccar/delete-geofences-queue}}'
 
 Outputs:
