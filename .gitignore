@@ -210,3 +210,6 @@ S3DailyMigrator/obj/
 S3DailyMigrator/.vs/
 /S3DailyMigrator/bin/
 .idea/workspace.xml
+.vs/
+GeofenceDeleteLambda/bin/
+GeofenceDeleteLambda/obj/
