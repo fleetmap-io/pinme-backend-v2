@@ -1,6 +1,8 @@
 name: Deploy aws
 run-name: ${{ github.actor }} is running GitHub Actions 🚀
-on: [push]
+on:
+  push:
+    branches: [ "master" ]
 jobs:
   deploy:
     runs-on: ubuntu-latest
