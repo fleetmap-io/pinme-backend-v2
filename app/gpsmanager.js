@@ -154,7 +154,6 @@ app.post('/gpsmanager/devices/:deviceId', async (req, res) => {
 })
 
 app.post('/gpsmanager/users', async (req, res) => {
-  console.log(req.body)
   try {
     res.json(await users.post(req.body, res.locals.user))
   } catch (e) {
