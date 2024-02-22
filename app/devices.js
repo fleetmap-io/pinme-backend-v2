@@ -287,7 +287,6 @@ exports.getCanProtocols = async () => {
   return result
 }
 
-exports.put = async (item, user) => {
-  console.log('add new device', item)
+exports.putDevice = async (item, user) => {
   return await traccar.putDevice(item, user)
 }
