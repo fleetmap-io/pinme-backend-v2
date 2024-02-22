@@ -495,6 +495,28 @@ Resources:
       QueueName: "AutomaticReportsDLQ"
       VisibilityTimeout: 900
 
+  GeofenceDeleteLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: pinme-backend-gepfence-delete-lambda
+      CodeUri: ./GeofenceDeleteLambda/
+      Handler: GeofenceDeleteLambda::GeofenceDeleteLambda.Function::FunctionHandler
+      Runtime: dotnet6
+      MemorySize: 256
+      Timeout: 120
+      Policies:
+        - AmazonSQSFullAccess
+      VpcConfig:
+        SubnetIds:
+          - !Ref PrivateSubnet
+        SecurityGroupIds:
+          - !Ref SecurityGroup
+      Events:
+        SQSEvent:
+          Type: SQS
+          Properties:
+            BatchSize: 10
+            Queue: '{{resolve:ssm:/traccar/delete-geofences-queue}}'
 
 Outputs:
   ElasticIPAddress:
