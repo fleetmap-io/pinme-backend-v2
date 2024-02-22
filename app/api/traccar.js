@@ -269,7 +269,7 @@ exports.updateDeviceAccumulators = (deviceId, accumulators) => {
 }
 
 exports.getComputed = async (deviceId) => {
-  return await get(`/attributes/computed?deviceid=${deviceId}`)
+  return await get(`/attributes/computed?deviceId=${deviceId}`)
 }
 
 exports.removeComputed = (deviceId, attributeId) => {
