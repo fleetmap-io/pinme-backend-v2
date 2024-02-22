@@ -55,6 +55,8 @@ async function validate (accessTokenFromClient, req, res, next, retries = 3) {
       })
     }
     const response = await cognitoExpress.validate(accessTokenFromClient)
+    console.log('USER_POOL_ID', process.env.USER_POOL_ID)
+    console.log('Cognito validate response', response)
     if (!response['cognito:groups'] || !response['cognito:groups'].find(g => g === 'Backoffice')) {
       console.warn('not authorized for ', response.username)
       return res.status(401).send('Unauthorized')
