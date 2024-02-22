@@ -13,6 +13,7 @@ const cw = require('../../cloudwatch')
 const traccar = require('../../auth')
 const { pushPositions } = require('../../push')
 const { eventsAndPositionsConsumer } = require('../../index')
+const users = require('../../users')
 
 function checkResult (result) {
   console.log(result)
@@ -83,4 +84,10 @@ describe('Tests index', function () {
   it('pushes positions', async () => {
     await pushPositions(require('../../../events/position'))
   })
+
+  // eslint-disable-next-line no-undef
+  it('changes password', async () => {
+    const user = { id: 8253, email: 'joaquim@fleetmap.io' }
+    await users.post({ ...user, updatePassword: true, newPassword: process.env.NEW_PASSWORD }, 'joaquim@fleetmap.io')
+  }, 10000)
 })

@@ -42,7 +42,7 @@ exports.post = async (item, adminUser) => {
     return data
   }
 
-  const user = await getUser(item.id).then(r => r.data)
+  const user = await getUser(item.id)
   const partnerid = _user.partnerid
   const select = `select count(*) count from traccar.tc_users 
                     where 
@@ -142,7 +142,7 @@ exports.getDB = async (options, user) => {
 }
 
 exports.getUser = async (user) => {
-  const [result] = await mysql.query(`select * from traccar.tc_users  where email = '${user}'`)
+  const [result] = await mysql.query(`select * from traccar.tc_users  where email = '${user}'`, true)
   if (!result) {
     throw new Error('User not found: ' + user)
   }
