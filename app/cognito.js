@@ -62,6 +62,7 @@ exports.changeUserPass = async (email, clientId, Password, traccarUser) => {
     console.log('AdminSetUserPasswordCommand', response.Users[0], params, await client.send(new AdminSetUserPasswordCommand(params)))
     return { Password: Password || randomPassword }
   } catch (e) {
+    console.log(e)
     return { Password: e.message || e }
   }
 }
