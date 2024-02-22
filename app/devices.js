@@ -277,7 +277,7 @@ const generateRandomString = () => {
 }
 
 exports.getComputedAttributes = async (deviceid) => {
-  return await traccar.attributes.get(deviceid)
+  return await traccar.getComputed(deviceid)
 }
 
 exports.getCanProtocols = async () => {

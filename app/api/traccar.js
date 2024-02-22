@@ -268,8 +268,8 @@ exports.updateDeviceAccumulators = (deviceId, accumulators) => {
   return put('/devices/' + deviceId + '/accumulators', body)
 }
 
-exports.getComputed = (deviceId) => {
-  return get(`/permissions?deviceid=${deviceId}`)
+exports.getComputed = async (deviceId) => {
+  return await get(`/permissions?deviceid=${deviceId}`)
 }
 
 exports.removeComputed = (deviceId, attributeId) => {
@@ -288,7 +288,7 @@ exports.sendCommand = (deviceId, data) => {
 exports.getCommands = (deviceId) => {
   const url = `/commands?deviceId=${deviceId}`
   console.log(url)
-  return get(url).then(r => r.data)
+  return get(url)
 }
 
 exports.addPermission = async (permission) => {
