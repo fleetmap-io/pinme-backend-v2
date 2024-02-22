@@ -289,7 +289,7 @@ exports.getCanProtocols = async () => {
 
 exports.put = async (item, user) => {
   console.log('add new device', item)
-  let newDevice = await traccar.devices.put(item)
+  let newDevice = await traccar.putDevice(item)
   if (!newDevice.id) {
     console.log('new device already exists')
     newDevice = await traccar.devices.getUniqueId(item.uniqueId)

@@ -1,4 +1,6 @@
 const NodeCache = require('node-cache')
+const { query } = require('../mysql')
+const mysql = require('../mysql')
 const _timeout = 10000
 const cache = new NodeCache({ stdTTL: 600, useClones: false, checkperiod: 120 })
 const baseURL = process.env.TRACCAR_API_BASE_PATH || 'https://api2.pinme.io/api'
@@ -84,10 +86,11 @@ exports.getGroups = (userId, timeout) => {
 exports.createUser = (user) => {
   return post('/users', user)
 }
-
-exports.createDevice = (device) => {
+const createDevice = (device) => {
   return post('/devices', device)
 }
+
+exports.createDevice = createDevice
 
 exports.createGroup = (device) => {
   return post('/groups', device)
@@ -152,12 +155,13 @@ exports.deleteDevice = (deviceId) => {
   return axios.delete('/devices/' + deviceId)
 }
 
-exports.getDevices = (uniqueId) => {
+const getDevices = (uniqueId) => {
   let url = '/devices'
   if (uniqueId) { url += '?uniqueId=' + uniqueId }
   console.log(url)
   return get(url)
 }
+exports.getDevices = getDevices
 
 exports.getDevicesById = (deviceIds) => {
   const url = '/devices?' + deviceIds.map(d => 'id=' + d).join('&')
@@ -300,3 +304,53 @@ exports.deletePermission = async (permission) => {
 exports.postUser = (body) => post('/users', body)
 
 exports.deleteUser = (id) => del(`/users/${id}`).then(r => r.data)
+
+exports.put = async (item, user) => {
+  console.log('add new device', item)
+  let newDevice = await put(item)
+  if (!newDevice.id) {
+    console.log('new device already exists')
+    newDevice = await getDevices(item.uniqueId)
+
+    // check partner
+    const select = `select d.id from traccar.tc_devices d where d.id=${newDevice.id}`
+    const [result] = await query(select, true)
+    if (result.length) {
+      newDevice.name = item.name
+      newDevice.phone = item.phone || newDevice.phone
+      newDevice.attributes.apn = item.attributes.apn || newDevice.attributes.apn
+      newDevice.attributes.client = item.attributes.client
+      newDevice.attributes.clientId = item.attributes.clientId
+      newDevice.attributes.deviceType = item.attributes.deviceType
+      newDevice.attributes.license_plate = item.attributes.license_plate
+      newDevice.attributes.serialNumber = item.attributes.serialNumber
+      console.log('update device', newDevice)
+      await updateDevice(newDevice)
+    }
+  }
+  console.log('newDevice', newDevice)
+  const query2 = `
+            update traccar.tc_devices set partnerid = (select partnerid from traccar.tc_users where email = '${user}') where id = ${newDevice.id}
+            `
+  console.log(query2)
+  console.log(await mysql.query(query2))
+  try {
+    // console.log('remove admin', await permissions.delete({ userId: 1, deviceId: newDevice.id }))
+  } catch (e) {
+    console.warn(e)
+  }
+  return newDevice
+}
+exports.put = async (device) => {
+  try {
+    const newDevice = await createDevice(device).then(r => r.data)
+    console.log(newDevice)
+    return newDevice
+  } catch (e) {
+    return e.message
+  }
+}
+
+const updateDevice = async (device) => {
+  return axios.put(`/devices/${device.id}`, device).then(r => r.data)
+}
