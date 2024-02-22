@@ -432,6 +432,10 @@ Resources:
       PrimaryKey:
         Name: user
         Type: String
+  DriverUniqueIdTimeline:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      TableName: DriverUniqueIdTimeline
 
   SQSS3DailyMigratorUnit:
     Type: AWS::SQS::Queue
