@@ -15,7 +15,9 @@ public class Function
     public async Task<string> FunctionHandler(SQSEvent sqsEvent, ILambdaContext context)
     {
         var ids = string.Join(',', sqsEvent.Records.Select(r => r.Body));
-        await MySqlHelper.ExecuteNonQueryAsync(Settings.mysqlcs, $"DELETE FROM tc_geofences WHERE id IN ({ids})");
+        var q = $"DELETE FROM tc_geofences WHERE id IN ({ids})";
+        Console.WriteLine(q);
+        await MySqlHelper.ExecuteNonQueryAsync(Settings.mysqlcs, q);
 
         var httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{Settings.TraccarUser}:{Settings.TraccarPass}")));
