@@ -167,11 +167,11 @@ exports.post = async (item, user) => {
   if (item.addUserId) {
     console.log('addPermission device', item.id, 'user', item.addUserId.id)
     const permission = { userId: item.addUserId.id, deviceId: item.id }
-    await traccar.permissions.add(permission)
+    await traccar.addPermission(permission)
   }
 
   if (item.newAttributes) {
-    const device = await traccar.devices.get(item.id)
+    const device = await traccar.getDevice(item.id)
     console.log(device)
     for (const k of Object.keys(item.newAttributes)) {
       device.attributes[k] = item.newAttributes[k]
@@ -181,38 +181,38 @@ exports.post = async (item, user) => {
     device.uniqueId = item.uniqueid || item.uniqueId
     try {
       console.log('updating device', device)
-      await traccar.devices.update(device)
+      await traccar.updateDevice(device.id, device)
     } catch (e) {
       console.error(device.name, e.message, e.response && e.response.data)
     }
   }
 
   if (item.removeAttribute) {
-    const device = await traccar.devices.get(item.id)
+    const device = await traccar.getDevice(item.id)
     console.log('removing', item.removeAttribute, 'on', device.id)
     delete device.attributes[item.removeAttribute]
     console.log('device without attribute', device)
-    await traccar.devices.update(device)
+    await traccar.updateDevice(device.id, device)
   }
 
   if (item.removeComputedAttribute) {
     console.log('removePermission device ', item.id, 'attribute', item.removeComputedAttribute.id)
     const permission = { deviceId: item.id, attributeId: item.removeComputedAttribute.id }
-    await traccar.permissions.delete(permission)
+    await traccar.deletePermission(permission)
   }
 
   if (item.newDisabled) {
     console.log(user, 'enable or disable', item)
-    const device = await traccar.devices.get(item.id)
+    const device = await traccar.getDevice(item.id)
     device.disabled = item.newDisabled
-    await traccar.devices.update(device)
+    await traccar.updateDevice(device.id, device)
   }
 
   if (item.removeGroup) {
     console.log(user, 'remove group', item)
-    const device = await traccar.devices.get(item.id)
+    const device = await traccar.getDevice(item.id)
     device.groupId = null
-    await traccar.devices.update(device)
+    await traccar.updateDevice(device.id, device)
   }
 
   if (item.updatePartnerId) {
@@ -225,7 +225,7 @@ exports.post = async (item, user) => {
 
   if (item.switchImeiAndSim) {
     try {
-      const device0 = await traccar.devices.get(item.id)
+      const device0 = await traccar.getDevice(item.id)
       const device1 = await traccar.devices.getUniqueId(item.switchImeiAndSim)
 
       console.log('switch imei and sim', device0, device1)

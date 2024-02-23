@@ -157,6 +157,11 @@ exports.deleteDevice = (deviceId) => {
   return axios.delete('/devices/' + deviceId)
 }
 
+exports.getDevice = async (id) => {
+  const [device] = await get(`/devices?id=${id}`)
+  return device
+}
+
 const getDevices = (uniqueId) => {
   let url = '/devices'
   if (uniqueId) { url += '?uniqueId=' + uniqueId }
