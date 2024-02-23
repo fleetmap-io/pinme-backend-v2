@@ -10,6 +10,7 @@
     "@aws-sdk/client-cognito-identity-provider": "3.511.0",
     "@aws-sdk/client-dynamodb": "3.511.0",
     "@aws-sdk/client-quicksight": "3.511.0",
+    "@aws-sdk/client-s3": "^3.515.0",
     "@aws-sdk/client-secrets-manager": "3.511.0",
     "@aws-sdk/client-sesv2": "3.511.0",
     "@aws-sdk/client-sqs": "3.511.0",
@@ -38,6 +39,7 @@
     "node-cache": "^5.1.2",
     "nodemailer": "6.9.9",
     "papaparse": "^5.4.1",
+    "soap": "^1.0.0",
     "traccar-api": "^1.0.5",
     "ua-parser-js": "^1.0.37"
   },
