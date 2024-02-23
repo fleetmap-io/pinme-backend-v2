@@ -260,6 +260,7 @@ app.get('/reports', async (req, res) => {
 })
 
 app.get('/gpsmanager/session', async (req, res) => {
+  console.log('get session', req.query.email)
   res.json(await require('./auth').getUserSession(req.query.email))
 })
 
@@ -274,6 +275,7 @@ app.get('/gpsmanager/attributes/computed', async (req, res) => {
 app.get('/gpsmanager/commands', async (req, res) => {
   await processRequest(async () => {
     const [rows] = await require('./mysql').query('select * from traccar.tc_commands order by description')
+    console.log('returning', rows)
     console.log('returning', rows)
     return rows
   }, res)
