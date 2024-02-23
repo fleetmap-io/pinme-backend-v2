@@ -296,7 +296,7 @@ exports.getCommands = (deviceId) => {
 }
 
 exports.addPermission = async (permission) => {
-  return post('/permissions', permission).then(r => r.data)
+  return await post('/permissions', permission).then(r => r.data)
 }
 
 exports.deletePermission = async (permission) => {
