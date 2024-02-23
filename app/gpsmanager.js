@@ -259,7 +259,7 @@ app.get('/reports', async (req, res) => {
   res.json(await reports.get())
 })
 
-app.get('/session', async (req, res) => {
+app.get('/gpsmanager/session', async (req, res) => {
   res.json(await require('./auth').getUserSession(req.query.email))
 })
 
