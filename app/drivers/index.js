@@ -5,7 +5,7 @@ const traccar = require('../api/traccar')
 const allDrivers = {}
 
 exports.get = async (options, user) => {
-  const [_user] = await getUserPartnerId(user)
+  const _user = await getUserPartnerId(user)
   console.log('user', _user)
   let from = `
 from traccar.tc_drivers d 
