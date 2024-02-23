@@ -135,7 +135,7 @@ app.post('/gpsmanager', async (req, res) => {
 
 app.put('/gpsmanager/devices', async (req, res) => {
   console.log(req.body)
-  res.json(await devices.put(req.body, res.locals.user))
+  res.json(await devices.putDevice(req.body, res.locals.user))
 })
 
 app.delete('/gpsmanager/devices/:deviceId', async (req, res) => {

@@ -22,6 +22,7 @@ exports.put = (device) => {
 
 const mysql = require('./mysql')
 const { safeSearch } = require('./util')
+const { query } = require('./mysql')
 
 exports.delete = async (id) => {
   const response = await traccar.devices.delete(id)
@@ -276,7 +277,7 @@ const generateRandomString = () => {
 }
 
 exports.getComputedAttributes = async (deviceid) => {
-  return await traccar.attributes.get(deviceid)
+  return await traccar.getComputed(deviceid)
 }
 
 exports.getCanProtocols = async () => {
@@ -287,16 +288,14 @@ exports.getCanProtocols = async () => {
   return result
 }
 
-exports.put = async (item, user) => {
-  console.log('add new device', item)
+exports.putDevice = async (item, user) => {
   let newDevice = await traccar.putDevice(item)
   if (!newDevice.id) {
     console.log('new device already exists')
-    newDevice = await traccar.devices.getUniqueId(item.uniqueId)
-
+    newDevice = await traccar.getDevices(item.uniqueId).then(d => d.data)[0]
     // check partner
     const select = `select d.id from traccar.tc_devices d where d.id=${newDevice.id}`
-    const [result] = await mysql.query(select)
+    const [result] = await query(select, true)
     if (result.length) {
       newDevice.name = item.name
       newDevice.phone = item.phone || newDevice.phone
@@ -307,17 +306,17 @@ exports.put = async (item, user) => {
       newDevice.attributes.license_plate = item.attributes.license_plate
       newDevice.attributes.serialNumber = item.attributes.serialNumber
       console.log('update device', newDevice)
-      await traccar.devices.update(newDevice)
+      await traccar.updateDevice(newDevice)
     }
   }
   console.log('newDevice', newDevice)
   const query2 = `
-    update traccar.tc_devices set partnerid = (select partnerid from traccar.tc_users where email = '${user}') where id = ${newDevice.id}
-  `
+            update traccar.tc_devices set partnerid = (select partnerid from traccar.tc_users where email = '${user}') where id = ${newDevice.id}
+            `
   console.log(query2)
   console.log(await mysql.query(query2))
   try {
-    console.log('remove admin', await traccar.permissions.delete({ userId: 1, deviceId: newDevice.id }))
+    // console.log('remove admin', await permissions.delete({ userId: 1, deviceId: newDevice.id }))
   } catch (e) {
     console.warn(e)
   }
