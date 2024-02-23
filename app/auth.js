@@ -12,6 +12,14 @@ async function getUser (email) {
 
 exports.getUser = getUser
 
+async function getUserPartnerId (email) {
+  const [rows] = await mysql.getRows(`select id, name, email, partnerId
+        from tc_users where email='${email}'`, process.env.DB_HOST_READER)
+  return rows[0]
+}
+
+exports.getUserPartnerId = getUserPartnerId
+
 exports.insertUser = async (userName, name, email, clientId) => {
   console.log('insertUser', userName, name, email, clientId)
   const newUser = await traccar.createUser({
