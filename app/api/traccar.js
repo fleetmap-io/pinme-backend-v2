@@ -102,6 +102,10 @@ exports.updateDriver = (driver) => {
   return put('/drivers/' + driver.id, driver)
 }
 
+exports.deleteDriver = (driverId) => {
+  return axios.delete('/drivers/' + driverId)
+}
+
 exports.createGeofence = (geofence) => {
   return post('/geofences', geofence)
 }
