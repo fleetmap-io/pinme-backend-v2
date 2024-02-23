@@ -82,3 +82,68 @@ async function createUser (tempPassword, clientId, Username) {
     console.error('AdminCreateUserCommand', e.message)
   }
 }
+
+const mysql = require('./mysql')
+const traccar = require('./traccar')
+
+exports.migrateUser = async (e, context) => {
+  console.log(e)
+  await traccar.sessions.create(e.userName, e.request.password)
+  e.response.userAttributes = {
+    username: e.userName,
+    email: e.userName,
+    email_verified: true
+  }
+  e.response.finalUserStatus = 'CONFIRMED'
+  context.succeed(e)
+}
+
+exports.createUser = async (item, adminUser) => {
+  const [result] = await mysql.query(`select attributes->'$.clientId' clientId, partnerId from traccar.tc_users  where email = '${adminUser}'`)
+  item.email = item.email.trim()
+  console.log('clientId', result[0].clientId)
+  const tempPassword = '0' + crypto.randomBytes(4).toString('hex').toUpperCase() + crypto.randomBytes(4).toString('hex').toLowerCase()
+  await createUser(tempPassword, result[0].clientId, item.email)
+  const newUser = {
+    administrator: false,
+    coordinateFormat: '',
+    deviceLimit: -1,
+    deviceReadonly: false,
+    disabled: false,
+    expirationTime: null,
+    id: -1,
+    latitude: 0,
+    limitCommands: false,
+    login: '',
+    longitude: 0,
+    map: '',
+    phone: '',
+    poiLayer: '',
+    readonly: false,
+    token: null,
+    twelveHourFormat: false,
+    userLimit: -1,
+    zoom: 0,
+    password: tempPassword,
+    name: item.email,
+    email: item.email,
+    attributes: {
+      clientId: result[0].clientId,
+      dashboard: false
+    }
+  }
+  console.log(newUser)
+  try {
+    const newTraccarUser = await traccar.createUser(newUser)
+    console.log(await mysql.query(`update traccar.tc_users set partnerid=${result[0].partnerId} where id=${newTraccarUser.data.id}`))
+  } catch (e) {
+    console.error(e.message, e.response && e.response.data)
+    const log = `update traccar.tc_users set partnerid=${result[0].partnerId} where email='${item.email}' and (partnerid=0 or partnerid=12)`
+    console.log(log, await mysql.query(log))
+    const [[_user]] = await mysql.query(`select id from traccar.tc_users  where email='${item.email}' and partnerid=${result[0].partnerId}`)
+    const user = await traccar.users.get(_user.id).then(d => d.data)
+    user.attributes.clientId = result[0].clientId
+    await traccar.updateUser(user)
+  }
+  return { tempPassword }
+}
