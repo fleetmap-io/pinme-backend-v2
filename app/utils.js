@@ -13,8 +13,8 @@ function logError (e, ...args) {
   console.error(
     e.message,
     ...args,
-    e.response && e.response.data,
-    e.config || e)
+    (e.response && e.response.data) || e,
+    e.config)
 }
 
 exports.logException = async (e, req, ...args) => {
