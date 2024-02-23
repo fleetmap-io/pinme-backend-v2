@@ -45,7 +45,7 @@ exports.mainFunction = async (event) => {
         try {
           const skipCountries = ['PT', 'MA']
           const { country } = await axios.get(`https://ipinfo.io/${xforwarded.split(',')[0]}?token=${process.env.IPINFO_TOKEN}`, { timeout: 1000 }).then(d => d.data)
-          if (skipCountries.indexOf(country)) {
+          if (skipCountries.indexOf(country) !== -1) {
             skip = true
             console.log(xforwarded, 'skipping for', country, email)
           } else {
