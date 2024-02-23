@@ -30,7 +30,7 @@ module.exports = async (devPosition) => {
     client = soap.createClientAsync(urlUnigis, wsdlOptions)
   }
 
-  console.log('unigis', args, await sendSoap(client), 'LoginYInsertarEvento', args)
+  console.log('unigis', args, await sendSoap(client, 'LoginYInsertarEvento', args))
 }
 
 async function sendSoap (soapClient, method, data) {
