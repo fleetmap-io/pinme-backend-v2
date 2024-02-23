@@ -21,7 +21,7 @@
     "@vendia/serverless-express": "^4.12.6",
     "amazon-cognito-identity-js": "^6.3.7",
     "aws-serverless-express": "^3.4.0",
-    "axios": "1.6.7",
+    "axios": "0.28.0",
     "body-parser": "^1.20.2",
     "cognito-express": "^3.0.4",
     "compression": "^1.7.4",
