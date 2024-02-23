@@ -171,7 +171,7 @@ exports.post = async (item, user) => {
   }
 
   if (item.newAttributes) {
-    const device = await getDevice(item.id)
+    const device = await traccar.getDevice(item.id)
     console.log(device)
     for (const k of Object.keys(item.newAttributes)) {
       device.attributes[k] = item.newAttributes[k]
@@ -188,7 +188,7 @@ exports.post = async (item, user) => {
   }
 
   if (item.removeAttribute) {
-    const device = await getDevice(item.id)
+    const device = await traccar.getDevice(item.id)
     console.log('removing', item.removeAttribute, 'on', device.id)
     delete device.attributes[item.removeAttribute]
     console.log('device without attribute', device)
@@ -203,14 +203,14 @@ exports.post = async (item, user) => {
 
   if (item.newDisabled) {
     console.log(user, 'enable or disable', item)
-    const device = await getDevice(item.id)
+    const device = await traccar.getDevice(item.id)
     device.disabled = item.newDisabled
     await traccar.updateDevice(device.id, device)
   }
 
   if (item.removeGroup) {
     console.log(user, 'remove group', item)
-    const device = await getDevice(item.id)
+    const device = await traccar.getDevice(item.id)
     device.groupId = null
     await traccar.updateDevice(device.id, device)
   }
@@ -225,7 +225,7 @@ exports.post = async (item, user) => {
 
   if (item.switchImeiAndSim) {
     try {
-      const device0 = await getDevice(item.id)
+      const device0 = await traccar.getDevice(item.id)
       const device1 = await traccar.devices.getUniqueId(item.switchImeiAndSim)
 
       console.log('switch imei and sim', device0, device1)
@@ -286,11 +286,6 @@ exports.getCanProtocols = async () => {
   const [result] = await mysql.query(select, true)
   console.log('returning', result)
   return result
-}
-
-const getDevice = async (id) => {
-  const [device] = await traccar.get(`/devices?id=${id}`)
-  return device
 }
 
 exports.putDevice = async (item, user) => {
