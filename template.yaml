@@ -377,7 +377,7 @@ Resources:
       FunctionName: pinme-backend-api-helper
       CodeUri: ./api_helper/
       Handler: main_function
-      Runtime: python
+      Runtime: python3.8
       MemorySize: 1024
       Timeout: 120
       VpcConfig:
