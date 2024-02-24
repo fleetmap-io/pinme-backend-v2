@@ -254,7 +254,7 @@ def main(event, context):
                         return response_type1_event(True, "Sent via SMS", event)
                     else:
                         # return response_type1(False, response.content.decode("utf-8"))
-                        return response_type1_event(False, "SMS error " + response.status_code, event)
+                        return response_type1_event(False, "SMS error " + str(response.status_code), event)
                 else:
                     # Teltonika
                     print("Device type: Teltonika")
