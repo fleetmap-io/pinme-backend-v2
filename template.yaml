@@ -19,6 +19,8 @@ Globals:
         DB_HOST_POSITIONS_READER: '{{resolve:secretsmanager:db:SecretString:host_positions_reader}}'
         USER_POOL_ID: '{{resolve:ssm:/traccar/user-pool-id}}'
         DELETE_GEOFENCES_QUEUE: '{{resolve:ssm:/traccar/delete-geofences-queue}}'
+        SMS_GATEWAY_URL: '{{resolve:ssm:/traccar/sms-gateway}}'
+        SMS_GATEWAY_TOKEN: '{{resolve:secretsmanager:smsgateway:SecretString:token}}'
         IPINFO_TOKEN: df58ccf730ab1c
         DEVICE_IGNITION_OFF_TABLE: !Ref DevicesIgnitionOff
         QUEUE_S3_DAILY_MIGRATOR_UNIT: !Ref SQSS3DailyMigratorUnit
@@ -369,6 +371,20 @@ Resources:
           Properties:
             BatchSize: 1
             Queue: !GetAtt SQSS3DailyMigratorUnitDL.Arn
+  ApiHelper:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: pinme-backend-api-helper
+      CodeUri: ./api_helper/
+      Handler: main_function
+      Runtime: python
+      MemorySize: 1024
+      Timeout: 120
+      VpcConfig:
+        SubnetIds:
+          - !Ref PrivateSubnet
+        SecurityGroupIds:
+          - !Ref SecurityGroup
   CloudWatchFunction:
     Type: AWS::Serverless::Function
     Properties:
