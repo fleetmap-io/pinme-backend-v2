@@ -14,6 +14,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
       - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
       - run: sam build
       - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
       - uses: aws-actions/configure-aws-credentials@v2
