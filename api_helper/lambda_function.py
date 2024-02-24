@@ -1,13 +1,9 @@
 import settings
-import json
-import os
 import sys
 import pymysql
 import hashlib
 import requests
-import socket
 import json
-from requests.auth import HTTPBasicAuth
 
 # Database connection
 try:
