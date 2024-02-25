@@ -99,7 +99,7 @@ app.use(async (req, res, next) => {
     return res.status(401).send('Access Token missing from header')
   }
   await validate(accessTokenFromClient, req, res, next)
-  console.log(res.locals.user, req.method, req.path, req.query, req.body)
+  console.log(res.locals, req.method, req.path, req.query, req.body)
 })
 
 app.get('/gpsmanager', async (req, res) => {
