@@ -376,15 +376,23 @@ Resources:
     Properties:
       FunctionName: pinme-backend-api-helper
       CodeUri: ./api_helper/
-      Handler: main_function
-      Runtime: python3.8
+      Handler: lambda_function.main
+      Runtime: python3.12
       MemorySize: 1024
       Timeout: 120
+      Policies:
+        - SecretsManagerReadWrite
       VpcConfig:
         SubnetIds:
           - !Ref PrivateSubnet
         SecurityGroupIds:
           - !Ref SecurityGroup
+      Events:
+        ProxyApiRoot:
+          Type: Api
+          Properties:
+            Path: /api_helper
+            Method: ANY
   CloudWatchFunction:
     Type: AWS::Serverless::Function
     Properties:

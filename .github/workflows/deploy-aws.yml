@@ -15,7 +15,7 @@ jobs:
           aws-region: us-east-1
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.8'
+          python-version: '3.12'
       - run: sam build
       - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
       - uses: aws-actions/configure-aws-credentials@v2

@@ -1,7 +1,7 @@
 import os
 
 db_server = os.environ.get('DB_HOST_READER', 'db-read.pinme.io')
-db_user = os.environ.get('DB_HOST_READER', 'admin')
+db_user = os.environ.get('DB_USER', 'admin')
 db_password = os.environ.get('DB_PASSWORD')
 db_database = os.environ.get('DB_DATABASE', 'traccar')
 

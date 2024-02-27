@@ -35,7 +35,7 @@ def main(event, context):
 
     # if event['headers']['cookie'][0:11] == "JSESSIONID=":
     login_response = requests.get(settings.traccar_api_baseurl + '/api/session',
-                                  headers={'cookie': event['headers']['cookie']})
+                                  headers={'cookie': event['headers']['Cookie']})
 
     print("Login result: " + str(login_response.status_code) + " " + login_response.text)
 
@@ -407,4 +407,3 @@ def hash_password(password, salt):
 
 if len(sys.argv) > 1:
     print("Called from command line")
-
