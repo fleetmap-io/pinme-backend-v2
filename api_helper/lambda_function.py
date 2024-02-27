@@ -30,11 +30,11 @@ def main(event, context):
     except:
         return response_type1_event('', '', event)
 
-    print("Called via API")
+    print("Called via API " + settings.traccar_api_baseurl)
     # Called via Lambda IDE/localhost
 
     # if event['headers']['cookie'][0:11] == "JSESSIONID=":
-    login_response = requests.get(settings.traccar_api_baseurl + '/api/session',
+    login_response = requests.get(settings.traccar_api_baseurl + '/session',
                                   headers={'cookie': event['headers']['Cookie']})
 
     print("Login result: " + str(login_response.status_code) + " " + login_response.text)
@@ -106,7 +106,7 @@ def main(event, context):
                             "deviceId": body['deviceid']
                         }
 
-                    response = call_traccar_api(body['username'], event['headers']['cookie'], "POST", "commands/send",
+                    response = call_traccar_api(body['username'], event['headers']['Cookie'], "POST", "commands/send",
                                                 request_body)
 
                     if 200 <= response.status_code <= 299:
@@ -314,13 +314,13 @@ def call_traccar_api(username, cookie, method, api, body):
         'cookie': cookie
     }
 
-    print("Calling HTTP " + method + " " + settings.traccar_api_baseurl + "/api/" + api + " data: " + json.dumps(
+    print("Calling HTTP " + method + " " + settings.traccar_api_baseurl + "/" + api + " data: " + json.dumps(
         body) + " cookie: " + cookie)
 
     if method == "POST":
-        response = requests.post(settings.traccar_api_baseurl + "/api/" + api, headers=headers, data=json.dumps(body))
+        response = requests.post(settings.traccar_api_baseurl + "/" + api, headers=headers, data=json.dumps(body))
     elif method == "GET":
-        response = requests.get(settings.traccar_api_baseurl + "/api/" + api, headers=headers, data=json.dumps(body))
+        response = requests.get(settings.traccar_api_baseurl + "/" + api, headers=headers, data=json.dumps(body))
     else:
         print("Unknown method")
 
