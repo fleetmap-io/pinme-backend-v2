@@ -314,13 +314,13 @@ def call_traccar_api(username, cookie, method, api, body):
         'cookie': cookie
     }
 
-    print("Calling HTTP " + method + " " + settings.traccar_api_baseurl + "/api/" + api + " data: " + json.dumps(
+    print("Calling HTTP " + method + " " + settings.traccar_api_baseurl + "/" + api + " data: " + json.dumps(
         body) + " cookie: " + cookie)
 
     if method == "POST":
-        response = requests.post(settings.traccar_api_baseurl + "/api/" + api, headers=headers, data=json.dumps(body))
+        response = requests.post(settings.traccar_api_baseurl + "/" + api, headers=headers, data=json.dumps(body))
     elif method == "GET":
-        response = requests.get(settings.traccar_api_baseurl + "/api/" + api, headers=headers, data=json.dumps(body))
+        response = requests.get(settings.traccar_api_baseurl + "/" + api, headers=headers, data=json.dumps(body))
     else:
         print("Unknown method")
 
