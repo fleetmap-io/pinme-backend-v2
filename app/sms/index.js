@@ -3,7 +3,7 @@ const mysql = require('../mysql')
 
 exports.sendSms = (phone, message) => {
   return axios.get(
-      `https://api.pinme.io/gateway/?token=${process.env.SMS_GATEWAY_TOKEN}&msisdn=${
+      `${process.env.SMS_GATEWAY_URL}?token=${process.env.SMS_GATEWAY_TOKEN}&msisdn=${
         phone}&message=${
         encodeURIComponent(message.replaceAll('\'', ' '))}`
   ).then(d => d.data)

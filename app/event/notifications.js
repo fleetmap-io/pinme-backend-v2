@@ -345,7 +345,7 @@ async function processEvent (event) {
           const deviceGroup = await getDeviceGroup(event, i)
           msg = `${event.device.name}${deviceGroup}${message}`
           console.log('sendSms', users[i].email, users[i].phone, msg)
-          // await sms.sendSms(users[i].phone, msg)
+          await sms.sendSms(users[i].phone, msg)
         } catch (e) {
           await logException(e, undefined, 'sendSms', users[i].phone, msg)
         }
@@ -390,14 +390,14 @@ async function processEvent (event) {
         }
       }
       if (notification.notificators.includes('whatsapp')) {
-        // await whatsapp.send(users[i], event, message)
+        await whatsapp.send(users[i], event)
       }
       if (notification.notificators.includes('driver')) {
         if (event.position.attributes.driverUniqueId) {
           try {
             const driver = await getDriver(event, i)
             if (driver && driver.attributes && driver.attributes.phone) {
-              // await whatsapp.send({ ...users[i], phone: driver.attributes.phone }, event, message)
+              await whatsapp.send({ ...users[i], phone: driver.attributes.phone }, event)
             }
           } catch (e) {
             console.error(e.message, (e.response && e.response.data) || e)
@@ -406,7 +406,7 @@ async function processEvent (event) {
       }
       if (notification.attributes.integration) {
         if (integration[notification.attributes.integration.toLowerCase()]) {
-          // await integration[notification.attributes.integration.toLowerCase()](event)
+          await integration[notification.attributes.integration.toLowerCase()](event)
         } else {
           console.warn('unknown integration', users[i] && users[i].email, notification.attributes.integration)
         }

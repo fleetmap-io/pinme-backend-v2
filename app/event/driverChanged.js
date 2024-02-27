@@ -16,7 +16,7 @@ async function processDriverChanged (event, retries = 3) {
         if (driver.attributes.deviceId !== event.position.deviceId) {
           console.log('update driver', driver.name, 'from device id', driver.attributes.deviceId, 'to', event.position.deviceId)
           driver.attributes.deviceId = event.position.deviceId
-          await traccar.updateDriver(driver).then(d => d.data)
+          await traccar.updateDriver(driver)
         }
       }
 
@@ -24,7 +24,7 @@ async function processDriverChanged (event, retries = 3) {
       if (device) {
         if (device.attributes.lastDriverUniqueId !== event.position.attributes.driverUniqueId) {
           device.attributes.lastDriverUniqueId = event.position.attributes.driverUniqueId
-          await traccar.updateDevice(device.id, device).then(d => d.data)
+          await traccar.updateDevice(device.id, device)
         }
       }
     } else {
@@ -35,7 +35,7 @@ async function processDriverChanged (event, retries = 3) {
       console.warn('concurrent exception trying again', retries, event.event)
       return processDriverChanged(event, retries--)
     } else {
-      logException(e, undefined, 'processDriverChanged', event.event && event.event.attributes,
+      await logException(e, undefined, 'processDriverChanged', event.event && event.event.attributes,
         'after', new Date() - date, 'ms')
     }
   }

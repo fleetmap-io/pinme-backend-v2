@@ -3,8 +3,8 @@ const dynamo = new DynamoDBClient({ region: 'us-east-1' })
 const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb')
 
 exports.batchGet = (TableName, Keys) => {
-  const params = {RequestItems: {}}
-  params.RequestItems[TableName] = {Keys: Keys.slice(0, 100).map(k => marshall(k))}
+  const params = { RequestItems: {} }
+  params.RequestItems[TableName] = { Keys: Keys.slice(0, 100).map(k => marshall(k)) }
   return dynamo.send(new BatchGetItemCommand(params)).then(d => d.Responses[TableName])
 }
 
@@ -52,22 +52,18 @@ exports.getItem = async function (params) {
 exports.updateIgnitionOff = (deviceId, ignitionOffDate) => {
   const params = {
     TableName: process.env.DEVICE_IGNITION_OFF_TABLE,
-    Key: marshall({deviceId}),
+    Key: marshall({ deviceId }),
     UpdateExpression: 'set ignitionOffDate = :ignitionOffDate',
-    ExpressionAttributeValues: marshall({':ignitionOffDate': ignitionOffDate})
+    ExpressionAttributeValues: marshall({ ':ignitionOffDate': ignitionOffDate })
   }
   return dynamo.send(new UpdateItemCommand(params))
 }
 
-
 exports.getDeviceIgnitionOff = (deviceId) => {
   const params = {
-    TableName: deviceIgnitionOffTable,
-    Key: {
-      deviceId
-    }
+    TableName: process.env.DEVICE_IGNITION_OFF_TABLE,
+    Key: marshall({ deviceId })
   }
 
-  return docClient.get(params).promise()
+  return dynamo.get(new GetItemCommand(params))
 }
-

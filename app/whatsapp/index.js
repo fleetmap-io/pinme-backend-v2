@@ -4,13 +4,13 @@ const here = require('../api/here')
 const messages = require('../lang')
 let _axios
 
-function axiosReady() {
+function axiosReady () {
   if (!_axios) {
     _axios = secrets.getSecretValue('whatsapp').then(s =>
-        require('axios').create({
-          headers: {Authorization: 'Bearer ' + s.WHATSAPP_TOKEN},
-          baseURL: `https://graph.facebook.com/v13.0/${s.WHATSAPP_PNI}/messages`
-        }))
+      require('axios').create({
+        headers: { Authorization: 'Bearer ' + s.WHATSAPP_TOKEN },
+        baseURL: `https://graph.facebook.com/v13.0/${s.WHATSAPP_PNI}/messages`
+      }))
   }
 }
 
@@ -70,7 +70,7 @@ const geofenceAlert = async (user, event) => {
 
 const genericAlert = async (user, event) => {
   const code = getLanguageCode(user)
-  const name= (event.device.name && event.device.name.replaceAll('*', '')) ||
+  const name = (event.device.name && event.device.name.replaceAll('*', '')) ||
       event.device.attributes.license_plate
   const body = {
     messaging_product: 'whatsapp',
@@ -79,7 +79,7 @@ const genericAlert = async (user, event) => {
     template: {
       name: 'platform_events9',
       language: {
-        code: code
+        code
       },
       components: [
         {
@@ -131,7 +131,7 @@ const events = {
       template: {
         name: 'platform_speed_alert',
         language: {
-          code: code
+          code
         },
         components: [{
           type: 'body',
@@ -247,24 +247,6 @@ exports.whatsapp = async (e) => {
   return { statusCode: 200 }
 }
 
-exports.send = async (user, template) => {
-  axiosReady()
-  const axios = await _axios
-  const code = (user.attributes.lang && user.attributes.lang.replace('-', '_').replace('es_CL', 'ES')) || 'ES'
-  const body = {
-    messaging_product: 'whatsapp',
-    to: user.phone.replace('+', ''),
-    type: 'template',
-    template: {
-      name: template,
-      language: {
-        code
-      }
-    }
-  }
-  console.log('whatsapp', await axios.post('/', body).then(d => d.data).catch(e => e.response))
-}
-
 // eslint-disable-next-line camelcase
 async function sendText (from, text, image_url) {
   const blocks = {
@@ -333,5 +315,3 @@ async function sendVideo (from, url) {
   await require('axios').post(process.env.SLACK_WEB_HOOK, blocks).then(d => d.data)
 }
 exports.sendVideo = sendVideo
-
-
