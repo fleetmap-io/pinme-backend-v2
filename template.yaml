@@ -20,7 +20,7 @@ Globals:
         USER_POOL_ID: '{{resolve:ssm:/traccar/user-pool-id}}'
         DELETE_GEOFENCES_QUEUE: '{{resolve:ssm:/traccar/delete-geofences-queue}}'
         ALB_LAMBDA_URL: '{{resolve:ssm:/traccar/alb-lambda}}'
-        SMS_GATEWAY_URL: '{{resolve:secretsmanager:smsgateway:SecretString:}}'
+        SMS_GATEWAY_URL: '{{resolve:ssm:/traccar/sms-gateway-url}}'
         SMS_GATEWAY_TOKEN: '{{resolve:secretsmanager:smsgateway:SecretString:token}}'
         IPINFO_TOKEN: df58ccf730ab1c
         DEVICE_IGNITION_OFF_TABLE: !Ref DevicesIgnitionOff
