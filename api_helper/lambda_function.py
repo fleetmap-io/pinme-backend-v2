@@ -30,7 +30,7 @@ def main(event, context):
     except:
         return response_type1_event('', '', event)
 
-    print("Called via API")
+    print("Called via API " + settings.traccar_api_baseurl)
     # Called via Lambda IDE/localhost
 
     # if event['headers']['cookie'][0:11] == "JSESSIONID=":
