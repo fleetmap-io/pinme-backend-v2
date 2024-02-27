@@ -376,7 +376,7 @@ Resources:
     Properties:
       FunctionName: pinme-backend-api-helper
       CodeUri: ./api_helper/
-      Handler: main_function
+      Handler: lambda_function.main_function
       Runtime: python3.8
       MemorySize: 1024
       Timeout: 120
