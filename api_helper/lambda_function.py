@@ -407,4 +407,3 @@ def hash_password(password, salt):
 
 if len(sys.argv) > 1:
     print("Called from command line")
-
