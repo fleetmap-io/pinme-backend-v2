@@ -106,7 +106,7 @@ def main(event, context):
                             "deviceId": body['deviceid']
                         }
 
-                    response = call_traccar_api(body['username'], event['headers']['cookie'], "POST", "commands/send",
+                    response = call_traccar_api(body['username'], event['headers']['Cookie'], "POST", "commands/send",
                                                 request_body)
 
                     if 200 <= response.status_code <= 299:
