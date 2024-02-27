@@ -34,7 +34,7 @@ def main(event, context):
     # Called via Lambda IDE/localhost
 
     # if event['headers']['cookie'][0:11] == "JSESSIONID=":
-    login_response = requests.get(settings.traccar_api_baseurl + '/api/session',
+    login_response = requests.get(settings.traccar_api_baseurl + '/session',
                                   headers={'cookie': event['headers']['Cookie']})
 
     print("Login result: " + str(login_response.status_code) + " " + login_response.text)
