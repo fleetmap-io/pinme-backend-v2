@@ -31,7 +31,7 @@ app.use(bodyParser.json({ limit: '50mb' }))
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use((req, res, next) => {
-  console.log(req.method, req.path, req.body)
+  console.log(req.method, req.path, req.query, req.params, req.body)
   next()
 })
 
