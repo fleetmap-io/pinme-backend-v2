@@ -4,4 +4,5 @@ exports.sitrans = require('./sitrans')
 exports.movup = require('./movup')
 exports.owl = require('./owl')
 exports.unigis = require('./unigis')
+exports.samtech = require('./samtech')
 exports.monitrip = async () => {}
