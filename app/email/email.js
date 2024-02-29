@@ -1,4 +1,4 @@
-const { SESv2Client, SendEmailCommand } = require("@aws-sdk/client-sesv2");
+const { SESv2Client, SendEmailCommand } = require('@aws-sdk/client-sesv2')
 const MailComposer = require('nodemailer/lib/mail-composer')
 const sesV2 = new SESv2Client({ region: 'us-east-1' })
 

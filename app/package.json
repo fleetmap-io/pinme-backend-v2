@@ -41,7 +41,9 @@
     "papaparse": "^5.4.1",
     "soap": "^1.0.0",
     "traccar-api": "^1.0.5",
-    "ua-parser-js": "^1.0.37"
+    "ua-parser-js": "^1.0.37",
+    "xml-js": "^1.6.11",
+    "xml2js": "^0.6.2"
   },
   "scripts": {
     "test": "mocha tests/unit/"

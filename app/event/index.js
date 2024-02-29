@@ -35,19 +35,16 @@ exports.pushEvents = async (event) => {
       if (event.event.type === 'ignitionOff') {
         await ignition.processIgnitionOff(event)
       }
-      /*      if (event.event.type === 'driverChanged') {
+      if (event.event.type === 'driverChanged') {
         await driverChanged.processDriverChanged(event)
-      } */
+      }
     } else {
       const body = await notifications.processEvent(event)
       deleteEvent = body.event.delete
     }
     if (!deleteEvent) {
       try {
-        if (event.device.attributes.partnerId === '6') {
-          console.log('forward to rabbit', event.device)
-          // await sendToRabbit(event)
-        }
+        await sendToRabbit(event)
       } catch (e) {
         console.error(e)
       }
