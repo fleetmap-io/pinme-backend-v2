@@ -48,6 +48,7 @@ module.exports = (devPosition) => {
 }
 
 async function sendSoap (soapClient, method, data) {
+  const client = await soapClient
   const resp = await client[method + 'Async'](data)
   console.log(data.datos, resp)
   return resp
