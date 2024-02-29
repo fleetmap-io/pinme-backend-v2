@@ -26,7 +26,7 @@ module.exports = (devPosition) => {
         vel: position.speed,
         mot: position.attributes.ignition ? '1' : '0',
         hdop: position.attributes.hdop || 1,
-        odo: position.attributes.totalDistance / 1000,
+        odo: position.attributes.odometer / 1000,
         eve: position.attributes.ignition ? 46 : 47,
         conductor: position.attributes.driverUniqueId || 'No asignado',
         numSAT: position.attributes.sat || position.attributes.sats,
