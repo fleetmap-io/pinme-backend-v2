@@ -18,7 +18,7 @@ module.exports = (devPosition) => {
         pgps: 'Verizon',
         empresa: 'Verizon',
         tercero: device.attributes.client || 'fleetrack',
-        pat: device.name.replace('-', ''),
+        pat: device.attributes.license_plate && device.attributes.license_plate.replace('-', ''),
         fn: new Date(position.fixTime).toLocaleString('es-CL', { timeZone: 'America/Santiago' }).replace(/-/g, '/'),
         lat: position.latitude,
         lon: position.longitude,
@@ -48,6 +48,7 @@ module.exports = (devPosition) => {
 }
 
 async function sendSoap (soapClient, method, data) {
-  const client = await soapClient
-  return await client[method + 'Async'](data)
+  const resp = await client[method + 'Async'](data)
+  console.log(data.datos, resp)
+  return resp
 }
