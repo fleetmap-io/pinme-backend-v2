@@ -86,6 +86,11 @@ describe('Tests index', function () {
   })
 
   // eslint-disable-next-line no-undef
+  it('queries cloudwatch', async () => {
+    await pushPositions(require('../../../events/position'))
+  })
+
+  // eslint-disable-next-line no-undef
   it('changes password', async () => {
     const user = { id: 8253, email: 'joaquim@fleetmap.io' }
     await users.post({ ...user, updatePassword: true, newPassword: process.env.NEW_PASSWORD }, 'joaquim@fleetmap.io')
