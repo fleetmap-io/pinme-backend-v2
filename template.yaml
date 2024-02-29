@@ -125,11 +125,6 @@ Resources:
         - AmazonSQSFullAccess
         - AmazonDynamoDBFullAccess
       Events:
-        ProxyApiRoot:
-          Type: Api
-          Properties:
-            Path: /gpsmanager
-            Method: ANY
         ProxyApiGreedy:
           Type: Api
           Properties:
