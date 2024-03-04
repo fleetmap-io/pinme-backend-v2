@@ -5,4 +5,5 @@ exports.movup = require('./movup')
 exports.owl = require('./owl')
 exports.unigis = require('./unigis')
 exports.samtech = require('./samtech')
+exports.qanalytics = require('./qanalytics')
 exports.monitrip = async () => {}
