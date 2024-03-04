@@ -20,10 +20,10 @@ module.exports = async (devPosition) => {
       }
     })
   }
-  console.log(await _sendQ(devPosition))
+  await _sendQ(devPosition)
 }
 
-function _sendQ (devPosition) {
+async function _sendQ (devPosition) {
   const device = devPosition.device
   const position = devPosition.position
 
@@ -42,5 +42,6 @@ function _sendQ (devPosition) {
     'tns:SENTIDO': Math.round(position.course),
     'tns:IGNITION': position.ignition ? 1 : 0
   }
-  return qClient.WM_INS_REPORTE_PUNTO_A_PUNTOAsync(args)
+
+  console.log('qanalytics', args, await qClient.WM_INS_REPORTE_PUNTO_A_PUNTOAsync(args))
 }
