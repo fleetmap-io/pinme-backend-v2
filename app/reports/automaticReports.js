@@ -1,10 +1,10 @@
-import secrets from '../secrets'
-import { getFilePath, logException } from '../utils'
-import dynamo from '../api/dynamo'
-import traccar from '../api/traccar'
-import { getUserSession } from '../auth'
-import { SendMessageCommand, SQSClient } from '@aws-sdk/client-sqs'
-import { validateEmail } from '../email/email'
+const secrets = require('../secrets')
+const { getFilePath, logException } = require('../utils')
+const dynamo = require('../api/dynamo')
+const traccar = require('../api/traccar')
+const { getUserSession } = require('../auth')
+const { SendMessageCommand, SQSClient } = require('@aws-sdk/client-sqs')
+const { validateEmail } = require('../email/email')
 const xlsx = require('json-as-xlsx')
 const fs = require('fs')
 const Vue = require('vue')
