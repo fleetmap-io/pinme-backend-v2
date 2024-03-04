@@ -537,6 +537,7 @@ Resources:
         - AmazonSQSFullAccess
       Events:
         SQSEvent:
+          Enable: false
           Type: SQS
           Properties:
             BatchSize: 10
