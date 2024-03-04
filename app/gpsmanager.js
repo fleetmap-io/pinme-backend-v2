@@ -298,11 +298,11 @@ app.post('/gpsmanager/logs/:device', async (req, res) => {
 })
 
 app.post('/logs/import/:device', async (req, res) => {
-  res.json(await require('./cloudwatch').post(req.params.device, '/aws/lambda/import-backend-ProcessVehicle-lnss6J9beBGo'))
+  res.json(await require('./cloudwatch/cloudwatch').post(req.params.device, '/aws/lambda/import-backend-ProcessVehicle-lnss6J9beBGo'))
 })
 
 app.post('/logs/commands/:device', async (req, res) => {
-  res.json(await require('./cloudwatch').post('"deviceId": ' + req.params.device, '/aws/lambda/api_helper'))
+  res.json(await require('./cloudwatch/cloudwatch').post('"deviceId": ' + req.params.device, '/aws/lambda/api_helper'))
 })
 
 app.get('/gpsmanager/sms/:phoneNumber', async (req, res) => {
