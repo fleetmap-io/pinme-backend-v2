@@ -1,5 +1,5 @@
 const secrets = require('../secrets')
-const { getFilePath, logException } = require('../utils')
+const { getFilePath, logException, camelCaseToKebabCase } = require('../utils')
 const dynamo = require('../api/dynamo')
 const traccar = require('../api/traccar')
 const { getUserSession } = require('../auth')
@@ -185,7 +185,7 @@ async function processReport (report, reportData, userData) {
   const app = createVueApp(report.reportType, reportData, translations, userData)
   const files = []
 
-  const fleetmapReport = require('fleetmap-reports/src/' + report.reportType)
+  const fleetmapReport = require('fleetmap-reports/src/' + camelCaseToKebabCase(report.reportType))
   const pdfDoc = await fleetmapReport.exportToPDF(userData, reportData)
   const excel = fleetmapReport.exportToExcel(userData, reportData)
   files.push(...addFiles(report.reportType, pdfDoc, excel))
