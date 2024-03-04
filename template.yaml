@@ -539,6 +539,7 @@ Resources:
         SQSEvent:
           Type: SQS
           Properties:
+            Enabled: false
             BatchSize: 10
             Queue: '{{resolve:ssm:/traccar/delete-geofences-queue}}'
 
