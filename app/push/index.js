@@ -1,4 +1,3 @@
-const integration = require('../integration')
 exports.pushPositions = async (e) => {
   let devPosition
   try {
@@ -6,10 +5,11 @@ exports.pushPositions = async (e) => {
       devPosition = JSON.parse(e.body)
       if (devPosition.device.attributes.integration) {
         for (const target of devPosition.device.attributes.integration.split(',')) {
-          if (integration[target.toLowerCase()]) {
+          try {
+            const integration = require('../integration/' + target.toLowerCase())
             await integration[target.toLowerCase()](devPosition)
-          } else {
-            console.warn('no integration for', devPosition.device.attributes.integration, devPosition.device.name)
+          } catch (e) {
+            console.warn(e.message, devPosition.device.attributes.integration, devPosition.device.name)
           }
         }
       } else {
