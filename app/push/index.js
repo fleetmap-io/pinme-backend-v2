@@ -7,7 +7,7 @@ exports.pushPositions = async (e) => {
         for (const target of devPosition.device.attributes.integration.split(',')) {
           try {
             const integration = require('../integration/' + target.toLowerCase())
-            await integration[target.toLowerCase()](devPosition)
+            await integration(devPosition)
           } catch (e) {
             console.warn(e.message, devPosition.device.attributes.integration, devPosition.device.name)
           }
