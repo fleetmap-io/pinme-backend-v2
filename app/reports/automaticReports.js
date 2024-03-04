@@ -1,5 +1,5 @@
 const secrets = require('../secrets')
-const { getFilePath, logException } = require('../utils')
+const { getFilePath, logException, camelCaseToKebabCase } = require('../utils')
 const dynamo = require('../api/dynamo')
 const traccar = require('../api/traccar')
 const { getUserSession } = require('../auth')
@@ -120,7 +120,7 @@ async function createReport (report, userData) {
   reportData.drivers = reportDrivers
   reportData.geofences = report.geofences && report.geofences.length > 0 ? geofences.filter(g => report.geofences.includes(g.id)) : geofences
 
-  const fleetmapReport = require('fleetmap-reports/src/' + report.reportType)
+  const fleetmapReport = require('fleetmap-reports/src/' + camelCaseToKebabCase(report.reportType))
   if (fleetmapReport) {
     return fleetmapReport.create(from, to, reportData)
   }
@@ -185,7 +185,7 @@ async function processReport (report, reportData, userData) {
   const app = createVueApp(report.reportType, reportData, translations, userData)
   const files = []
 
-  const fleetmapReport = require('fleetmap-reports/src/' + report.reportType)
+  const fleetmapReport = require('fleetmap-reports/src/' + camelCaseToKebabCase(report.reportType))
   const pdfDoc = await fleetmapReport.exportToPDF(userData, reportData)
   const excel = fleetmapReport.exportToExcel(userData, reportData)
   files.push(...addFiles(report.reportType, pdfDoc, excel))
