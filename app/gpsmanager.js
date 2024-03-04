@@ -294,7 +294,7 @@ app.get('/logs/:query', async (req, res) => {
 })
 
 app.post('/gpsmanager/logs/:device', async (req, res) => {
-  res.json(await require('./cloudwatch').post(req.params.device))
+  res.json(await require('./cloudwatch/cloudwatch').post(req.params.device))
 })
 
 app.post('/logs/import/:device', async (req, res) => {
