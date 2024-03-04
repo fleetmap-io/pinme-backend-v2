@@ -23,7 +23,7 @@ module.exports = (devPosition) => {
         lat: position.latitude,
         lon: position.longitude,
         ori: position.course,
-        vel: position.speed,
+        vel: position.speed / 1.852,
         mot: position.attributes.ignition ? '1' : '0',
         hdop: position.attributes.hdop || 1,
         odo: position.attributes.odometer / 1000,

@@ -1,4 +1,5 @@
 const axios = require('axios')
+const path = require('path')
 
 function _logException (e, req, ...args) {
   console.error(
@@ -31,4 +32,12 @@ exports.logException = async (e, req, ...args) => {
 
 exports.getCity = (ip) => {
   return axios.get(`https://ipinfo.io/${ip}?token=${process.env.IPINFO_TOKEN}`, { timeout: 1000 }).then(d => d.data)
+}
+
+exports.getFilePath = (fileName) => {
+  if (process.env.LAMBDA_TASK_ROOT) {
+    return path.resolve(process.env.LAMBDA_TASK_ROOT, fileName)
+  } else {
+    return path.resolve(__dirname, fileName)
+  }
 }

@@ -1,4 +1,5 @@
 const s3 = require('../s3')
+const automaticReport = require('./automaticReports')
 
 exports.getReport = async (report, traccar, { from, to, userData }) => {
   console.log('getReport', report, new Date(from), to, userData)
@@ -26,10 +27,15 @@ async function process (report, req) {
 exports.consumeMessage = async (e) => {
   for (const r of e.Records) {
     console.log('processing', r)
-    const { report, cookie, params, ingestionId } = JSON.parse(r.body)
-    const _report = require('../partnerReports/' + report)
-    if (report) {
-      await _report.ingestReport(params, ingestionId, cookie)
+    const reportData = JSON.parse(r.body)
+    if (reportData.userId) {
+      await automaticReport.processUserSchedules(reportData)
+    } else {
+      const { report, cookie, params, ingestionId } = reportData
+      const _report = require('../partnerReports/' + report)
+      if (report) {
+        await _report.ingestReport(params, ingestionId, cookie)
+      }
     }
   }
 }
