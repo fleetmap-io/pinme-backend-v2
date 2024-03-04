@@ -120,7 +120,7 @@ async function createReport (report, userData) {
   reportData.drivers = reportDrivers
   reportData.geofences = report.geofences && report.geofences.length > 0 ? geofences.filter(g => report.geofences.includes(g.id)) : geofences
 
-  const fleetmapReport = require('fleetmap-reports/src/' + report.reportType)
+  const fleetmapReport = require('fleetmap-reports/src/' + camelCaseToKebabCase(report.reportType))
   if (fleetmapReport) {
     return fleetmapReport.create(from, to, reportData)
   }
