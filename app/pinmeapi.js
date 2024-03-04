@@ -612,6 +612,7 @@ const { send } = require('./sqs')
 const { checkReport } = require('./quicksight')
 
 app.post('/pinmeapi/reports/quicksight/:report', async (req, res) => {
+  console.info('/pinmeapi/reports/quicksight', req.params.report)
   const ingestionId = uuidv1()
   await send(JSON.stringify({
     report: req.params.report,
