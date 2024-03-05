@@ -316,7 +316,7 @@ app.get('/gpsmanager/smsreceived/:phoneNumber', async (req, res) => {
 })
 
 app.post('/gpsmanager/cloudwatch/widget', async (req, res) => {
-  res.json(await require('./cloudwatch').getWidget(res.locals.user, req.body))
+  res.json(await require('./cloudwatch/cloudwatch').getWidget(res.locals.user, req.body))
 })
 
 app.get('/gpsmanager/partners', async (req, res) => {
