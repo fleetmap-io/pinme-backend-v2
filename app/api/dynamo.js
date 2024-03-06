@@ -1,4 +1,4 @@
-const { GetItemCommand, PutItemCommand, DynamoDBClient } = require('@aws-sdk/client-dynamodb')
+const { GetItemCommand, PutItemCommand, UpdateItemCommand, DeleteItemCommand, DynamoDBClient } = require('@aws-sdk/client-dynamodb')
 const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb')
 const dynamo = new DynamoDBClient({ region: 'us-east-1' })
 const schedulerTable = 'scheduler-1'
@@ -73,7 +73,7 @@ exports.getAllSchedules = async () => {
 
 exports.updateSchedule = async (id, userId, nextExecutionDate) => {
   console.log('Update nextExecutionDate', id, userId, nextExecutionDate)
-  const params = {
+  const update = new UpdateItemCommand({
     TableName: schedulerTable,
     Key: { id },
     UpdateExpression: 'set lastExecutionDate = :lastExecutionDate, nextExecution = :nextExecution',
@@ -83,29 +83,16 @@ exports.updateSchedule = async (id, userId, nextExecutionDate) => {
       ':lastExecutionDate': new Date(Date.now()).toISOString(),
       ':nextExecution': nextExecutionDate.toISOString()
     }
-  }
+  })
 
-  await dynamo.update(params).promise()
+  await dynamo.send(update)
 }
 
 exports.deleteSchedule = async (id) => {
   console.log('deleteSchedule', id)
-  const params = {
+  const deleteCommand = new DeleteItemCommand({
     TableName: schedulerTable,
     Key: { id }
-  }
-  return dynamo.delete(params).promise()
-}
-
-exports.updateNextExecution = async (id, nextExecutionDate) => {
-  const params = {
-    TableName: schedulerTable,
-    Key: { id },
-    UpdateExpression: 'set nextExecution = :nextExecution',
-    ExpressionAttributeValues: {
-      ':nextExecution': nextExecutionDate.toISOString()
-    }
-  }
-
-  await dynamo.update(params).promise()
+  })
+  await dynamo.send(deleteCommand)
 }
