@@ -19,7 +19,7 @@ module.exports = (devPosition) => {
         empresa: 'Verizon',
         tercero: device.attributes.client || 'fleetrack',
         pat: device.attributes.license_plate && device.attributes.license_plate.replace('-', ''),
-        fn: new Date(position.fixTime).toLocaleString('es-CL', { timeZone: 'America/Santiago' }).replace(/-/g, '/').replace(',', ''),
+        fn: new Date(position.fixTime).toLocaleString('es-CL', { timeZone: 'UTC' }).replace(/-/g, '/').replace(',', ''),
         lat: position.latitude,
         lon: position.longitude,
         ori: position.course,
