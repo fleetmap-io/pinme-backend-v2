@@ -3,8 +3,6 @@ const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb')
 const dynamo = new DynamoDBClient({ region: 'us-east-1' })
 const schedulerTable = 'scheduler-1'
 
-
-
 exports.get = async (deviceId) => {
   const device = await dynamo.send(new GetItemCommand({
     TableName: process.env.DEVICE_IGNITION_OFF_TABLE,
@@ -48,7 +46,7 @@ async function scan (params) {
     if (lastEvaluatedKey) {
       params.ExclusiveStartKey = lastEvaluatedKey
     }
-    const data = await docClient.scan(params).promise()
+    const data = await scan(params).promise()
     result = result.concat(data.Items)
     lastEvaluatedKey = data.LastEvaluatedKey
   } while (lastEvaluatedKey)
@@ -77,9 +75,7 @@ exports.updateSchedule = async (id, userId, nextExecutionDate) => {
   console.log('Update nextExecutionDate', id, userId, nextExecutionDate)
   const params = {
     TableName: schedulerTable,
-    Key: {
-      id: id
-    },
+    Key: { id },
     UpdateExpression: 'set lastExecutionDate = :lastExecutionDate, nextExecution = :nextExecution',
     ConditionExpression: 'userId = :userId',
     ExpressionAttributeValues: {
@@ -89,31 +85,27 @@ exports.updateSchedule = async (id, userId, nextExecutionDate) => {
     }
   }
 
-  await docClient.update(params).promise()
+  await dynamo.update(params).promise()
 }
 
 exports.deleteSchedule = async (id) => {
   console.log('deleteSchedule', id)
   const params = {
     TableName: schedulerTable,
-    Key: { id}
+    Key: { id }
   }
-  return docClient.delete(params).promise()
+  return dynamo.delete(params).promise()
 }
 
 exports.updateNextExecution = async (id, nextExecutionDate) => {
   const params = {
     TableName: schedulerTable,
-    Key: {
-      id: id
-    },
+    Key: { id },
     UpdateExpression: 'set nextExecution = :nextExecution',
     ExpressionAttributeValues: {
       ':nextExecution': nextExecutionDate.toISOString()
     }
   }
 
-  await docClient.update(params).promise()
+  await dynamo.update(params).promise()
 }
-
-
