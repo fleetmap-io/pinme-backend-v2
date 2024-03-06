@@ -13,6 +13,15 @@ const sqsClient = new SQSClient({ region: 'us-east-1' })
 const messages = require('../lang')
 const bcc = ['reports.fleetmap@gmail.com']
 
+const apiUrl = 'https://slowreports.pinme.io/api'
+const FleetmapReports = require('fleetmap-reports')
+const Reports = new FleetmapReports({
+  basePath: apiUrl,
+  baseOptions: {
+    withCredentials: true
+  }
+}, require('axios'))
+
 const maxLocationReportRows = 40000
 async function processUserSchedules ({ userId, items, filterClientId }) {
   const { hereSpeedLimits } = await secrets.getSecretValue('hereSpeedLimits')
@@ -122,7 +131,7 @@ async function createReport (report, userData) {
 
   const fleetmapReport = require('fleetmap-reports/src/' + camelCaseToKebabCase(report.reportType))
   if (fleetmapReport) {
-    return fleetmapReport.create(from, to, reportData)
+    return fleetmapReport.create(from, to, reportData, Reports.traccar)
   }
 
   console.log('Unkown ReportType ' + report.reportType)
