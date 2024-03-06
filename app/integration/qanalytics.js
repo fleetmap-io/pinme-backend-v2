@@ -30,7 +30,7 @@ async function _sendQ (devPosition) {
   const args = {
     'tns:ID_REG': device.uniqueId,
     'tns:FH_DATO': new Date(position.fixTime).toISOString(),
-    'tns:PLACA': device.name,
+    'tns:PLACA': device.attributes.license_plate && device.attributes.license_plate.trim().replace('-', ''),
     'tns:TEMP1': position.attributes.temp1 !== 175
       ? position.attributes.temp1
       : position.attributes.temp2 !== 175 ? position.attributes.temp2 : undefined,

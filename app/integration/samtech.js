@@ -19,7 +19,7 @@ module.exports = (devPosition) => {
         empresa: 'Verizon',
         tercero: device.attributes.client || 'fleetrack',
         pat: device.attributes.license_plate && device.attributes.license_plate.replace('-', ''),
-        fn: new Date(position.fixTime).toLocaleString('es-CL', { timeZone: 'America/Santiago' }).replace(/-/g, '/').replace(',', ''),
+        fn: new Date(position.fixTime).toLocaleString('es-CL', { timeZone: 'UTC' }).replace(/-/g, '/').replace(',', ''),
         lat: position.latitude,
         lon: position.longitude,
         ori: position.course,
@@ -29,7 +29,7 @@ module.exports = (devPosition) => {
         odo: position.attributes.odometer / 1000,
         eve: position.attributes.ignition ? 46 : 47,
         conductor: position.attributes.driverUniqueId || 'No asignado',
-        numSAT: position.attributes.sat || position.attributes.sats,
+        numSAT: position.attributes.sat || position.attributes.sats || 0,
         sens1: 0,
         sens2: 0
       },
