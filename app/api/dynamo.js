@@ -79,7 +79,7 @@ exports.updateSchedule = async (id, userId, nextExecutionDate) => {
     UpdateExpression: 'set lastExecutionDate = :lastExecutionDate, nextExecution = :nextExecution',
     ConditionExpression: 'userId = :userId',
     ExpressionAttributeValues: {
-      ':userId': { N: userId },
+      ':userId': { N: Number(userId) },
       ':lastExecutionDate': { S: new Date(Date.now()).toISOString() },
       ':nextExecution': { S: nextExecutionDate.toISOString() }
     }
