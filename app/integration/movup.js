@@ -17,7 +17,7 @@ module.exports = async (e) => {
   console.log('movup', data,
     await axios.post('https://segmentado.ziyu.cl/api/restapp/gpssignal/external/', data,
       {
-        timeout: 4000,
+        timeout: 3000,
         headers: {
           Username: 'Fleetrack',
           Password: 'yYoHmGkE7mXj'
