@@ -20,7 +20,7 @@ const Reports = new FleetmapReports({
   baseOptions: {
     withCredentials: true
   }
-}, require('axios'))
+})
 
 const maxLocationReportRows = 40000
 async function processUserSchedules ({ userId, items, filterClientId }) {
