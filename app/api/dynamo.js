@@ -75,13 +75,13 @@ exports.updateSchedule = async (id, userId, nextExecutionDate) => {
   console.log('Update nextExecutionDate', id, userId, nextExecutionDate)
   const update = new UpdateItemCommand({
     TableName: schedulerTable,
-    Key: { id },
+    Key: marshall({ id }),
     UpdateExpression: 'set lastExecutionDate = :lastExecutionDate, nextExecution = :nextExecution',
     ConditionExpression: 'userId = :userId',
     ExpressionAttributeValues: {
-      ':userId': userId,
-      ':lastExecutionDate': new Date(Date.now()).toISOString(),
-      ':nextExecution': nextExecutionDate.toISOString()
+      ':userId': { N: Number(userId) },
+      ':lastExecutionDate': { S: new Date(Date.now()).toISOString() },
+      ':nextExecution': { S: nextExecutionDate.toISOString() }
     }
   })
 
@@ -92,7 +92,7 @@ exports.deleteSchedule = async (id) => {
   console.log('deleteSchedule', id)
   const deleteCommand = new DeleteItemCommand({
     TableName: schedulerTable,
-    Key: { id }
+    Key: marshall({ id })
   })
   await dynamo.send(deleteCommand)
 }
