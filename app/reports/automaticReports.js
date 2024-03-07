@@ -13,7 +13,7 @@ const sqsClient = new SQSClient({ region: 'us-east-1' })
 const messages = require('../lang')
 const bcc = ['reports.fleetmap@gmail.com']
 
-const apiUrl = 'https://slowreports.pinme.io/api'
+const apiUrl = 'https://api2.pinme.io/api'
 const FleetmapReports = require('fleetmap-reports')
 const Reports = new FleetmapReports({
   basePath: apiUrl,
