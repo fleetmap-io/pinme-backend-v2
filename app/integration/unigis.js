@@ -7,7 +7,7 @@ const wsdlOptions = {
   }
 }
 
-const timeout = 60000
+const timeout = 4000
 let client
 
 module.exports = async (devPosition) => {
