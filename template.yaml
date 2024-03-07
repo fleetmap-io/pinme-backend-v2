@@ -250,6 +250,10 @@ Resources:
       Policies:
         - AmazonS3FullAccess
         - SecretsManagerReadWrite
+        - AmazonDynamoDBFullAccess
+        - AmazonSESFullAccess
+        - CloudWatchFullAccess
+        - AmazonSQSFullAccess
         - Statement:
             - Effect: Allow
               Action:
