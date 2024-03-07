@@ -131,6 +131,7 @@ async function createReport (report, userData) {
 
   const fleetmapReport = require('fleetmap-reports/src/' + camelCaseToKebabCase(report.reportType))
   if (fleetmapReport) {
+    await getUserSession(userData.user.email)
     return fleetmapReport.create(from, to, reportData, Reports.traccar)
   }
 
