@@ -13,14 +13,14 @@ const sqsClient = new SQSClient({ region: 'us-east-1' })
 const messages = require('../lang')
 const bcc = ['reports.fleetmap@gmail.com']
 
-const apiUrl = 'https://slowreports.pinme.io/api'
+const apiUrl = 'https://api2.pinme.io/api'
 const FleetmapReports = require('fleetmap-reports')
-const Reports = new FleetmapReports({
+const config = {
   basePath: apiUrl,
   baseOptions: {
     withCredentials: true
   }
-}, require('axios'))
+}
 
 const maxLocationReportRows = 40000
 async function processUserSchedules ({ userId, items, filterClientId }) {
@@ -131,6 +131,7 @@ async function createReport (report, userData) {
 
   const fleetmapReport = require('fleetmap-reports/src/' + camelCaseToKebabCase(report.reportType))
   if (fleetmapReport) {
+    const Reports = new FleetmapReports(config, require('axios').create({ ...config.baseOptions, baseURL: config.basePath }))
     return fleetmapReport.create(from, to, reportData, Reports.traccar)
   }
 
