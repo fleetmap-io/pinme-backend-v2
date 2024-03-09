@@ -70,16 +70,31 @@ async function addDBDefinedMetrics (host, metricsData) {
   }
 }
 
+async function addTraccarMetrics (metricsData) {
+  const traccar = require('../traccar')
+  const positions = await traccar.get('positions')
+  let Value = 0
+  positions.forEach(p => {
+    Value += new Date() - new Date(p.fixTime) < 2 * 60 * 1000 ? 1 : 0
+  })
+  metricsData.push({
+    MetricName: 'UpdatedOnMap',
+    Unit: 'Count',
+    Value
+  })
+}
+
 exports.putMetrics = async (e) => {
   let metricsData = []
   let metrics
   if (e.resources[0].split('rule/')[1] === 'everyMinute') {
     await addDBDefinedMetrics(process.env.DB_HOST_READER, metricsData)
     await addDBDefinedMetrics(process.env.DB_HOST_POSITIONS_READER, metricsData)
+    await addTraccarMetrics(metricsData)
   } else {
     await checkCountries()
     metrics = await getCountByCountry()
-      metricsData = metricsData.concat(metrics.filter(m => m.country && !m.country.includes('amp;')).map(m => {
+    metricsData = metricsData.concat(metrics.filter(m => m.country && !m.country.includes('amp;')).map(m => {
       return {
         // eslint-disable-next-line no-control-regex
         MetricName: m.country ? m.country.replace(/[^\x00-\x7F]/g, '_').replace('\\n', '').trim() : 'unknown',

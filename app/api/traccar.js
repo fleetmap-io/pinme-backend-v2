@@ -277,6 +277,8 @@ exports.updateDeviceAccumulators = (deviceId, accumulators) => {
   return put('/devices/' + deviceId + '/accumulators', body)
 }
 
+exports.get = (path) => axios.get(path).then(d => d.data)
+
 exports.getComputed = async (deviceId) => {
   return await get(`/attributes/computed?deviceId=${deviceId}`)
 }
