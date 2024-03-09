@@ -73,14 +73,24 @@ async function addDBDefinedMetrics (host, metricsData) {
 async function addTraccarMetrics (metricsData) {
   const traccar = require('../traccar')
   const positions = await traccar.get('positions')
-  let Value = 0
+  let updatedOnMap = 0
+  const sources = {}
   positions.forEach(p => {
-    Value += new Date() - new Date(p.fixTime) < 5 * 60 * 1000 ? 1 : 0
+    updatedOnMap += new Date() - new Date(p.fixTime) < 5 * 60 * 1000 ? 1 : 0
+    sources[p.attributes.source || 'null'] ||= 0
+    sources[p.attributes.source || 'null'] += 1
   })
   metricsData.push({
     MetricName: 'UpdatedOnMap',
     Unit: 'Count',
-    Value
+    Value: updatedOnMap
+  })
+  Object.keys(sources).forEach(s => {
+    metricsData.push({
+      MetricName: s,
+      Unit: 'Count',
+      Value: sources[s]
+    })
   })
 }
 
