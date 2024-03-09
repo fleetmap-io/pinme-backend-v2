@@ -361,7 +361,7 @@ Resources:
       Handler: S3DailyMigrator::S3DailyMigrator.Function::FunctionHandlerSQS
       Runtime: dotnet6
       MemorySize: 3000
-      Timeout: 120
+      Timeout: 300
       Policies:
         - AmazonSQSFullAccess
         - AmazonS3FullAccess
@@ -375,6 +375,8 @@ Resources:
           Type: SQS
           Properties:
             BatchSize: 1
+            ScalingConfig:
+              MaximumConcurrency: 2
             Queue: !GetAtt SQSS3DailyMigratorUnitDL.Arn
   ApiHelper:
     Type: AWS::Serverless::Function
@@ -486,7 +488,7 @@ Resources:
     Properties:
       FifoQueue: true
       QueueName: 'S3DailyMigratorUnitDL.fifo'
-      VisibilityTimeout: 120
+      VisibilityTimeout: 300
       MessageRetentionPeriod: 1209600
       ContentBasedDeduplication: true
       RedrivePolicy:
