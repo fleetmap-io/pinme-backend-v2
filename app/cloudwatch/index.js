@@ -75,7 +75,7 @@ async function addTraccarMetrics (metricsData) {
   const positions = await traccar.get('positions')
   let Value = 0
   positions.forEach(p => {
-    Value += new Date() - new Date(p.fixTime) < 3 * 60 * 1000 ? 1 : 0
+    Value += new Date() - new Date(p.fixTime) < 5 * 60 * 1000 ? 1 : 0
   })
   metricsData.push({
     MetricName: 'UpdatedOnMap',
