@@ -20,8 +20,7 @@ function getCountBySource () {
   return getRowsArray(`
   SELECT attributes->>"$.source" source, count(*) count
   FROM tc_positions_last p
- WHERE p.fixtime > DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -2 MINUTE)
-   group by SUBSTRING_INDEX(p.address,',',-1)
+group by attributes->>"$.source"
   `, process.env.DB_HOST_READER)
 }
 
