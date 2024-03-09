@@ -77,8 +77,8 @@ async function addTraccarMetrics (metricsData) {
   const sources = {}
   positions.forEach(p => {
     updatedOnMap += new Date() - new Date(p.fixTime) < 5 * 60 * 1000 ? 1 : 0
-    sources[p.attributes.source || 'null'] ||= 0
-    sources[p.attributes.source || 'null'] += 1
+    sources[p.attributes.source || 'no_source'] ||= 0
+    sources[p.attributes.source || 'no_source'] += 1
   })
   metricsData.push({
     MetricName: 'UpdatedOnMap',
