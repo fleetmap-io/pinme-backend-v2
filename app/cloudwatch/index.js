@@ -16,6 +16,15 @@ SUBSTRING_INDEX(p.address,',',-1) country, count(*) count
   `, process.env.DB_HOST_READER)
 }
 
+function getCountBySource () {
+  return getRowsArray(`
+  SELECT attributes->>"$.source" source, count(*) count
+  FROM tc_positions_last p
+ WHERE p.fixtime > DATE_ADD(CURRENT_TIMESTAMP, INTERVAL -2 MINUTE)
+   group by SUBSTRING_INDEX(p.address,',',-1)
+  `, process.env.DB_HOST_READER)
+}
+
 function getCountByAPN () {
   return getRowsArray(`
 
@@ -74,24 +83,24 @@ async function addTraccarMetrics (metricsData) {
   const traccar = require('../traccar')
   const positions = await traccar.get('positions')
   let updatedOnMap = 0
-  const sources = {}
+  // const sources = {}
   positions.forEach(p => {
     updatedOnMap += new Date() - new Date(p.fixTime) < 5 * 60 * 1000 ? 1 : 0
-    sources[p.attributes.source || 'no_source'] ||= 0
-    sources[p.attributes.source || 'no_source'] += 1
+    //    sources[p.attributes.source || 'no_source'] ||= 0
+    //    sources[p.attributes.source || 'no_source'] += 1
   })
   metricsData.push({
     MetricName: 'UpdatedOnMap',
     Unit: 'Count',
     Value: updatedOnMap
   })
-  Object.keys(sources).forEach(s => {
+  /* Object.keys(sources).forEach(s => {
     metricsData.push({
       MetricName: s,
       Unit: 'Count',
       Value: sources[s]
     })
-  })
+  }) */
 }
 
 exports.putMetrics = async (e) => {
@@ -101,6 +110,15 @@ exports.putMetrics = async (e) => {
     await addDBDefinedMetrics(process.env.DB_HOST_READER, metricsData)
     await addDBDefinedMetrics(process.env.DB_HOST_POSITIONS_READER, metricsData)
     await addTraccarMetrics(metricsData)
+    metrics = await getCountBySource()
+    metricsData = metricsData.concat(metrics.filter(m => m.source).map(m => {
+      return {
+        // eslint-disable-next-line no-control-regex
+        MetricName: m.source,
+        Unit: 'Count',
+        Value: m.count
+      }
+    }).filter(m => m.MetricName))
   } else {
     await checkCountries()
     metrics = await getCountByCountry()
