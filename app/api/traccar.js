@@ -298,7 +298,7 @@ exports.sendCommand = (deviceId, data) => {
 
 exports.getCommands = (deviceId) => {
   const url = `/commands?deviceId=${deviceId}`
-  return axios.get(url)
+  return tryGet(url)
 }
 
 exports.addPermission = async (permission) => {
