@@ -16,7 +16,7 @@ module.exports = async (devPosition) => {
   const args = {
     SystemUser: 'FleetTrack',
     Password: 'VLR624wax',
-    Dominio: device.attributes.license_plate,
+    Dominio: device.attributes.license_plate.trim(),
     Codigo: 'POSICIÓN',
     NroSerie: -1,
     FechaHoraEvento: position.fixTime.substring(0, 19),
