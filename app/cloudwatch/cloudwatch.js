@@ -24,14 +24,15 @@ exports.delete = async (filterName, logGroupName) => {
   }))
 }
 
-const startQuery = async (logGroupName, device) => {
-  return await cwlClient.send(new StartQueryCommand({
+const startQuery = (logGroupName, device) => {
+  const queryString = `fields @timestamp, @message
+                  | filter @message like /${device}/ or @message like /${device.replace('-', '')}/`
+  return cwlClient.send(new StartQueryCommand({
     logGroupName,
     limit: 50,
     startTime: Math.round(new Date().setHours(new Date().getHours() - 24) / 1000),
     endTime: Math.round(new Date().getTime() / 1000),
-    queryString: `fields @timestamp, @message
-                  | filter @message like /${device}/ or @message like /${device.replace('-', '')}/`
+    queryString
   })).then(d => d.queryId)
 }
 exports.startQuery = startQuery
@@ -52,7 +53,7 @@ exports.get = async (query) => {
   return await getQueryResults(query)
 }
 
-exports.post = async (device, logGroupName = '/aws/lambda/pinme-backend-event-and-locations-consumer') => {
+exports.post = (device, logGroupName = '/aws/lambda/pinme-backend-event-and-locations-consumer') => {
   console.log(device)
-  return await startQuery(logGroupName, device)
+  return startQuery(logGroupName, device)
 }
