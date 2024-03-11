@@ -293,7 +293,7 @@ app.post('/gpsmanager/commands/:deviceId', async (req, res) => {
   res.json(await sendCommand(req.params.deviceId, req.body))
 })
 
-app.get('/logs/:query', async (req, res) => {
+app.get('/gpsmanager/logs/:query', async (req, res) => {
   res.json(await require('./cloudwatch').get(req.params.query))
 })
 
