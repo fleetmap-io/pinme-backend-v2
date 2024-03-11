@@ -106,6 +106,10 @@ app.get('/gpsmanager', async (req, res) => {
   await processRequest(devices.get, res, req.query, res.locals.user, res.locals.partners)
 })
 
+app.get('/gpsmanager/gpsmanager', async (req, res) => {
+  await processRequest(devices.get, res, req.query, res.locals.user, res.locals.partners)
+})
+
 app.get('/gpsmanager/devices/conf/:deviceId', async (req, res) => {
   await processRequest(devices.getConfById, res, req.params.deviceId, res.locals.user)
 })
