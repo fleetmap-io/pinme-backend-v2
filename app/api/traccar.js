@@ -258,7 +258,7 @@ exports.getPosition = (positionId, deviceId) => {
 
 exports.getPositions = async (body) => {
   if (body.from && body.to) {
-    return await get(`/reports/route?deviceId=${body.deviceId}&from=${body.from}T00:00:00Z&to=${body.to}T23:59:59Z`)
+    return await tryGet(`/reports/route?deviceId=${body.deviceId}&from=${body.from}T00:00:00Z&to=${body.to}T23:59:59Z`)
   }
   return []
 }
