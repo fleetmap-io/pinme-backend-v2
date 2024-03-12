@@ -1,20 +1,25 @@
+const Vue = require('vue')
+const renderer = require('vue-server-renderer')
 const secrets = require('../secrets')
+const MJML = require('mjml')
 const { getFilePath, logException, camelCaseToKebabCase } = require('../utils')
 const dynamo = require('../api/dynamo')
 const traccar = require('../api/traccar')
 const { getUserSession } = require('../auth')
 const { SendMessageCommand, SQSClient } = require('@aws-sdk/client-sqs')
-const { validateEmail } = require('../email/email')
+const { validateEmail, email } = require('../email/email')
 const xlsx = require('json-as-xlsx')
 const fs = require('fs')
-const Vue = require('vue')
 const { getUserPartner } = require('fleetmap-partners')
 const sqsClient = new SQSClient({ region: 'us-east-1' })
 const messages = require('../lang')
 const bcc = ['reports.fleetmap@gmail.com']
-
+const senderEmail = 'no-reply@gpsmanager.io'
+const automaticReportSendMetric = 'AutomaticReportSend'
+const automaticReportErrorMetric = 'AutomaticReportError'
 const apiUrl = 'https://api2.pinme.io/api'
 const FleetmapReports = require('fleetmap-reports')
+const { putMetricData } = require('../cloudwatch')
 const config = {
   basePath: apiUrl,
   baseOptions: {
@@ -98,13 +103,13 @@ async function processUserSchedules ({ userId, items, filterClientId }) {
           }
           await dynamo.updateSchedule(report.id, user.id, calculateNextExecution(report.periodicity))
         } catch (error) {
-          // if (canSplit(error)) {
-          //  await splitMessage(report, user.id, error.message)
-          // } else {
-          console.warn(error.message, 'automaticReport', report && report.reportType)
-          throw error
-          // }
-          // await putReportMetricData(automaticReportErrorMetric)
+          if (canSplit(error)) {
+            await splitMessage(report, user.id, error.message)
+          } else {
+            console.warn(error.message, 'automaticReport', report && report.reportType)
+            throw error
+          }
+          await putReportMetricData(automaticReportErrorMetric)
         }
       }
     }
@@ -241,14 +246,13 @@ async function renderAndEmail (user, translations, report, reportData, app, file
 
 async function renderEmail (to, bcc, subject, app, files) {
   console.log('TODO render Email')
-  // TODO render email
-  /* const vueRender = await renderer.createRenderer().renderToString(app)
+  const vueRender = await renderer.createRenderer().renderToString(app)
   const mjmlRender = MJML(vueRender)
   if (mjmlRender.html) {
     const htmlText = mjmlRender.html
     await email.emailWithAttachment(to, bcc, htmlText, subject, senderEmail, files)
     await putReportMetricData(automaticReportSendMetric)
-  } */
+  }
 }
 
 function addFiles (name, pdfDoc, excelDoc) {
@@ -386,11 +390,37 @@ async function splitMessage (report, userId, error) {
   }
 }
 
+function canSplit (error) {
+  return (error.message && error.message.startsWith('Message length is more than')) ||
+      (error.message && error.message.startsWith('spawn ENOMEM')) ||
+      (error.message && error.message.startsWith('Worker died ')) ||
+      error.statusCode === 413
+}
+
 function sendMessage (userId, reportsToProcess, filterClientId) {
   return sqsClient.send(new SendMessageCommand({
     MessageBody: JSON.stringify({ userId, items: reportsToProcess, filterClientId }),
     QueueUrl: process.env.REPORTS_QUEUE1
   }))
+}
+
+function putReportMetricData (name) {
+  try {
+    const metricsData = [{
+      MetricName: name,
+      Unit: 'Count',
+      Value: 1
+    }]
+
+    const metricData = {
+      MetricData: metricsData,
+      Namespace: 'Reports'
+    }
+
+    return putMetricData(metricData)
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 exports.processUserSchedules = processUserSchedules
