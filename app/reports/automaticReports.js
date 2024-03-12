@@ -7,7 +7,7 @@ const dynamo = require('../api/dynamo')
 const traccar = require('../api/traccar')
 const { getUserSession } = require('../auth')
 const { SendMessageCommand, SQSClient } = require('@aws-sdk/client-sqs')
-const { validateEmail, email } = require('../email/email')
+const { validateEmail, emailWithAttachment } = require('../email/email')
 const xlsx = require('json-as-xlsx')
 const fs = require('fs')
 const { getUserPartner } = require('fleetmap-partners')
@@ -245,12 +245,11 @@ async function renderAndEmail (user, translations, report, reportData, app, file
 }
 
 async function renderEmail (to, bcc, subject, app, files) {
-  console.log('TODO render Email')
   const vueRender = await renderer.createRenderer().renderToString(app)
   const mjmlRender = MJML(vueRender)
   if (mjmlRender.html) {
     const htmlText = mjmlRender.html
-    await email.emailWithAttachment(to, bcc, htmlText, subject, senderEmail, files)
+    await emailWithAttachment(to, bcc, htmlText, subject, senderEmail, files)
     await putReportMetricData(automaticReportSendMetric)
   }
 }
