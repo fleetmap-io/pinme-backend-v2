@@ -277,8 +277,8 @@ function addFiles (name, pdfDoc, excelDoc) {
 }
 
 function createVueApp (reportType, data, translations, userData) {
-  const groupByDay = userData.groupByDay ? 'GroupByDay' : ''
-  const filePath = getFilePath(`${process.env.REPORTS_PATH || 'reports/'}${reportType}${groupByDay}Template.mjml`)
+  const groupByDay = userData.groupByDay && reportType === 'KmsReport' ? 'GroupByDay' : ''
+  const filePath = getFilePath(`${process.env.REPORTS_PATH || 'node_modules/fleetmap-reports/src/templates/'}${reportType}${groupByDay}Template.mjml`)
   const partnerData = getUserPartner(userData.user)
 
   console.log(`Loading report at: ${filePath}`)
