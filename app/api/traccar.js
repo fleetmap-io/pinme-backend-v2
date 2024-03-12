@@ -258,7 +258,7 @@ exports.getPosition = (positionId, deviceId) => {
 
 exports.getPositions = async (body) => {
   if (body.from && body.to) {
-    return await get(`/reports/route?deviceId=${body.deviceId}&from=${body.from}T00:00:00Z&to=${body.to}T23:59:59Z`)
+    return await tryGet(`/reports/route?deviceId=${body.deviceId}&from=${body.from}T00:00:00Z&to=${body.to}T23:59:59Z`)
   }
   return []
 }
@@ -276,6 +276,8 @@ exports.updateDeviceAccumulators = (deviceId, accumulators) => {
   }
   return put('/devices/' + deviceId + '/accumulators', body)
 }
+
+exports.get = (path) => axios.get(path).then(d => d.data)
 
 exports.getComputed = async (deviceId) => {
   return await get(`/attributes/computed?deviceId=${deviceId}`)
@@ -296,8 +298,7 @@ exports.sendCommand = (deviceId, data) => {
 
 exports.getCommands = (deviceId) => {
   const url = `/commands?deviceId=${deviceId}`
-  console.log(url)
-  return get(url)
+  return tryGet(url)
 }
 
 exports.addPermission = async (permission) => {

@@ -33,9 +33,11 @@ def main(event, context):
     print("Called via API " + settings.traccar_api_baseurl)
     # Called via Lambda IDE/localhost
 
-    # if event['headers']['cookie'][0:11] == "JSESSIONID=":
+    cookie = event['headers']['Cookie']
+
+    # if cookie[0:11] == "JSESSIONID=":
     login_response = requests.get(settings.traccar_api_baseurl + '/session',
-                                  headers={'cookie': event['headers']['Cookie']})
+                                  headers={'cookie': cookie})
 
     print("Login result: " + str(login_response.status_code) + " " + login_response.text)
 
@@ -106,7 +108,7 @@ def main(event, context):
                             "deviceId": body['deviceid']
                         }
 
-                    response = call_traccar_api(body['username'], event['headers']['Cookie'], "POST", "commands/send",
+                    response = call_traccar_api(body['username'], cookie, "POST", "commands/send",
                                                 request_body)
 
                     if 200 <= response.status_code <= 299:
@@ -128,7 +130,7 @@ def main(event, context):
                             "id": 52,
                             "deviceId": body['deviceid']
                         }
-                    response = call_traccar_api(body['username'], event['headers']['cookie'], "POST", "commands/send",
+                    response = call_traccar_api(body['username'], cookie, "POST", "commands/send",
                                                 request_body)
                     if 200 <= response.status_code <= 299:
                         sms_result = send_sms(device['phone'], "0000,800", str(user_details['email']))
@@ -152,7 +154,7 @@ def main(event, context):
                             "deviceId": body['deviceid']
                         }
 
-                    response = call_traccar_api(body['username'], event['headers']['cookie'], "POST", "commands/send",
+                    response = call_traccar_api(body['username'], cookie, "POST", "commands/send",
                                                 request_body)
 
                     if 200 <= response.status_code <= 299:
@@ -190,7 +192,7 @@ def main(event, context):
                             }
                         }
 
-                    response = call_traccar_api(body['username'], event['headers']['cookie'], "POST", "commands/send",
+                    response = call_traccar_api(body['username'], cookie, "POST", "commands/send",
                                                 request_body)
 
                     if 200 <= response.status_code <= 299:
@@ -225,7 +227,7 @@ def main(event, context):
                             }
                         }
 
-                    response = call_traccar_api(body['username'], event['headers']['cookie'], "POST", "commands/send",
+                    response = call_traccar_api(body['username'], cookie, "POST", "commands/send",
                                                 request_body)
 
                     if 200 <= response.status_code <= 299:
@@ -262,13 +264,13 @@ def main(event, context):
                         "id": 19,
                         "deviceId": body['deviceid']
                     }
-                    response = call_traccar_api(body['username'], event['headers']['cookie'], "POST", "commands/send",
+                    response = call_traccar_api(body['username'], cookie, "POST", "commands/send",
                                                 request_body)
 
                     # immobiliation on
                     if body['value'] == True:
                         request_body = {"id": 10, "deviceId": body['deviceid']}
-                        call_traccar_api(body['username'], event['headers']['cookie'], "POST", "commands/send",
+                        call_traccar_api(body['username'], cookie, "POST", "commands/send",
                                          request_body)
                         request_body = {
                             "type": "custom", "deviceId": body['deviceid'],
@@ -276,7 +278,7 @@ def main(event, context):
                                 "data": "setdigout 11"
                             }
                         }
-                        call_traccar_api(body['username'], event['headers']['cookie'], "POST", "commands/send",
+                        call_traccar_api(body['username'], cookie, "POST", "commands/send",
                                          request_body)
                     else:
                         request_body = {
@@ -285,16 +287,16 @@ def main(event, context):
                                 "data": "setdigout 00"
                             }
                         }
-                        call_traccar_api(body['username'], event['headers']['cookie'], "POST", "commands/send",
+                        call_traccar_api(body['username'], cookie, "POST", "commands/send",
                                          request_body)
                         request_body = {"id": 11, "deviceId": body['deviceid']}
-                        response = call_traccar_api(body['username'], event['headers']['cookie'], "POST",
+                        response = call_traccar_api(body['username'], cookie, "POST",
                                                     "commands/send", request_body)
                     print('response: ', response)
                     if 200 <= response.status_code <= 299:
 
                         request_body["id"] = 18
-                        response = call_traccar_api(body['username'], event['headers']['cookie'], "POST",
+                        response = call_traccar_api(body['username'], cookie, "POST",
                                                     "commands/send", request_body)
                         sms_result = send_sms(device['phone'], "\u2008\u2008getrecord", str(user_details['email']))
                         print(sms_result.status_code)

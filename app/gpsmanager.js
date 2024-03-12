@@ -106,6 +106,10 @@ app.get('/gpsmanager', async (req, res) => {
   await processRequest(devices.get, res, req.query, res.locals.user, res.locals.partners)
 })
 
+app.get('/gpsmanager/gpsmanager', async (req, res) => {
+  await processRequest(devices.get, res, req.query, res.locals.user, res.locals.partners)
+})
+
 app.get('/gpsmanager/devices/conf/:deviceId', async (req, res) => {
   await processRequest(devices.getConfById, res, req.params.deviceId, res.locals.user)
 })
@@ -289,19 +293,19 @@ app.post('/gpsmanager/commands/:deviceId', async (req, res) => {
   res.json(await sendCommand(req.params.deviceId, req.body))
 })
 
-app.get('/logs/:query', async (req, res) => {
-  res.json(await require('./cloudwatch').get(req.params.query))
+app.get('/gpsmanager/logs/:query', async (req, res) => {
+  res.json(await require('./cloudwatch/cloudwatch').get(req.params.query))
 })
 
 app.post('/gpsmanager/logs/:device', async (req, res) => {
   res.json(await require('./cloudwatch/cloudwatch').post(req.params.device))
 })
 
-app.post('/logs/import/:device', async (req, res) => {
+app.post('/gpsmanager/logs/import/:device', async (req, res) => {
   res.json(await require('./cloudwatch/cloudwatch').post(req.params.device, '/aws/lambda/import-backend-ProcessVehicle-lnss6J9beBGo'))
 })
 
-app.post('/logs/commands/:device', async (req, res) => {
+app.post('/gpsmanager/logs/commands/:device', async (req, res) => {
   res.json(await require('./cloudwatch/cloudwatch').post('"deviceId": ' + req.params.device, '/aws/lambda/api_helper'))
 })
 
