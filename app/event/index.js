@@ -11,6 +11,15 @@ async function sendToRabbit (body, retry = 3) {
     if (--retry) { return await sendToRabbit(body, retry) } else { throw e }
   }
 }
+const getCountry = position => position && position.address &&
+    position.address.split(',').length &&
+    position.address.split(',').slice(-1)[0].trim()
+
+const migrated = position =>
+  getCountry(position) === 'Chile' ||
+    getCountry(position) === 'Senegal' ||
+    getCountry(position) === 'Qatar' ||
+    getCountry(position) === 'Portugal'
 
 exports.pushEvents = async (event) => {
   try {
@@ -18,6 +27,11 @@ exports.pushEvents = async (event) => {
 
     if (!event.event) {
       console.warn('ignoring empty event', event)
+      return
+    }
+
+    if (event.position && !migrated(event.position)) {
+      console.log('ignoring not migrated', getCountry(event.position), event.device && event.device.name)
       return
     }
 
