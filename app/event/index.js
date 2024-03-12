@@ -53,8 +53,8 @@ exports.pushEvents = async (event) => {
         await driverChanged.processDriverChanged(event)
       }
     } else {
-      const body = await notifications.processEvent(event)
-      deleteEvent = body.event.delete
+      await notifications.processEvent(event)
+      deleteEvent = true
     }
     if (!deleteEvent) {
       try {
