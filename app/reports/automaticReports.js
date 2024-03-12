@@ -424,3 +424,4 @@ function putReportMetricData (name) {
 
 exports.processUserSchedules = processUserSchedules
 exports.sendMessage = sendMessage
+exports.splitMessage =  splitMessage
