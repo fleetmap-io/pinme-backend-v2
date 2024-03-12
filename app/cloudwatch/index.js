@@ -79,7 +79,7 @@ exports.putMetrics = async (e) => {
   } else {
     await checkCountries()
     metrics = await getCountByCountry()
-      metricsData = metricsData.concat(metrics.filter(m => m.country && !m.country.includes('amp;')).map(m => {
+    metricsData = metricsData.concat(metrics.filter(m => m.country && !m.country.includes('amp;')).map(m => {
       return {
         // eslint-disable-next-line no-control-regex
         MetricName: m.country ? m.country.replace(/[^\x00-\x7F]/g, '_').replace('\\n', '').trim() : 'unknown',

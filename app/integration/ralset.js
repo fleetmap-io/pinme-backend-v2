@@ -1,7 +1,9 @@
 const net = require('net')
+const axios = require('axios')
 
 module.exports = async (e) => {
   console.log('ralset integration', e)
+  console.log('ralset integration', await axios.get('https://checkip.amazonaws.com/'))
   const start = new Date()
   try {
     // let ip = await axios.get('https://checkip.amazonaws.com').then(d => d.data)
