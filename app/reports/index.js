@@ -1,3 +1,4 @@
+const s3 = require('../s3')
 const automaticReport = require('./automaticReports')
 
 exports.getReport = async (report, traccar, { from, to, userData }) => {
@@ -18,9 +19,6 @@ exports.getReport = async (report, traccar, { from, to, userData }) => {
   }
   await s3.put(key, JSON.stringify(body))
   return `${process.env.CLOUDFRONT_URL}/${key}`
-}
-
-async function process (report, req) {
 }
 
 exports.consumeMessage = async (e) => {
