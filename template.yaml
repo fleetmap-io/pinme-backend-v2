@@ -7,6 +7,7 @@ Globals:
     Timeout: 30
     Environment:
       Variables:
+        BACKEND_TABLE: !Ref BackendTable
         TRACCAR_ADMIN_USER: '{{resolve:secretsmanager:traccar:SecretString:username}}'
         TRACCAR_ADMIN_PASS: '{{resolve:secretsmanager:traccar:SecretString:password}}'
         TRACCAR_API_BASE_PATH: '{{resolve:secretsmanager:traccar:SecretString:base_path}}'
@@ -557,6 +558,8 @@ Resources:
             Enabled: false
             BatchSize: 10
             Queue: '{{resolve:ssm:/traccar/delete-geofences-queue}}'
+  BackendTable:
+    Type: AWS::Serverless::SimpleTable
 
 Outputs:
   ElasticIPAddress:
