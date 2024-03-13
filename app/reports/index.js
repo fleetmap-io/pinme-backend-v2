@@ -26,6 +26,7 @@ exports.consumeMessage = async (e) => {
     console.log('processing', r)
     const reportData = JSON.parse(r.body)
     if (reportData.userId) {
+      console.log(e.eventSourceARN, process.env.REPORTS_QUEUE_DLQ)
       if (e.eventSourceARN === process.env.REPORTS_QUEUE_DLQ) {
         await automaticReport.splitMessage(reportData.items[0], reportData.userId, 'splitted by timeout')
       } else {
