@@ -144,8 +144,8 @@ function post (url, data) {
   return axios.post(url, data)
 }
 
-function del (url) {
-  return axios.delete(url)
+function del (url, body) {
+  return axios.delete(url, body)
 }
 
 function put (url, data) {
