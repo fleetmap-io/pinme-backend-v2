@@ -154,7 +154,7 @@ function put (url, data) {
 
 exports.deleteDevice = (deviceId) => {
   console.warn('deleting deviceId', deviceId)
-  return axios.delete('/devices/' + deviceId)
+  return axios.delete('/devices/' + deviceId).then(d => d.data)
 }
 
 exports.getDevice = async (id) => {
