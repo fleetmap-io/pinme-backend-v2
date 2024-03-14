@@ -47,7 +47,7 @@ exports.getByUniqueId = async (uniqueId, user) => {
   console.log(response)
   return response
 }
-exports.getById = (id) => traccar.devices.get(id)
+exports.getById = (id) => traccar.getDevice(id)
 
 exports.postById = async (deviceId, user, body) => {
   console.log('post by id', deviceId, user, body)
