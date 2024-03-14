@@ -10,10 +10,11 @@ exports.pushPositions = async (e) => {
             await integration({ device, position })
           } catch (e) {
             if (e.message.startsWith('Cannot find module') && position.address && position.address.endsWith('Brazil')) {
-              // default integration for Brazil
+              console.warn(target.trim().toLowerCase(), 'Brazil will default to monitrip')
               await require('../integration/monitrip')({ device, position })
+            } else {
+              console.warn(e.message, device.attributes.integration, device.name, position.address)
             }
-            console.warn(e.message, device.attributes.integration, device.name)
           }
         }
       } else {
