@@ -129,13 +129,7 @@ app.get('/gpsmanager/canprotocols', async (req, res) => {
 })
 
 app.post('/gpsmanager', async (req, res) => {
-  console.log(res.locals.user, req.body)
-  try {
-    res.json(await devices.post(req.body, res.locals.user))
-  } catch (e) {
-    console.error(res.locals.user, e.message, e.response && e.response.data)
-    res.status(500).send(e.message)
-  }
+  await processRequest(devices.post, res, req.body, res.locals.user)
 })
 
 app.put('/gpsmanager/devices', async (req, res) => {
