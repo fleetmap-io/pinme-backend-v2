@@ -2,14 +2,18 @@ exports.pushPositions = async (e) => {
   let devPosition
   try {
     if (e && e.body) {
-      devPosition = JSON.parse(e.body)
-      if (devPosition.device.attributes.integration) {
-        for (const target of devPosition.device.attributes.integration.split(',')) {
+      const { device, position } = JSON.parse(e.body)
+      if (device.attributes.integration) {
+        for (const target of device.attributes.integration.split(',')) {
           try {
             const integration = require('../integration/' + target.trim().toLowerCase())
-            await integration(devPosition)
+            await integration({ device, position })
           } catch (e) {
-            console.warn(e.message, devPosition.device.attributes.integration, devPosition.device.name)
+            if (e.message.startsWith('Cannot find module') && position.address && position.address.endsWith('Brazil')) {
+              // default integration for Brazil
+              await require('../integration/monitrip')({ device, position })
+            }
+            console.warn(e.message, device.attributes.integration, device.name)
           }
         }
       } else {
