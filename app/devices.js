@@ -47,18 +47,7 @@ exports.getByUniqueId = async (uniqueId, user) => {
   console.log(response)
   return response
 }
-exports.getById = async (id) => {
-  const newUser = await traccar.createUser({
-    administrator: false,
-    deviceLimit: 1,
-    deviceReadonly: true,
-    limitCommands: false,
-    userLimit: 0,
-    email: 'internal_' + id,
-  })
-  console.log(newUser)
-  traccar.getDevice(id)
-}
+exports.getById = (id) => traccar.getDevice(id)
 
 exports.postById = async (deviceId, user, body) => {
   console.log('post by id', deviceId, user, body)
