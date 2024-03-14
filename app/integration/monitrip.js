@@ -1,5 +1,5 @@
 const mysql = require('../mysql')
-const { axios } = require('../traccar')
+const axios = require('axios')
 let companies = null
 const monitrip = 'http://appservices.antt.gov.br:9000/antt/monitriip.monitoramento/rest/'
 const dynamo = require('../dynamo')
