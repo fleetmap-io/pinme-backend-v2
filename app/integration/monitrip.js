@@ -95,13 +95,13 @@ module.exports = async (devPosition) => {
 }
 
 async function sendMonitripData (plate, data, method) {
-  console.log(`${plate} ${method}`, await axios.post(monitrip + method, data, {
+  const {mensagem} =  await axios.post(monitrip + method, data, {
     headers: {
       Authorization: '61229a50-56b8-4a6f-85cd-2fba64af3532'
     }
   }).then(d => d.data).catch(e => {
     console.warn(plate, data)
     console.warn(plate, method, e.message, e.status, e.statusMessage, e.response && e.response.data)
-  }
-  ))
+  })
+  console.log(`${plate} ${method}`, mensagem)
 }

@@ -38,7 +38,6 @@ function _sendMedLog (devPosition) {
   }
 
   
-
   module.exports = async (devPosition) => {
     if (mClient === null) {
       mClient = await soap.createClientAsync(urlMedLog, wsdlOptions)
