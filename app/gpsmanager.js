@@ -235,7 +235,7 @@ app.get('/gpsmanager/positions2', async (req, res) => {
     const message = 'no device id'
     console.error(res.locals.user, 'positions2', req.query, message)
     res.status(500).send(message)
-  } else { res.json(await require('./positions').getPositions(req.query)) }
+  } else { res.json(await require('./positions').get(req.query)) }
 })
 
 app.get('/gpsmanager/permissions', async (req, res) => {
