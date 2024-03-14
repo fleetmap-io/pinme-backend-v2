@@ -68,6 +68,7 @@ async function validate (accessTokenFromClient, req, res, next, retries = 3) {
     }))
 
     res.locals.user = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'email').Value
+    res.locals.sub = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'sub').Value
     res.locals.partners = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'custom:partners')
     res.locals.userType = listUsersResponse.Users[0].Attributes.find(a => a.Name === 'custom:userType')
     next()
