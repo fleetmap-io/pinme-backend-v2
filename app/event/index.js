@@ -6,7 +6,7 @@ const axios = require('axios')
 
 async function sendToRabbit (body, retry = 3) {
   try {
-    return await axios.post('http://forward.pinme.io/pushRabbit', body)
+    return await axios.post(`http://${process.env.FORWARD_URL}/pushRabbit`, body)
   } catch (e) {
     if (--retry) { return await sendToRabbit(body, retry) } else { throw e }
   }

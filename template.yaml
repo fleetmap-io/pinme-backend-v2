@@ -33,6 +33,7 @@ Globals:
         REPORTS_QUEUE1: !Ref AutomaticReportsQueue1
         REPORTS_QUEUE2: !Ref AutomaticReportsQueue2
         REPORTS_QUEUE_DLQ: !Ref AutomaticReportsDLQ
+        FORWARD_URL: '{{resolve:ssm:/traccar/forward-url}}'
         FORCE_RELOAD: 4
 
 Resources:
