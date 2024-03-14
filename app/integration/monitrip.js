@@ -102,6 +102,7 @@ async function sendMonitripData (plate, data, method) {
   }).then(d => d.data).catch(e => {
     console.warn(plate, data)
     console.warn(plate, method, e.message, e.status, e.statusMessage, e.response && e.response.data)
+    return
   })
   console.log(`${plate} ${method}`, result && result.mensagem)
 }
