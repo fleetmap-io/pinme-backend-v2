@@ -31,6 +31,7 @@ const compression = require('compression')
 const CognitoExpress = require('fleetmap-cognito-express')
 const companies = require('./companies')
 const { getUserPartnerId } = require('./auth')
+const crypto = require('crypto')
 
 const auth = require('./cognito')
 const { CognitoIdentityProviderClient, ListUsersCommand } = require('@aws-sdk/client-cognito-identity-provider')
