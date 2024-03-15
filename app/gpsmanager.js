@@ -30,6 +30,7 @@ const cors = require('cors')
 const compression = require('compression')
 const CognitoExpress = require('fleetmap-cognito-express')
 const companies = require('./companies')
+const { getUserPartnerId } = require('./auth')
 
 const auth = require('./cognito')
 const { CognitoIdentityProviderClient, ListUsersCommand } = require('@aws-sdk/client-cognito-identity-provider')
@@ -109,6 +110,10 @@ app.get('/gpsmanager', async (req, res) => {
 
 app.get('/gpsmanager/gpsmanager', async (req, res) => {
   await processRequest(devices.get, res, req.query, res.locals.user, res.locals.partners)
+})
+
+app.get('/gpsmanager/partnerId', async (req, res) => {
+  await processRequest(auth.getUserPartnerId, res, res.locals.user)
 })
 
 app.get('/gpsmanager/devices/conf/:deviceId', async (req, res) => {
