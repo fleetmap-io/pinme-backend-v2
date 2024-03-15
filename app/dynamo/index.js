@@ -5,7 +5,7 @@ const { marshall, unmarshall } = require('@aws-sdk/util-dynamodb')
 exports.batchGet = (TableName, Keys) => {
   const params = { RequestItems: {} }
   params.RequestItems[TableName] = { Keys: Keys.slice(0, 100).map(k => marshall(k)) }
-  return dynamo.send(new BatchGetItemCommand(params)).then(d => d.Responses[TableName])
+  return dynamo.send(new BatchGetItemCommand(params)).then(d => d.Responses[TableName].map(item => unmarshall(item)))
 }
 
 exports.get = async (item, TableName = 'TraccarUserLogins') => {
