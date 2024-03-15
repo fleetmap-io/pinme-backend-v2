@@ -113,7 +113,7 @@ app.get('/gpsmanager/gpsmanager', async (req, res) => {
 })
 
 app.get('/gpsmanager/partnerId', async (req, res) => {
-  await processRequest(auth.getUserPartnerId, res, res.locals.user)
+  await processRequest(getUserPartnerId, res, res.locals.user)
 })
 
 app.get('/gpsmanager/devices/conf/:deviceId', async (req, res) => {
