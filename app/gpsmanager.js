@@ -256,7 +256,7 @@ app.get('/reports', async (req, res) => {
 
 app.get('/gpsmanager/session', async (req, res) => {
   console.log('get session', req.query.email)
-  res.json(await require('./auth').getUserSession(req.query.email))
+  res.json(await require('./auth').getUserSession(req.query.email, crypto.randomUUID()))
 })
 
 app.get('/gpsmanager/attributes/computed', async (req, res) => {
