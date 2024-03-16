@@ -1,24 +1,4 @@
 const axios = require('axios')
-const awsServerlessExpress = require('aws-serverless-express')
-const binaryMimeTypes = [
-  'application/javascript',
-  'application/json',
-  'application/octet-stream',
-  'application/xml',
-  'font/eot',
-  'font/opentype',
-  'font/otf',
-  'image/jpeg',
-  'image/png',
-  'image/svg+xml',
-  'text/comma-separated-values',
-  'text/css',
-  'text/html',
-  'text/javascript',
-  'text/plain',
-  'text/text',
-  'text/xml'
-]
 const bodyParser = require('body-parser')
 const express = require('express')
 const devices = require('./devices')
@@ -35,6 +15,7 @@ const crypto = require('crypto')
 const auth = require('./cognito')
 const { CognitoIdentityProviderClient, ListUsersCommand } = require('@aws-sdk/client-cognito-identity-provider')
 const { getCommands, sendCommand } = require('./api/traccar')
+const serverlessExpress = require('@vendia/serverless-express')
 
 const app = express()
 app.use(cors())
@@ -365,10 +346,4 @@ app.get('/gpsmanager/subtel/:imei', async (req, res) => {
   res.json(await require('partners/subtel').checkImei(req.params.imei))
 })
 
-const server = awsServerlessExpress.createServer(app, null, binaryMimeTypes)
-
-exports.main = async (event, context) => {
-  console.log(event)
-  console.log(context)
-  return awsServerlessExpress.proxy(server, event, context, 'PROMISE').promise
-}
+exports.main = serverlessExpress({ app })
