@@ -161,6 +161,7 @@ const whatsappTemplates = {
 }
 
 async function sendWhatsapp (event, user, retries = 2) {
+  user.phone = user.phone.replace(/[+\s-]/g, '')
   try {
     if (events[event.event.type]) {
       await events[event.event.type](user, event)
@@ -267,6 +268,10 @@ async function sendText (from, text, image_url) {
 exports.sendText = sendText
 const s3 = require('../s3')
 const { setDoc } = require('../firebase')
+
+async function getWhatsApp () {
+  // TODO:
+}
 
 exports.getMediaUrl = async (id, mimeType) => {
   const axios = await getWhatsApp()
