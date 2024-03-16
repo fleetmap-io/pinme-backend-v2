@@ -13,7 +13,7 @@ async function getUser (email) {
 exports.getUser = getUser
 
 async function getUserPartnerId (email) {
-  const [rows] = await mysql.getRows(`select id, name, email, partnerId
+  const [rows] = await mysql.getRows(`select id, name, email, partnerId, partnerId partnerid
         from tc_users where email='${email}'`, process.env.DB_HOST_READER)
   return rows[0]
 }

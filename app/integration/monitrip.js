@@ -17,7 +17,7 @@ module.exports = async (devPosition) => {
         }
         loadingCompanies = true
         console.log('getting from bd, this shouldn\'t happen very often')
-        companies = await mysql.getRowsArray('select * from traccar.bo_company where partnerId=10')
+        companies = await mysql.getRowsArray('select * from traccar.bo_company where partnerId=10', process.env.DB_HOST_READER)
         const item = { id: 'companies', companies, timestamp: new Date().getTime() }
         await dynamo.put(item, process.env.BACKEND_TABLE)
         loadingCompanies = false
@@ -95,14 +95,13 @@ module.exports = async (devPosition) => {
 }
 
 async function sendMonitripData (plate, data, method) {
-  const result =  await axios.post(monitrip + method, data, {
+  const result = await axios.post(monitrip + method, data, {
     headers: {
       Authorization: '61229a50-56b8-4a6f-85cd-2fba64af3532'
     }
   }).then(d => d.data).catch(e => {
     console.warn(plate, data)
     console.warn(plate, method, e.message, e.status, e.statusMessage, e.response && e.response.data)
-    return
   })
   console.log(`${plate} ${method}`, result && result.mensagem)
 }
