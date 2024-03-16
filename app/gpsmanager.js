@@ -32,7 +32,6 @@ const CognitoExpress = require('fleetmap-cognito-express')
 const companies = require('./companies')
 const { getUserPartnerId } = require('./auth')
 const crypto = require('crypto')
-
 const auth = require('./cognito')
 const { CognitoIdentityProviderClient, ListUsersCommand } = require('@aws-sdk/client-cognito-identity-provider')
 const { getCommands, sendCommand } = require('./api/traccar')
@@ -368,4 +367,8 @@ app.get('/gpsmanager/subtel/:imei', async (req, res) => {
 
 const server = awsServerlessExpress.createServer(app, null, binaryMimeTypes)
 
-exports.main = async (event, context) => awsServerlessExpress.proxy(server, event, context, 'PROMISE').promise
+exports.main = async (event, context) => {
+  console.log(event)
+  console.log(context)
+  return awsServerlessExpress.proxy(server, event, context, 'PROMISE').promise
+}
