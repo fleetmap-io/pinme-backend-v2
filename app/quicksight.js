@@ -77,7 +77,7 @@ exports.checkReport = async (_report, IngestionId) => {
     }
     return GetDashboardEmbedUrl(DashboardId)
   } catch (e) {
-    console.error(e)
+    console.warn(e)
     return { ingestionId: IngestionId, ...e }
   }
 }
