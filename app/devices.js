@@ -146,7 +146,7 @@ exports.get = async (options, user, partners) => {
   const queryCount = `select count(*) count ${from}`
   console.log(queryCount)
   const [count] = await mysql.query(queryCount, true)
-  const select = `select d.id, d.name, p.fixTime lastupdate, p.attributes->>'$.source' source, p.address, 
+  const select = `select p.attributes->>'$ignition' ignition, d.id, d.name, p.fixTime lastupdate, p.attributes->>'$.source' source, p.address, 
         p.attributes->>'$.rpm' rpm, p.attributes->>'$.fuelUsed' fuelUsed, p.attributes->>'$.versionFw' versionFw,
         d.phone, dd.lastaction, c.name client, d.licenseplate, p.latitude, p.longitude,
         g.name groupName, dt.name device, d.uniqueid, d.model, dd.lastsms, dd.lastsmsstatus, dd.immobilizationType,
