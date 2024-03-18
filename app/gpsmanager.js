@@ -101,7 +101,7 @@ app.get('/gpsmanager/devices/conf/:deviceId', async (req, res) => {
   await processRequest(devices.getConfById, res, req.params.deviceId, res.locals.user)
 })
 
-app.get('/gpsmanager/devices/uniqueId/:uniqueId', async (req, res) => {
+app.get('/devices/uniqueId/:uniqueId', async (req, res) => {
   await processRequest(devices.getByUniqueId, res, req.params.uniqueId, res.locals.user)
 })
 
