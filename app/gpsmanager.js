@@ -32,7 +32,7 @@ async function validate (accessTokenFromClient, req, res, next, retries = 3) {
     if (!cognitoExpress) {
       cognitoExpress = new CognitoExpress({
         region,
-        cognitoUserPoolId: process.env.USER_POOL_ID,
+        cognitoUserPoolId: process.env.USER_POOL_ID || 'eu-west-3_3zjuFkIv8',
         tokenUse: 'access' // Possible Values: access | id
       })
     }
@@ -44,7 +44,7 @@ async function validate (accessTokenFromClient, req, res, next, retries = 3) {
 
     const cognito = new CognitoIdentityProviderClient({ region })
     const listUsersResponse = await cognito.send(new ListUsersCommand({
-      UserPoolId: process.env.USER_POOL_ID,
+      UserPoolId: process.env.USER_POOL_ID || 'eu-west-3_3zjuFkIv8',
       Filter: `username = "${response.username}"`,
       Limit: 1
     }))
