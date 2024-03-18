@@ -89,15 +89,15 @@ app.get('/gpsmanager', async (req, res) => {
   await processRequest(devices.get, res, req.query, res.locals.user, res.locals.partners)
 })
 
-app.get('/gpsmanager/gpsmanager', async (req, res) => {
+app.get('/', async (req, res) => {
   await processRequest(devices.get, res, req.query, res.locals.user, res.locals.partners)
 })
 
-app.get('/gpsmanager/partnerId', async (req, res) => {
+app.get('/partnerId', async (req, res) => {
   await processRequest(getUserPartnerId, res, res.locals.user)
 })
 
-app.get('/gpsmanager/devices/conf/:deviceId', async (req, res) => {
+app.get('/devices/conf/:deviceId', async (req, res) => {
   await processRequest(devices.getConfById, res, req.params.deviceId, res.locals.user)
 })
 
@@ -105,11 +105,11 @@ app.get('/devices/uniqueId/:uniqueId', async (req, res) => {
   await processRequest(devices.getByUniqueId, res, req.params.uniqueId, res.locals.user)
 })
 
-app.get('/gpsmanager/devices/:id', async (req, res) => {
+app.get('/devices/:id', async (req, res) => {
   await processRequest(devices.getById, res, req.params.id)
 })
 
-app.get('/gpsmanager/canprotocols', async (req, res) => {
+app.get('/canprotocols', async (req, res) => {
   console.log('Request CanProtocols')
   res.json(await devices.getCanProtocols())
 })
@@ -118,12 +118,12 @@ app.post('/gpsmanager', async (req, res) => {
   await processRequest(devices.post, res, req.body, res.locals.user)
 })
 
-app.put('/gpsmanager/devices', async (req, res) => {
+app.put('/devices', async (req, res) => {
   console.log(req.body)
   res.json(await devices.putDevice(req.body, res.locals.user))
 })
 
-app.delete('/gpsmanager/devices/:deviceId', async (req, res) => {
+app.delete('/devices/:deviceId', async (req, res) => {
   console.log(res.locals.user, 'deleting device', req.params.deviceId)
   try {
     res.json(await devices.delete(req.params.deviceId))
@@ -133,12 +133,12 @@ app.delete('/gpsmanager/devices/:deviceId', async (req, res) => {
   }
 })
 
-app.post('/gpsmanager/devices/:deviceId', async (req, res) => {
+app.post('/devices/:deviceId', async (req, res) => {
   console.log(res.locals.user, 'post device', req.params.deviceId, req.body)
   res.json(await devices.postById(req.params.deviceId, res.locals.user, req.body))
 })
 
-app.post('/gpsmanager/users', async (req, res) => {
+app.post('/users', async (req, res) => {
   try {
     res.json(await users.post(req.body, res.locals.user))
   } catch (e) {
@@ -147,12 +147,12 @@ app.post('/gpsmanager/users', async (req, res) => {
   }
 })
 
-app.post('/gpsmanager/token', async (req, res) => {
+app.post('/token', async (req, res) => {
   console.log(req.body)
   res.json(res.locals)
 })
 
-app.post('/gpsmanager/users/create', async (req, res) => {
+app.post('/users/create', async (req, res) => {
   try {
     res.json(await auth.createUser(req.body, res.locals.user))
   } catch (e) {
@@ -161,33 +161,33 @@ app.post('/gpsmanager/users/create', async (req, res) => {
   }
 })
 
-app.get('/gpsmanager/users', async (req, res) => {
+app.get('/users', async (req, res) => {
   await processRequest(users.getDB, res, req.query, res.locals.user)
 })
 
-app.get('/gpsmanager/user', async (req, res) => {
+app.get('/user', async (req, res) => {
   res.json(await users.getUser(res.locals.user))
 })
 
-app.get('/gpsmanager/companies', async (req, res) => {
+app.get('/companies', async (req, res) => {
   await processRequest(companies.get, res, res.locals.user)
 })
 
-app.put('/gpsmanager/companies', async (req, res) => {
+app.put('/companies', async (req, res) => {
   console.log(req.body)
   res.json(await companies.put(req.body, res.locals.user))
 })
 
-app.post('/gpsmanager/companies', async (req, res) => {
+app.post('/companies', async (req, res) => {
   console.log(req.body)
   res.json(await companies.post(req.body, res.locals.user))
 })
 
-app.delete('/gpsmanager/companies/:companyId', async (req, res) => {
+app.delete('/companies/:companyId', async (req, res) => {
   res.json(await companies.delete(req.params.companyId, res.locals.user))
 })
 
-app.post('/gpsmanager/permissions', async (req, res) => {
+app.post('/permissions', async (req, res) => {
   console.log(req.body)
   try {
     const resp = await permissions.post(req.body)
@@ -199,7 +199,7 @@ app.post('/gpsmanager/permissions', async (req, res) => {
   }
 })
 
-app.get('/gpsmanager/positions', async (req, res) => {
+app.get('/positions', async (req, res) => {
   console.log(req.body)
   try {
     res.json(await require('./positions').get(req.query))
@@ -209,7 +209,7 @@ app.get('/gpsmanager/positions', async (req, res) => {
   }
 })
 
-app.get('/gpsmanager/permissions', async (req, res) => {
+app.get('/permissions', async (req, res) => {
   console.log(req.body)
   res.json(await devices.getComputedAttributes(req.query.deviceid))
 })
@@ -222,11 +222,11 @@ async function processRequest (method, res, ...args) {
   }
 }
 
-app.delete('/gpsmanager/permissions', async (req, res) => {
+app.delete('/permissions', async (req, res) => {
   await processRequest(permissions.delete, res, req.body)
 })
 
-app.delete('/gpsmanager/users/:userId', async (req, res) => {
+app.delete('/users/:userId', async (req, res) => {
   console.log(res.locals.user, 'deleting', req.params.userId)
   res.json(await users.delete(req.params.userId))
 })
@@ -235,12 +235,12 @@ app.get('/reports', async (req, res) => {
   res.json(await reports.get())
 })
 
-app.get('/gpsmanager/session', async (req, res) => {
+app.get('/session', async (req, res) => {
   console.log('get session', req.query.email)
   res.json(await require('./auth').getUserSession(req.query.email, crypto.randomUUID()))
 })
 
-app.get('/gpsmanager/attributes/computed', async (req, res) => {
+app.get('/attributes/computed', async (req, res) => {
   await processRequest(async () => {
     const [rows] = await require('./mysql').query('select * from traccar.tc_attributes order by description', process.env.DB_HOST_READER)
     console.log('returning', rows)
@@ -248,7 +248,7 @@ app.get('/gpsmanager/attributes/computed', async (req, res) => {
   }, res)
 })
 
-app.get('/gpsmanager/commands', async (req, res) => {
+app.get('/commands', async (req, res) => {
   await processRequest(async () => {
     const [rows] = await require('./mysql').query('select * from traccar.tc_commands order by description')
     console.log('returning', rows)
@@ -257,49 +257,49 @@ app.get('/gpsmanager/commands', async (req, res) => {
   }, res)
 })
 
-app.get('/gpsmanager/commands/:deviceId', async (req, res) => {
+app.get('/commands/:deviceId', async (req, res) => {
   res.json(await getCommands(req.params.deviceId))
 })
 
-app.post('/gpsmanager/commands/:deviceId', async (req, res) => {
+app.post('/commands/:deviceId', async (req, res) => {
   res.json(await sendCommand(req.params.deviceId, req.body))
 })
 
-app.get('/gpsmanager/logs/:query', async (req, res) => {
+app.get('/logs/:query', async (req, res) => {
   res.json(await require('./cloudwatch/cloudwatch').get(req.params.query))
 })
 
-app.post('/gpsmanager/logs/:device', async (req, res) => {
+app.post('/logs/:device', async (req, res) => {
   res.json(await require('./cloudwatch/cloudwatch').post(req.params.device))
 })
 
-app.post('/gpsmanager/logs/import/:device', async (req, res) => {
+app.post('/logs/import/:device', async (req, res) => {
   res.json(await require('./cloudwatch/cloudwatch').post(req.params.device, '/aws/lambda/import-backend-ProcessVehicle-lnss6J9beBGo'))
 })
 
-app.post('/gpsmanager/logs/commands/:device', async (req, res) => {
+app.post('/logs/commands/:device', async (req, res) => {
   res.json(await require('./cloudwatch/cloudwatch').post('"deviceId": ' + req.params.device, '/aws/lambda/pinme-backend-api-helper'))
 })
 
-app.get('/gpsmanager/sms/:phoneNumber', async (req, res) => {
+app.get('/sms/:phoneNumber', async (req, res) => {
   console.log(res.locals.user, 'get sms', req.params.phoneNumber)
   res.json(await require('./sms').get(req.params.phoneNumber, res.locals.user))
 })
 
-app.get('/gpsmanager/smsreceived/:phoneNumber', async (req, res) => {
+app.get('/smsreceived/:phoneNumber', async (req, res) => {
   console.log(res.locals.user, 'get received sms', req.params.phoneNumber)
   res.json(await require('./sms').getReceived(req.params.phoneNumber, res.locals.user))
 })
 
-app.post('/gpsmanager/cloudwatch/widget', async (req, res) => {
+app.post('/cloudwatch/widget', async (req, res) => {
   res.json(await require('./cloudwatch/cloudwatch').getWidget(res.locals.user, req.body))
 })
 
-app.get('/gpsmanager/partners', async (req, res) => {
+app.get('/partners', async (req, res) => {
   res.json(await require('users').getPartners(res.locals.partners && res.locals.partners.Value, res.locals.user))
 })
 
-app.post('/gpsmanager/partners/:partnerId', async (req, res) => {
+app.post('/partners/:partnerId', async (req, res) => {
   res.json(await require('users').setPartnerId(res.locals.user, req.params.partnerId, res.locals.partners && res.locals.partners.Value))
 })
 
@@ -308,7 +308,7 @@ function logAndSendError (err, res) {
   res.status(500).send(err.message)
 }
 
-app.put('/gpsmanager/drivers', async (req, res) => {
+app.put('/drivers', async (req, res) => {
   console.log(req.body)
   try {
     res.json(await drivers.put(req.body, res.locals.user))
@@ -317,12 +317,12 @@ app.put('/gpsmanager/drivers', async (req, res) => {
   }
 })
 
-app.delete('/gpsmanager/drivers/:driverId', async (req, res) => {
+app.delete('/drivers/:driverId', async (req, res) => {
   console.log(res.locals.user, 'deleting driver', req.params.driverId)
   res.json(await drivers.delete(req.params.driverId))
 })
 
-app.get('/gpsmanager/drivers', async (req, res) => {
+app.get('/drivers', async (req, res) => {
   try {
     res.json(await drivers.get(req.query, res.locals.user))
   } catch (e) {
@@ -334,15 +334,15 @@ app.post('/inofleet', async (req, res) => {
   await processRequest(require('inosat').post, res, req, res)
 })
 
-app.get('/gpsmanager/tachocards', async (req, res) => {
+app.get('/tachocards', async (req, res) => {
   require('tacho').get(req, res)
 })
 
-app.post('/gpsmanager/tachocards/:icc', async (req, res) => {
+app.post('/tachocards/:icc', async (req, res) => {
   require('tacho').post(req, res)
 })
 
-app.get('/gpsmanager/subtel/:imei', async (req, res) => {
+app.get('/subtel/:imei', async (req, res) => {
   res.json(await require('partners/subtel').checkImei(req.params.imei))
 })
 
