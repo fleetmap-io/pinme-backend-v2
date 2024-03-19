@@ -49,3 +49,17 @@ exports.camelCaseToKebabCase = (str) => {
       : letter
   }).join('')
 }
+
+exports.processRequest = async (method, res, ...args) => {
+  try {
+    res.json(await method(...args))
+  } catch (e) {
+    logAndSendError(e, res)
+  }
+}
+
+const logAndSendError = (err, res) => {
+  console.error(res.locals.user, err.message, (err.response && err.response.data) || err, (err.config && err.config.url) || err)
+  res.status(500).send(err.message)
+}
+exports.logAndSendError = logAndSendError

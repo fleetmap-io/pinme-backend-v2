@@ -23,7 +23,10 @@ const upload = multer({ storage })
 const app = express()
 const serverlessExpress = require('@vendia/serverless-express')
 const { batchGet } = require('./dynamo')
-const { logException } = require('./utils')
+const {
+  logException,
+  processRequest
+} = require('./utils')
 
 // noinspection JSCheckFunctionSignatures
 app.use(cors({ origin: true, credentials: true, methods: 'GET,PUT,POST,DELETE,OPTIONS' }))
@@ -686,5 +689,13 @@ app.post('/pinmeapi/commands', async (req, res) => {
   await sendSms(device.phone, '09000120', user.email)
   res.status(200).end()
 })
+
+app.get('/pinmeapi/geofences/withGroup', async (req, res) => {
+  return processRequest(geofencesWIthGroup, res, req.header('cookie'))
+})
+
+function geofencesWIthGroup (cookie) {
+  console.log('geofencesWithGroup', cookie)
+}
 
 exports.main = serverlessExpress({ app })

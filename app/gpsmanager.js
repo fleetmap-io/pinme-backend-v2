@@ -16,6 +16,10 @@ const auth = require('./cognito')
 const { CognitoIdentityProviderClient, ListUsersCommand } = require('@aws-sdk/client-cognito-identity-provider')
 const { getCommands, sendCommand } = require('./api/traccar')
 const serverlessExpress = require('@vendia/serverless-express')
+const {
+  processRequest,
+  logAndSendError
+} = require('./utils')
 
 const app = express()
 app.use(cors())
@@ -214,14 +218,6 @@ app.get('/permissions', async (req, res) => {
   res.json(await devices.getComputedAttributes(req.query.deviceid))
 })
 
-async function processRequest (method, res, ...args) {
-  try {
-    res.json(await method(...args))
-  } catch (e) {
-    logAndSendError(e, res)
-  }
-}
-
 app.delete('/permissions', async (req, res) => {
   await processRequest(permissions.delete, res, req.body)
 })
@@ -302,11 +298,6 @@ app.get('/partners', async (req, res) => {
 app.post('/partners/:partnerId', async (req, res) => {
   res.json(await require('users').setPartnerId(res.locals.user, req.params.partnerId, res.locals.partners && res.locals.partners.Value))
 })
-
-function logAndSendError (err, res) {
-  console.error(res.locals.user, err.message, (err.response && err.response.data) || err, (err.config && err.config.url) || err)
-  res.status(500).send(err.message)
-}
 
 app.put('/drivers', async (req, res) => {
   console.log(req.body)
