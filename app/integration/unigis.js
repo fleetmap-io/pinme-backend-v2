@@ -20,7 +20,7 @@ module.exports = async (devPosition) => {
     Dominio: normalize(device.attributes.license_plate),
     Codigo: 'POSICIÓN',
     NroSerie: -1,
-    FechaHoraEvento: position.fixTime.substring(0, 19),
+    FechaHoraEvento: position.fixTime,
     FechaHoraRecepcion: position.serverTime.substring(0, 19),
     Latitud: position.latitude,
     Altitud: position.altitude,
