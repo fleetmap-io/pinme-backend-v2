@@ -173,17 +173,18 @@ def main(event, context):
                             "id": 63,
                             "deviceId": body['deviceid']
                         }
+                        response = call_traccar_api(body['username'], cookie, "POST", "commands/send",
+                                                                        request_body)
+                        sms_result = send_sms(device['phone'], "AT+GTOUT=gv310lau,1,,,0,0,0,0,0,0,0,,0,0,,,,FFFF$", str(user_details['email']))
                     else:
                         request_body = {
                             "id": 64,
                             "deviceId": body['deviceid']
                         }
-
-                    response = call_traccar_api(body['username'], cookie, "POST", "commands/send",
-                                                request_body)
+                        response = call_traccar_api(body['username'], cookie, "POST", "commands/send", request_body)
+                        sms_result = send_sms(device['phone'], "AT+GTOUT=gv310lau,0,,,0,0,0,0,0,0,0,,0,0,,,,FFFF$", str(user_details['email']))
 
                     if 200 <= response.status_code <= 299:
-                        sms_result = send_sms(device['phone'], "check123456", str(user_details['email']))
                         print(sms_result.status_code)
                         print(sms_result.text)
                         return response_type1_event(True, "Sent via API", event)
