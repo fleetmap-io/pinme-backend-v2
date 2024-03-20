@@ -1,5 +1,7 @@
 const s3 = require('../s3')
 const automaticReport = require('./automaticReports')
+const { getAllSchedules } = require('../api/dynamo')
+const { sendMessage } = require('./automaticReports')
 
 exports.getReport = async (report, traccar, { from, to, userData }) => {
   console.log('getReport', report, new Date(from), to, userData)
@@ -38,6 +40,24 @@ exports.consumeMessage = async (e) => {
       if (report) {
         await _report.ingestReport(params, ingestionId, cookie)
       }
+    }
+  }
+}
+
+exports.sendSchedulerReports = async (e) => {
+  const items = await getAllSchedules()
+  const users = [...new Set(items.map(i => i.userId))]
+  const filterClientId = e.filterClientId
+  console.log('Total users', users.length, filterClientId)
+  for (const userId of users) {
+    try {
+      const reportsToProcess = items.filter(i => i.userId === userId)
+      console.log('sending', reportsToProcess.length, 'reports for user', userId)
+      for (const item of reportsToProcess) {
+        await sendMessage(userId, [item], filterClientId)
+      }
+    } catch (e) {
+      console.error('sendSchedulerReports', e, 'moving on')
     }
   }
 }

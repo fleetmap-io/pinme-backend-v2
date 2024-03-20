@@ -318,6 +318,42 @@ Resources:
                 - 'quicksight:GetAuthCode'
               Resource: '*'
 
+  SchedulerSenderFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      MemorySize: 256
+      Timeout: 900
+      CodeUri: ./app/
+      Handler: reports/index.sendSchedulerReports
+      Runtime: nodejs16.x
+      Policies:
+        - AmazonSQSFullAccess
+        - AmazonSESFullAccess
+        - AmazonDynamoDBFullAccess
+        - SecretsManagerReadWrite
+      Events:
+        ScheduledQatar:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 3 * * ? *)
+            Name: ScheduledQatar
+            Input: '{"filterClientId": "1t327n9mfchj7c8punqusp0j01"}'
+            Enabled: False
+        ScheduledSpain:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 3 * * ? *)
+            Name: ScheduledSpain
+            Input: '{"filterClientId": "6udglokm8muv3j06tnledmo0ki"}'
+            Enabled: False
+        Scheduled:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 6 * * ? *)
+            Name: schedulerEveryDay
+            Description: Send scheduler reports
+            Enabled: False
+
   S3DailyMigrator:
     Type: AWS::Serverless::Function
     Properties:
