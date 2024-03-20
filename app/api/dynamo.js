@@ -26,12 +26,12 @@ exports.getAllSchedules = async () => {
   const last = new Date(Date.now())
   last.setUTCHours(0, 0, 0, 0)
   const expression = '(lastExecutionDate < :lastExecutionDate or attribute_not_exists(lastExecutionDate) or lastExecutionDate = :emptyLastExecutionDate) and (nextExecution <= :nextExecution or attribute_not_exists(nextExecution) or nextExecution = :nullNextExecution)'
-  const values = {
-    ':lastExecutionDate': marshall(last.toISOString()),
+  const values = marshall({
+    ':lastExecutionDate': last.toISOString(),
     ':emptyLastExecutionDate': '',
-    ':nextExecution': marshall(next.toISOString()),
+    ':nextExecution': next.toISOString(),
     ':nullNextExecution': null
-  }
+  })
   const data = await dynamo.send(new ScanCommand({
     TableName: schedulerTable,
     FilterExpression: expression,
