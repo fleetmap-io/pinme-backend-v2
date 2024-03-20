@@ -321,6 +321,7 @@ Resources:
   SchedulerSenderFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: pinme-backend-scheduler-sender
       MemorySize: 256
       Timeout: 900
       CodeUri: ./app/
