@@ -164,6 +164,32 @@ def main(event, context):
                         return response_type1_event(True, "Sent via API", event)
                     else:
                         return response_type1_event(False, "API error: " + response.text, event)
+                elif 'deviceType' in d.keys() and d['deviceType'] == 36:
+                    # Queclink
+                    print("Device type: Queclink")
+
+                    if body['value'] == True:
+                        request_body = {
+                            "id": 63,
+                            "deviceId": body['deviceid']
+                        }
+                    else:
+                        request_body = {
+                            "id": 64,
+                            "deviceId": body['deviceid']
+                        }
+
+                    response = call_traccar_api(body['username'], cookie, "POST", "commands/send",
+                                                request_body)
+
+                    if 200 <= response.status_code <= 299:
+                        sms_result = send_sms(device['phone'], "check123456", str(user_details['email']))
+                        print(sms_result.status_code)
+                        print(sms_result.text)
+                        return response_type1_event(True, "Sent via API", event)
+                    else:
+                        return response_type1_event(False, "API error: " + response.text, event)
+
                 elif 'deviceType' in d.keys() and d['deviceType'] == 25:
                     print("Device type: BWS")
 
