@@ -30,7 +30,7 @@ const startQuery = (logGroupName, device) => {
   return cwlClient.send(new StartQueryCommand({
     logGroupName,
     limit: 50,
-    startTime: Math.round(new Date().setHours(new Date().getHours() - 24) / 1000),
+    startTime: Math.round(new Date().setHours(new Date().getHours() - 12) / 1000),
     endTime: Math.round(new Date().getTime() / 1000),
     queryString
   })).then(d => d.queryId)
