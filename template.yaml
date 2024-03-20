@@ -339,21 +339,21 @@ Resources:
             Schedule: cron(0 3 * * ? *)
             Name: ScheduledQatar
             Input: '{"filterClientId": "1t327n9mfchj7c8punqusp0j01"}'
-            Enabled: False
+            Enabled: True
         ScheduledSpain:
           Type: Schedule
           Properties:
             Schedule: cron(0 3 * * ? *)
             Name: ScheduledSpain
             Input: '{"filterClientId": "6udglokm8muv3j06tnledmo0ki"}'
-            Enabled: False
+            Enabled: True
         Scheduled:
           Type: Schedule
           Properties:
             Schedule: cron(0 6 * * ? *)
             Name: schedulerEveryDay
             Description: Send scheduler reports
-            Enabled: False
+            Enabled: True
 
   S3DailyMigrator:
     Type: AWS::Serverless::Function
