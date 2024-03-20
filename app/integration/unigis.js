@@ -21,7 +21,7 @@ module.exports = async (devPosition) => {
     Codigo: 'POSICIÓN',
     NroSerie: -1,
     FechaHoraEvento: position.fixTime,
-    FechaHoraRecepcion: position.serverTime.substring(0, 19),
+    FechaHoraRecepcion: position.serverTime,
     Latitud: position.latitude,
     Altitud: position.altitude,
     Longitud: position.longitude,
