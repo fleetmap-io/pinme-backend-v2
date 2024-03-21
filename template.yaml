@@ -279,7 +279,7 @@ Resources:
           Properties:
             BatchSize: 1
             Queue: !GetAtt AutomaticReportsDLQ.Arn
-            Enabled: true
+            Enabled: false
             ScalingConfig:
               MaximumConcurrency: 2
 
