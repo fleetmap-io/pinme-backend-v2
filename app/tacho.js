@@ -2,25 +2,10 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const express = require('express')
 const app = express()
-
 const CognitoExpress = require('cognito-express')
-const { getUserPool } = require('fleetmap-partners')
 const { CognitoIdentityProviderClient, AdminGetUserCommand } = require('@aws-sdk/client-cognito-identity-provider')
 const client = new CognitoIdentityProviderClient({ region: 'eu-west-3' })
 const mysql = require('./mysql')
-const cognitoByOrigin = {}
-
-function getCognito (origin) {
-  if (!cognitoByOrigin[origin]) {
-    cognitoByOrigin[origin] = new CognitoExpress({
-      region: 'eu-west-3',
-      cognitoUserPoolId: 'eu-west-3_3zjuFkIv8',
-      tokenUse: 'id', // Possible Values: access | id
-      tokenExpiration: 3600000 // Up to default expiration of 1 hour (3600000 ms)
-    })
-  }
-  return cognitoByOrigin[origin]
-}
 
 // noinspection JSCheckFunctionSignatures
 app.use(cors({ origin: true, credentials: true, methods: 'GET,PUT,POST,DELETE,OPTIONS' }))
@@ -40,9 +25,14 @@ async function validate (cognitoExpress, accessTokenFromClient, retry = 3) {
     }
   }
 }
-
+const cognitoUserPoolId = process.env.USER_POOL_ID
+const cognitoExpress = new CognitoExpress({
+  region: 'eu-west-3',
+  cognitoUserPoolId,
+  tokenUse: 'id',
+  tokenExpiration: 3600000
+})
 app.use(async function (req, res, next) {
-  const cognitoExpress = getCognito(req.headers.origin)
   const accessTokenFromClient = req.headers.authorization
   console.log(res.locals, req.method, req.path, req.query, req.body)
   if (!accessTokenFromClient) return res.status(401).send('Access Token missing from header')
@@ -50,7 +40,7 @@ app.use(async function (req, res, next) {
     const user = await validate(cognitoExpress, accessTokenFromClient)
     const resp = await client.send(new AdminGetUserCommand({
       Username: user['cognito:username'],
-      UserPoolId: getUserPool(req.headers.origin)
+      UserPoolId: cognitoUserPoolId
     }))
     res.locals.user = resp.UserAttributes.find(a => a.Name === 'email').Value
     next()
