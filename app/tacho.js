@@ -44,6 +44,7 @@ async function validate (cognitoExpress, accessTokenFromClient, retry = 3) {
 app.use(async function (req, res, next) {
   const cognitoExpress = getCognito(req.headers.origin)
   const accessTokenFromClient = req.headers.authorization
+  console.log(res.locals, req.method, req.path, req.query, req.body)
   if (!accessTokenFromClient) return res.status(401).send('Access Token missing from header')
   try {
     const user = await validate(cognitoExpress, accessTokenFromClient)
@@ -54,7 +55,7 @@ app.use(async function (req, res, next) {
     res.locals.user = resp.UserAttributes.find(a => a.Name === 'email').Value
     next()
   } catch (e) {
-    res.redirect('/')
+    logAndSendError(e, res)
   }
 })
 
@@ -160,4 +161,5 @@ app.get('/tacho/tachodownloads/:deviceId', async (req, resp) => {
 })
 
 const serverlessExpress = require('@vendia/serverless-express')
+const { logAndSendError } = require('./utils')
 exports.main = serverlessExpress({ app })
