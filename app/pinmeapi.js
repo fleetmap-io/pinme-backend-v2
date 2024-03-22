@@ -630,7 +630,7 @@ app.get('/pinmeapi/reports/quicksight/:report', async (req, res) => {
   res.json(await checkReport(req.params.report, req.query.ingestionId))
 })
 
-app.post('/reports/speeding-report/getEvents', async (req, res) => {
+app.post('/pinmeapi/reports/speeding-report/getEvents', async (req, res) => {
   const axios = require('axios').create({ headers: { cookie: req.header('cookie') }, baseURL: apiConfig.basePath })
   const traccar = { reports: new ReportsApi(apiConfig, null, axios), axios }
   try {
