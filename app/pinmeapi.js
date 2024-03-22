@@ -640,6 +640,10 @@ app.post('/pinmeapi/reports/speeding-report/getEvents', async (req, res) => {
   }
 })
 
+app.get('/pinmeapi/reports/speeding-report/getEvents', async (req, res) => {
+  res.send(req.path).end()
+})
+
 function logAndReply (e, res, req, args) {
   logException(e, req, args)
   res.status(500).send(e.message).end()
