@@ -66,7 +66,7 @@ const sqlTachoDownloads = `select tr.id, tr.requestdate, tr.startdate, tr.enddat
 
 const groupBy = 'group by tr.id, tr.requestdate, tr.startdate, tr.enddate, tr.status, tr.companyid, tr.type, tr.entityid, tr.conclusiondate, tr.s3id, tr.automatic'
 
-app.get('/tacho', async (req, resp) => {
+app.get('/', async (req, resp) => {
   try {
     const email = resp.locals.user
     console.log('TachoDownloads User:', email)
@@ -79,7 +79,7 @@ app.get('/tacho', async (req, resp) => {
     resp.json({ m: e.message })
   }
 })
-app.get('/tacho/tachostatus/', async (req, resp) => {
+app.get('/tachostatus/', async (req, resp) => {
   try {
     const email = resp.locals.user
     console.log('Tacho Status User:', email)
@@ -134,7 +134,7 @@ app.get('/tachoconnectionstatus/', async (req, resp) => {
     resp.json({ m: e.message })
   }
 })
-app.get('/tacho/tachodownloads/:deviceId', async (req, resp) => {
+app.get('/tachodownloads/:deviceId', async (req, resp) => {
   try {
     const email = resp.locals.user
     console.log('Get Tacho Downloads by device')
