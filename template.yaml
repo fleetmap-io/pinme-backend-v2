@@ -117,7 +117,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: pinme-backend-tacho
-      Handler: index.main
+      CodeUri: ./app/
+      Handler: tacho.main
       Runtime: nodejs16.x
       Architectures:
         - x86_64

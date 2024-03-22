@@ -159,4 +159,5 @@ app.get('/tacho/tachodownloads/:deviceId', async (req, resp) => {
   }
 })
 
-module.exports = app
+const serverlessExpress = require('@vendia/serverless-express')
+exports.main = serverlessExpress({ app })
