@@ -107,7 +107,7 @@ app.post('/tachodownloads/', async (req, resp) => {
     resp.json({ m: e.message })
   }
 })
-app.get('/tacho/lasttachodownloads/', async (req, resp) => {
+app.get('/lasttachodownloads/', async (req, resp) => {
   try {
     const email = resp.locals.user
     console.log('Last TachoDownloads User:', email)
@@ -120,7 +120,7 @@ app.get('/tacho/lasttachodownloads/', async (req, resp) => {
     resp.json({ m: e.message })
   }
 })
-app.get('/tacho/tachoconnectionstatus/', async (req, resp) => {
+app.get('/tachoconnectionstatus/', async (req, resp) => {
   try {
     const email = resp.locals.user
     console.log('Tacho connection status:', email)
