@@ -83,7 +83,7 @@ app.get('/tacho', async (req, resp) => {
         and tr.status in (0,1)
         ${groupBy}
         `
-    resp.json(await mysql.query(sql))
+    resp.json(await mysql.query(sql, true))
   } catch (e) {
     resp.json({ m: e.message })
   }
@@ -111,7 +111,7 @@ app.post('/tacho/tachodownloads/', async (req, resp) => {
         and tr.requestdate > '${body.startDate}' and tr.requestdate < '${body.endDate}'
         ${groupBy}
         `
-    resp.json(await mysql.query(sql))
+    resp.json(await mysql.query(sql, true))
   } catch (e) {
     resp.json({ m: e.message })
   }
@@ -124,7 +124,7 @@ app.get('/tacho/lasttachodownloads/', async (req, resp) => {
         and tr.id in (SELECT MAX(id) FROM tacho_remotedownload GROUP BY entityid, TYPE)
         ${groupBy}
         `
-    resp.json(await mysql.query(sql))
+    resp.json(await mysql.query(sql, true))
   } catch (e) {
     resp.json({ m: e.message })
   }
@@ -138,7 +138,7 @@ app.get('/tacho/tachoconnectionstatus/', async (req, resp) => {
         inner join (${sqlDevices.replaceAll('userEmail', email)}) td on td.deviceid = ti.deviceid 
         where u.email = '${email}'
         `
-    resp.json(await mysql.query(sql))
+    resp.json(await mysql.query(sql, true))
   } catch (e) {
     resp.json({ m: e.message })
   }
@@ -153,7 +153,7 @@ app.get('/tacho/tachodownloads/:deviceId', async (req, resp) => {
         ${groupBy}
         order by requestdate desc limit 10
         `
-    resp.json(await mysql.query(sql))
+    resp.json(await mysql.query(sql, true))
   } catch (e) {
     resp.json({ m: e.message })
   }
