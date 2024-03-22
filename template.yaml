@@ -34,7 +34,7 @@ Globals:
         REPORTS_QUEUE2: !Ref AutomaticReportsQueue2
         REPORTS_QUEUE_DLQ: !Ref AutomaticReportsDLQ
         FORWARD_URL: '{{resolve:ssm:/traccar/forward-url}}'
-	    CLOUDFRONT_URL: https://d1qklwe1xqavez.cloudfront.net
+	CLOUDFRONT_URL: https://d1qklwe1xqavez.cloudfront.net
         FORCE_RELOAD: 4
 
 Resources:
