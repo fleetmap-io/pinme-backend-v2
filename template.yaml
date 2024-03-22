@@ -113,6 +113,29 @@ Resources:
         - Key: Name
           Value: pinme-backend-v2
 
+  tacho:   
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: pinme-backend-tacho
+      Handler: index.main
+      Runtime: nodejs16.x
+      Architectures:
+        - x86_64
+      Events:
+        ProxyApiRoot:
+          Type: Api
+          Properties:
+            Path: /tacho
+            Method: ANY
+        ProxyApiGreedy:
+          Type: Api
+          Properties:
+            Path: /tacho/{proxy+}
+            Method: ANY
+      Policies:
+        - SecretsManagerReadWrite
+        - AmazonCognitoPowerUser
+
   GpsManager:
     Type: AWS::Serverless::Function
     Properties:
