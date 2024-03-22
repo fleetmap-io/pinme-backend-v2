@@ -93,7 +93,7 @@ app.get('/tacho/tachostatus/', async (req, resp) => {
     resp.json({ m: e.message })
   }
 })
-app.post('/tacho/tachodownloads/', async (req, resp) => {
+app.post('/tachodownloads/', async (req, resp) => {
   try {
     const email = resp.locals.user
     const body = req.body
