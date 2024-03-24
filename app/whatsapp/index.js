@@ -171,7 +171,7 @@ async function sendWhatsapp (event, user, retries = 2) {
   } catch (e) {
     if (--retries) {
       if (e.response && e.response.status === 400) {
-        if (user.email.endsWith('.com.br') && !user.phone.replace('+', '').startsWith('55')) {
+        if (user.email.endsWith('.br') && user.email.endsWith('.com.br') && !user.phone.replace('+', '').startsWith('55')) {
           user.phone = '55' + user.phone.replace('+', '')
         }
         if (user.email.endsWith('.es') && !user.phone.replace('+', '').startsWith('34')) {
