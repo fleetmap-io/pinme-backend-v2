@@ -15,7 +15,7 @@ function logError (e, ...args) {
     e.message,
     ...args,
     (e.response && e.response.data) || (e.response && e.response.config && e.response.config.url) || e,
-    (e.config && e.config.url) || (e.response && e.response.config && e.response.config.data))
+    (e.response && e.response.config && e.response.config.data))
 }
 
 exports.logException = async (e, req, ...args) => {
