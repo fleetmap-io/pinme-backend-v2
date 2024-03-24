@@ -46,7 +46,7 @@ exports.pushEvents = async (event) => {
       try {
         await sendToRabbit(event)
       } catch (e) {
-        console.error(e)
+        await logException(e)
       }
     } else {
       // console.log('deleting event', event)
