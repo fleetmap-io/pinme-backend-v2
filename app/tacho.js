@@ -66,7 +66,7 @@ const sqlTachoDownloads = `select tr.id, tr.requestdate, tr.startdate, tr.enddat
 
 const groupBy = 'group by tr.id, tr.requestdate, tr.startdate, tr.enddate, tr.status, tr.companyid, tr.type, tr.entityid, tr.conclusiondate, tr.s3id, tr.automatic'
 
-app.get('/', async (req, resp) => {
+app.get('/tacho/', async (req, resp) => {
   try {
     const email = resp.locals.user
     console.log('TachoDownloads User:', email)
@@ -74,9 +74,7 @@ app.get('/', async (req, resp) => {
         and tr.status in (0,1)
         ${groupBy}
         `
-    console.log(sql)
-    const result = await mysql.query(sql, true)
-    console.log(result)
+    const [result] = await mysql.query(sql, true)
     resp.json(result)
   } catch (e) {
     resp.json({ m: e.message })
