@@ -74,7 +74,8 @@ app.get('/', async (req, resp) => {
         and tr.status in (0,1)
         ${groupBy}
         `
-    resp.json(await mysql.query(sql, true))
+    const [result] = await mysql.query(sql, true)
+    resp.json(result)
   } catch (e) {
     resp.json({ m: e.message })
   }
@@ -87,7 +88,7 @@ app.get('/tachostatus/', async (req, resp) => {
         from tacho_remotedownload_last_update tr
         inner join tc_users u on u.attributes->>'$.companyId' = tr.companyid
         where u.email = '${email}'`
-    const result = await mysql.query(sql)
+    const [result] = await mysql.query(sql)
     resp.json(result.length ? result[0] : null)
   } catch (e) {
     resp.json({ m: e.message })
@@ -102,7 +103,8 @@ app.post('/tachodownloads/', async (req, resp) => {
         and tr.requestdate > '${body.startDate}' and tr.requestdate < '${body.endDate}'
         ${groupBy}
         `
-    resp.json(await mysql.query(sql, true))
+    const [result] = await mysql.query(sql, true)
+    resp.json(result)
   } catch (e) {
     resp.json({ m: e.message })
   }
@@ -115,7 +117,8 @@ app.get('/lasttachodownloads/', async (req, resp) => {
         and tr.id in (SELECT MAX(id) FROM tacho_remotedownload GROUP BY entityid, TYPE)
         ${groupBy}
         `
-    resp.json(await mysql.query(sql, true))
+    const [result] = await mysql.query(sql, true)
+    resp.json(result)
   } catch (e) {
     resp.json({ m: e.message })
   }
@@ -129,7 +132,8 @@ app.get('/tachoconnectionstatus/', async (req, resp) => {
         inner join (${sqlDevices.replaceAll('userEmail', email)}) td on td.deviceid = ti.deviceid 
         where u.email = '${email}'
         `
-    resp.json(await mysql.query(sql, true))
+    const [result] = await mysql.query(sql, true)
+    resp.json(result)
   } catch (e) {
     resp.json({ m: e.message })
   }
@@ -144,7 +148,8 @@ app.get('/tachodownloads/:deviceId', async (req, resp) => {
         ${groupBy}
         order by requestdate desc limit 10
         `
-    resp.json(await mysql.query(sql, true))
+    const [result] = await mysql.query(sql, true)
+    resp.json(result)
   } catch (e) {
     resp.json({ m: e.message })
   }
