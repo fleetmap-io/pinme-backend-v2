@@ -702,4 +702,8 @@ function geofencesWIthGroup (cookie) {
   console.log('geofencesWithGroup', cookie)
 }
 
+app.get('/pinmeapi/cookie/get', async (req, res) => {
+  res.json(req.header('cookie').split(';').find(c => c.includes('JSESSIONID')).trim())
+})
+
 exports.main = serverlessExpress({ app })
