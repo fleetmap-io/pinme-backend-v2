@@ -74,7 +74,10 @@ app.get('/', async (req, resp) => {
         and tr.status in (0,1)
         ${groupBy}
         `
-    resp.json(await mysql.query(sql, true))
+    console.log(sql)
+    const result = await mysql.query(sql, true)
+    console.log(result)
+    resp.json(result)
   } catch (e) {
     resp.json({ m: e.message })
   }
