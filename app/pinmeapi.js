@@ -649,7 +649,7 @@ function logAndReply (e, res, req, args) {
   res.status(500).send(e.message).end()
 }
 
-app.post('/pinmeapi/reports/:report', async (req, res) => {
+app.post('/reports/:report', async (req, res) => {
   try {
     const axios = require('axios').create({ headers: { cookie: req.header('cookie') }, baseURL: apiConfig.basePath })
     const traccar = { reports: new ReportsApi(apiConfig, null, axios), axios }
