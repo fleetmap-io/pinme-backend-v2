@@ -1,6 +1,6 @@
 {
   "body": "{\"message\": \"hello world\"}",
-  "resource": "/{proxy+}",
+  "resource": "/gpsmanager/{proxy+}",
   "httpMethod": "GET",
   "isBase64Encoded": false,
   "queryStringParameters": {
