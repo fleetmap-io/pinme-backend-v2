@@ -644,8 +644,8 @@ app.get('/pinmeapi/reports/speeding-report/getEvents', async (req, res) => {
   res.send(req.path).end()
 })
 
-function logAndReply (e, res, req, args) {
-  logException(e, req, args)
+async function logAndReply (e, res, req, args) {
+  await logException(e, req, args)
   res.status(500).send(e.message).end()
 }
 
@@ -655,7 +655,7 @@ app.post('/reports/:report', async (req, res) => {
     const traccar = { reports: new ReportsApi(apiConfig, null, axios), axios }
     res.redirect(await require('./reports').getReport(req.params.report, traccar, req.body))
   } catch (e) {
-    logAndReply(e, res, req)
+    await logAndReply(e, res, req)
   }
 })
 
