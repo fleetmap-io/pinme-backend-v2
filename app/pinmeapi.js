@@ -636,7 +636,7 @@ app.post('/pinmeapi/reports/speeding-report/getEvents', async (req, res) => {
   try {
     res.redirect(await require('./reports/speeding-report').getEvents(traccar, req.body))
   } catch (e) {
-    logAndReply(e, res, req, 'getEvents')
+    await logAndReply(e, res, req, 'getEvents')
   }
 })
 
@@ -651,7 +651,8 @@ async function logAndReply (e, res, req, args) {
 
 app.post('/pinmeapi/reports/:report', async (req, res) => {
   try {
-    const axios = require('axios').create({ headers: { cookie: req.header('cookie') }, baseURL: apiConfig.basePath })
+    const cookie = req.headers.cookie || req.query.cookie
+    const axios = require('axios').create({ headers: { cookie }, baseURL: apiConfig.basePath })
     const traccar = { reports: new ReportsApi(apiConfig, null, axios), axios }
     res.redirect(await require('./reports').getReport(req.params.report, traccar, req.body))
   } catch (e) {
